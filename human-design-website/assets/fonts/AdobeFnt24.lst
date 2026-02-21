@@ -1,0 +1,171 @@
+%!Adobe-FontList 1.24
+%Locale:0x40c
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:DMSerifDisplay-Italic
+FamilyName:DM Serif Display
+StyleName:Italic
+FullName:DM Serif Display Italic
+MenuName:DM Serif Display
+StyleBits:1
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-website\Dossier 430x932px v2\Document fonts\DMSerifDisplay-Italic.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:70336
+FileModTime:1721719883
+WeightClass:400
+WidthClass:5
+AngleClass:1
+NameArray:0,Win,1,DM Serif Display
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:DMSerifDisplay-Regular
+FamilyName:DM Serif Display
+StyleName:Regular
+FullName:DM Serif Display Regular
+MenuName:DM Serif Display
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-website\Dossier 430x932px v2\Document fonts\DMSerifDisplay-Regular.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:72220
+FileModTime:1721719883
+WeightClass:400
+WidthClass:5
+AngleClass:0
+NameArray:0,Win,1,DM Serif Display
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Figtree-Light
+FamilyName:Figtree
+StyleName:Light
+FullName:Figtree Light
+MenuName:Figtree Light
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-website\Dossier 430x932px v2\Document fonts\Figtree-Light.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:39988
+FileModTime:1763911846
+WeightClass:300
+WidthClass:5
+AngleClass:0
+NameArray:0,Win,1,Figtree Light
+NameArray:0,Win,16,Figtree
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Figtree-LightItalic
+FamilyName:Figtree
+StyleName:Light Italic
+FullName:Figtree Light Italic
+MenuName:Figtree Light
+StyleBits:1
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-website\Dossier 430x932px v2\Document fonts\Figtree-LightItalic.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:40552
+FileModTime:1763911846
+WeightClass:300
+WidthClass:5
+AngleClass:1
+NameArray:0,Win,1,Figtree Light
+NameArray:0,Win,16,Figtree
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Figtree-Medium
+FamilyName:Figtree
+StyleName:Medium
+FullName:Figtree Medium
+MenuName:Figtree Medium
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-website\Dossier 430x932px v2\Document fonts\Figtree-Medium.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:40148
+FileModTime:1763911846
+WeightClass:500
+WidthClass:5
+AngleClass:0
+NameArray:0,Win,1,Figtree Medium
+NameArray:0,Win,16,Figtree
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Figtree-Regular
+FamilyName:Figtree
+StyleName:Regular
+FullName:Figtree Regular
+MenuName:Figtree
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-website\Dossier 430x932px v2\Document fonts\Figtree-Regular.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:40140
+FileModTime:1763911846
+WeightClass:400
+WidthClass:5
+AngleClass:0
+NameArray:0,Win,1,Figtree
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:MinionPro-Regular
+FamilyName:Minion Pro
+StyleName:Regular
+FullName:Minion Pro
+MenuName:Minion Pro
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-website\Dossier 430x932px v2\Document fonts\MinionPro-Regular.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:218640
+FileModTime:1719837924
+WeightClass:400
+WidthClass:5
+AngleClass:0
+DesignSize:110
+NameArray:0,Mac,4,Minion Pro
+NameArray:0,Win,1,Minion Pro
+%EndFont
+

@@ -1,0 +1,50 @@
+%!Adobe-FontList 1.24
+%Locale:0x40c
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:DMSerifDisplay-Regular
+FamilyName:DM Serif Display
+StyleName:Regular
+FullName:DM Serif Display Regular
+MenuName:DM Serif Display
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-promotion\logo\Dossier logo-dirknellens-black\Document fonts\DMSerifDisplay-Regular.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:72220
+FileModTime:1721719883
+WeightClass:400
+WidthClass:5
+AngleClass:0
+NameArray:0,Win,1,DM Serif Display
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Figtree-Light
+FamilyName:Figtree
+StyleName:Light
+FullName:Figtree Light
+MenuName:Figtree Light
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\Users\sofia\Desktop\all\WORK\hd-promotion\logo\Dossier logo-dirknellens-black\Document fonts\Figtree-Light.ttf
+DataFormat:sfntData
+hasSVG:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:39988
+FileModTime:1763911846
+WeightClass:300
+WidthClass:5
+AngleClass:0
+NameArray:0,Win,1,Figtree Light
+NameArray:0,Win,16,Figtree
+%EndFont
+
