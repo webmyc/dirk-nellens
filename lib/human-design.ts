@@ -1,26 +1,8 @@
-import {
-  Body,
-  EclipticLongitude,
-  NextMoonNode,
-  SearchMoonNode,
-  SearchSunLongitude,
-} from 'astronomy-engine';
+import sweph from 'sweph';
 import { DateTime } from 'luxon';
 
-export type HdType =
-  | 'Generator'
-  | 'Manifesting Generator'
-  | 'Projector'
-  | 'Manifestor'
-  | 'Reflector';
-export type HdAuthority =
-  | 'Sacral'
-  | 'Emotional'
-  | 'Splenic'
-  | 'Ego'
-  | 'Self-Projected'
-  | 'Mental'
-  | 'Lunar';
+export type HdType = 'Generator' | 'Manifesting Generator' | 'Projector' | 'Manifestor' | 'Reflector';
+export type HdAuthority = 'Sacral' | 'Emotional' | 'Splenic' | 'Ego' | 'Self-Projected' | 'Mental' | 'Lunar';
 
 type CenterKey =
   | 'HEAD'
@@ -33,28 +15,13 @@ type CenterKey =
   | 'SPLEEN'
   | 'ROOT';
 
-type PlanetActivation = {
-  planet: string;
-  gate: number;
-  line: number;
-  longitude: number;
-};
+type PlanetActivation = { planet: string; gate: number; line: number; longitude: number };
 
-type ChartInput = {
-  name: string;
-  birthDate: string;
-  birthTime: string;
-  timezone: string;
-  location: string;
-  unknownBirthTime?: boolean;
-};
+const C = sweph.constants;
+const SWISS_FLAGS = C.SEFLG_SWIEPH | C.SEFLG_SPEED;
+const MOSEPH_FLAGS = C.SEFLG_MOSEPH | C.SEFLG_SPEED;
 
-const GATE_ORDER = [
-  41, 19, 13, 49, 30, 55, 37, 63, 22, 36, 25, 17, 21, 51, 42, 3, 27, 24, 2, 23,
-  8, 20, 16, 35, 45, 12, 15, 52, 39, 53, 62, 56, 31, 33, 7, 4, 29, 59, 40, 64,
-  47, 6, 46, 18, 48, 57, 32, 50, 28, 44, 1, 43, 14, 34, 9, 5, 26, 11, 10, 58,
-  38, 54, 61, 60,
-] as const;
+const GATE_ORDER = [41, 19, 13, 49, 30, 55, 37, 63, 22, 36, 25, 17, 21, 51, 42, 3, 27, 24, 2, 23, 8, 20, 16, 35, 45, 12, 15, 52, 39, 53, 62, 56, 31, 33, 7, 4, 29, 59, 40, 64, 47, 6, 46, 18, 48, 57, 32, 50, 28, 44, 1, 43, 14, 34, 9, 5, 26, 11, 10, 58, 38, 54, 61, 60] as const;
 
 const CENTER_GATES: Record<CenterKey, number[]> = {
   HEAD: [64, 61, 63],
@@ -68,13 +35,7 @@ const CENTER_GATES: Record<CenterKey, number[]> = {
   ROOT: [58, 38, 54, 53, 60, 52, 19, 39, 41],
 };
 
-const CHANNELS: Array<{
-  gateA: number;
-  gateB: number;
-  centerA: CenterKey;
-  centerB: CenterKey;
-  name: string;
-}> = [
+const CHANNELS: Array<{ gateA: number; gateB: number; centerA: CenterKey; centerB: CenterKey; name: string }> = [
   { gateA: 64, gateB: 47, centerA: 'HEAD', centerB: 'AJNA', name: 'Abstraction' },
   { gateA: 61, gateB: 24, centerA: 'HEAD', centerB: 'AJNA', name: 'Awareness' },
   { gateA: 63, gateB: 4, centerA: 'HEAD', centerB: 'AJNA', name: 'Logic' },
@@ -128,20 +89,56 @@ function longitudeToGateLine(longitude: number): { gate: number; line: number } 
   return { gate: GATE_ORDER[gateIndex], line };
 }
 
+function jdFromUtc(utcDate: Date): number {
+  const year = utcDate.getUTCFullYear();
+  const month = utcDate.getUTCMonth() + 1;
+  const day = utcDate.getUTCDate();
+  const hour = utcDate.getUTCHours() + utcDate.getUTCMinutes() / 60 + utcDate.getUTCSeconds() / 3600 + utcDate.getUTCMilliseconds() / 3600000;
+  return sweph.julday(year, month, day, hour, C.SE_GREG_CAL);
+}
+
+function calcLongitudeUT(jdUt: number, planetId: number): number {
+  let result = sweph.calc_ut(jdUt, planetId, SWISS_FLAGS);
+  if (result.flag === C.ERR) {
+    result = sweph.calc_ut(jdUt, planetId, MOSEPH_FLAGS);
+  }
+  if (result.flag === C.ERR) {
+    throw new Error(result.error || `Swiss Ephemeris failed for planet id ${planetId}`);
+  }
+  return mod360(result.data[0]);
+}
+
+function buildPlanetActivationsFromJd(jdUt: number): PlanetActivation[] {
+  const sunLon = calcLongitudeUT(jdUt, C.SE_SUN);
+  const northNodeLon = calcLongitudeUT(jdUt, C.SE_TRUE_NODE);
+
+  const planets: Array<{ name: string; lon: number }> = [
+    { name: 'Sun', lon: sunLon },
+    { name: 'Earth', lon: mod360(sunLon + 180) },
+    { name: 'Moon', lon: calcLongitudeUT(jdUt, C.SE_MOON) },
+    { name: 'North Node', lon: northNodeLon },
+    { name: 'South Node', lon: mod360(northNodeLon + 180) },
+    { name: 'Mercury', lon: calcLongitudeUT(jdUt, C.SE_MERCURY) },
+    { name: 'Venus', lon: calcLongitudeUT(jdUt, C.SE_VENUS) },
+    { name: 'Mars', lon: calcLongitudeUT(jdUt, C.SE_MARS) },
+    { name: 'Jupiter', lon: calcLongitudeUT(jdUt, C.SE_JUPITER) },
+    { name: 'Saturn', lon: calcLongitudeUT(jdUt, C.SE_SATURN) },
+    { name: 'Uranus', lon: calcLongitudeUT(jdUt, C.SE_URANUS) },
+    { name: 'Neptune', lon: calcLongitudeUT(jdUt, C.SE_NEPTUNE) },
+    { name: 'Pluto', lon: calcLongitudeUT(jdUt, C.SE_PLUTO) },
+  ];
+
+  return planets.map(({ name, lon }) => {
+    const mapped = longitudeToGateLine(lon);
+    return { planet: name, longitude: lon, gate: mapped.gate, line: mapped.line };
+  });
+}
+
 function deriveDefinition(centersDefinedCount: number): 'Single' | 'None' {
   return centersDefinedCount === 0 ? 'None' : 'Single';
 }
 
-function deriveTypeAndAuthority(
-  definedCenters: Set<CenterKey>,
-  motorToThroat: boolean,
-): {
-  type: HdType;
-  authority: HdAuthority;
-  strategy: string;
-  signature: string;
-  notSelfTheme: string;
-} {
+function deriveTypeAndAuthority(definedCenters: Set<CenterKey>, motorToThroat: boolean): { type: HdType; authority: HdAuthority; strategy: string; signature: string; notSelfTheme: string } {
   const sacral = definedCenters.has('SACRAL');
   const solar = definedCenters.has('SOLAR_PLEXUS');
   const spleen = definedCenters.has('SPLEEN');
@@ -164,77 +161,62 @@ function deriveTypeAndAuthority(
               : 'Mental';
 
   if (definedCenters.size === 0) {
-    return {
-      type: 'Reflector',
-      authority,
-      strategy: 'Wait 28 days',
-      signature: 'Surprise',
-      notSelfTheme: 'Disappointment',
-    };
+    return { type: 'Reflector', authority, strategy: 'Wait 28 days', signature: 'Surprise', notSelfTheme: 'Disappointment' };
   }
 
   if (sacral && motorToThroat) {
-    return {
-      type: 'Manifesting Generator',
-      authority,
-      strategy: 'Respond, then inform',
-      signature: 'Satisfaction',
-      notSelfTheme: 'Frustration',
-    };
+    return { type: 'Manifesting Generator', authority, strategy: 'Respond, then inform', signature: 'Satisfaction', notSelfTheme: 'Frustration' };
   }
 
   if (sacral) {
-    return {
-      type: 'Generator',
-      authority,
-      strategy: 'Respond',
-      signature: 'Satisfaction',
-      notSelfTheme: 'Frustration',
-    };
+    return { type: 'Generator', authority, strategy: 'Respond', signature: 'Satisfaction', notSelfTheme: 'Frustration' };
   }
 
   if (motorToThroat) {
-    return {
-      type: 'Manifestor',
-      authority,
-      strategy: 'Inform',
-      signature: 'Peace',
-      notSelfTheme: 'Anger',
-    };
+    return { type: 'Manifestor', authority, strategy: 'Inform', signature: 'Peace', notSelfTheme: 'Anger' };
   }
 
-  return {
-    type: 'Projector',
-    authority,
-    strategy: 'Wait for invitation',
-    signature: 'Success',
-    notSelfTheme: 'Bitterness',
-  };
+  return { type: 'Projector', authority, strategy: 'Wait for invitation', signature: 'Success', notSelfTheme: 'Bitterness' };
 }
 
-function finalizeChart(
-  input: ChartInput,
-  personalityData: PlanetActivation[],
-  designData: PlanetActivation[],
-) {
+export function calculateChart(input: { name: string; birthDate: string; birthTime: string; timezone: string; location: string; unknownBirthTime?: boolean }) {
+  const birthTime = input.unknownBirthTime ? '12:00' : input.birthTime;
+  const dt = DateTime.fromISO(`${input.birthDate}T${birthTime}`, { zone: input.timezone });
+  if (!dt.isValid) {
+    throw new Error('Invalid date/time/timezone combination.');
+  }
+
+  const birthUtc = dt.toUTC().toJSDate();
+  const jdBirth = jdFromUtc(birthUtc);
+  const sunLonBirth = calcLongitudeUT(jdBirth, C.SE_SUN);
+  const targetDesignSunLon = mod360(sunLonBirth - 88);
+
+  const designStart = jdBirth - 110;
+  let cross = sweph.solcross_ut(targetDesignSunLon, designStart, SWISS_FLAGS);
+  if (!(cross.date > designStart && cross.date < jdBirth)) {
+    cross = sweph.solcross_ut(targetDesignSunLon, designStart, MOSEPH_FLAGS);
+  }
+  const jdDesign = cross.date;
+
+  if (!(jdDesign > designStart && jdDesign < jdBirth)) {
+    throw new Error(cross.error || 'Unable to compute design date from Swiss Ephemeris solar crossing.');
+  }
+
+  const personalityData = buildPlanetActivationsFromJd(jdBirth);
+  const designData = buildPlanetActivationsFromJd(jdDesign);
+
   const personalityGates = new Set(personalityData.map((p) => p.gate));
   const designGates = new Set(designData.map((p) => p.gate));
   const allGates = new Set<number>([...personalityGates, ...designGates]);
 
-  const definedChannels = CHANNELS.filter(
-    (ch) => allGates.has(ch.gateA) && allGates.has(ch.gateB),
-  ).map((ch) => {
+  const definedChannels = CHANNELS.filter((ch) => allGates.has(ch.gateA) && allGates.has(ch.gateB)).map((ch) => {
     const inPersonality = personalityGates.has(ch.gateA) && personalityGates.has(ch.gateB);
     const inDesign = designGates.has(ch.gateA) && designGates.has(ch.gateB);
     return {
       gateA: ch.gateA,
       gateB: ch.gateB,
       name: ch.name,
-      definedBy: (inPersonality && inDesign
-        ? 'both'
-        : inDesign
-          ? 'design'
-          : 'personality') as 'both' | 'design' | 'personality',
+      definedBy: inPersonality && inDesign ? 'both' : inDesign ? 'design' : 'personality',
       centerA: ch.centerA,
       centerB: ch.centerB,
     };
@@ -255,25 +237,11 @@ function finalizeChart(
         defined: definedCenters.has(center),
         open: activeGates.length === 0,
         activatedGates: activeGates,
-        definedBy: definedCenters.has(center)
-          ? (fromPersonality && fromDesign
-              ? 'both'
-              : fromDesign
-                ? 'design'
-                : 'personality')
-          : null,
+        definedBy: definedCenters.has(center) ? (fromPersonality && fromDesign ? 'both' : fromDesign ? 'design' : 'personality') : null,
       };
       return acc;
     },
-    {} as Record<
-      CenterKey,
-      {
-        defined: boolean;
-        open: boolean;
-        definedBy: 'personality' | 'design' | 'both' | null;
-        activatedGates: number[];
-      }
-    >,
+    {} as Record<CenterKey, { defined: boolean; open: boolean; definedBy: 'personality' | 'design' | 'both' | null; activatedGates: number[] }>,
   );
 
   const motorCenters: CenterKey[] = ['HEART', 'SACRAL', 'SOLAR_PLEXUS', 'ROOT'];
@@ -291,7 +259,7 @@ function finalizeChart(
       name: input.name,
       location: input.location,
       birthDate: input.birthDate,
-      birthTime: input.birthTime,
+      birthTime,
       timezone: input.timezone,
       unknownBirthTime: !!input.unknownBirthTime,
     },
@@ -316,156 +284,4 @@ function finalizeChart(
     personalityData,
     designData,
   };
-}
-
-function calculateWithAstronomy(input: ChartInput) {
-  const birthUtc = DateTime.fromISO(`${input.birthDate}T${input.birthTime}`, {
-    zone: input.timezone,
-  })
-    .toUTC()
-    .toJSDate();
-
-  const sunAtBirth = mod360(EclipticLongitude(Body.Sun, birthUtc));
-  const targetDesignSun = mod360(sunAtBirth - 88);
-  const designSearchStart = new Date(birthUtc.getTime() - 110 * 24 * 60 * 60 * 1000);
-  const designTime = SearchSunLongitude(targetDesignSun, designSearchStart, 40);
-  if (!designTime) {
-    throw new Error('Unable to compute design date from solar arc.');
-  }
-
-  const buildData = (date: Date) => {
-    const start = new Date(date.getTime() - 40 * 24 * 60 * 60 * 1000);
-    let node = SearchMoonNode(start);
-    let prev = node;
-    let guard = 0;
-    while (node.time.date.getTime() <= date.getTime() && guard < 40) {
-      prev = node;
-      node = NextMoonNode(node);
-      guard += 1;
-    }
-    const nearest =
-      Math.abs(date.getTime() - prev.time.date.getTime()) <=
-      Math.abs(node.time.date.getTime() - date.getTime())
-        ? prev
-        : node;
-    const nodeLon = mod360(EclipticLongitude(Body.Moon, nearest.time.date));
-    const northNodeLon = nearest.kind === 1 ? nodeLon : mod360(nodeLon + 180);
-
-    const sunLon = mod360(EclipticLongitude(Body.Sun, date));
-    const planets: Array<{ name: string; lon: number }> = [
-      { name: 'Sun', lon: sunLon },
-      { name: 'Earth', lon: mod360(sunLon + 180) },
-      { name: 'Moon', lon: mod360(EclipticLongitude(Body.Moon, date)) },
-      { name: 'North Node', lon: northNodeLon },
-      { name: 'South Node', lon: mod360(northNodeLon + 180) },
-      { name: 'Mercury', lon: mod360(EclipticLongitude(Body.Mercury, date)) },
-      { name: 'Venus', lon: mod360(EclipticLongitude(Body.Venus, date)) },
-      { name: 'Mars', lon: mod360(EclipticLongitude(Body.Mars, date)) },
-      { name: 'Jupiter', lon: mod360(EclipticLongitude(Body.Jupiter, date)) },
-      { name: 'Saturn', lon: mod360(EclipticLongitude(Body.Saturn, date)) },
-      { name: 'Uranus', lon: mod360(EclipticLongitude(Body.Uranus, date)) },
-      { name: 'Neptune', lon: mod360(EclipticLongitude(Body.Neptune, date)) },
-      { name: 'Pluto', lon: mod360(EclipticLongitude(Body.Pluto, date)) },
-    ];
-
-    return planets.map(({ name, lon }) => {
-      const mapped = longitudeToGateLine(lon);
-      return { planet: name, longitude: lon, gate: mapped.gate, line: mapped.line };
-    });
-  };
-
-  return finalizeChart(input, buildData(birthUtc), buildData(designTime.date));
-}
-
-async function calculateWithSweph(input: ChartInput) {
-  const swephModule = await import('sweph');
-  const sweph = swephModule.default;
-  const C = sweph.constants;
-  const SWISS_FLAGS = C.SEFLG_SWIEPH | C.SEFLG_SPEED;
-  const MOSEPH_FLAGS = C.SEFLG_MOSEPH | C.SEFLG_SPEED;
-
-  const birthUtc = DateTime.fromISO(`${input.birthDate}T${input.birthTime}`, {
-    zone: input.timezone,
-  })
-    .toUTC()
-    .toJSDate();
-
-  const jdFromUtc = (utcDate: Date): number => {
-    const year = utcDate.getUTCFullYear();
-    const month = utcDate.getUTCMonth() + 1;
-    const day = utcDate.getUTCDate();
-    const hour =
-      utcDate.getUTCHours() +
-      utcDate.getUTCMinutes() / 60 +
-      utcDate.getUTCSeconds() / 3600 +
-      utcDate.getUTCMilliseconds() / 3600000;
-    return sweph.julday(year, month, day, hour, C.SE_GREG_CAL);
-  };
-
-  const calcLongitudeUT = (jdUt: number, planetId: number): number => {
-    let result = sweph.calc_ut(jdUt, planetId, SWISS_FLAGS);
-    if (result.flag === C.ERR) result = sweph.calc_ut(jdUt, planetId, MOSEPH_FLAGS);
-    if (result.flag === C.ERR) {
-      throw new Error(result.error || `Swiss Ephemeris failed for planet id ${planetId}`);
-    }
-    return mod360(result.data[0]);
-  };
-
-  const jdBirth = jdFromUtc(birthUtc);
-  const sunLonBirth = calcLongitudeUT(jdBirth, C.SE_SUN);
-  const targetDesignSunLon = mod360(sunLonBirth - 88);
-  const designStart = jdBirth - 110;
-
-  let cross = sweph.solcross_ut(targetDesignSunLon, designStart, SWISS_FLAGS);
-  if (!(cross.date > designStart && cross.date < jdBirth)) {
-    cross = sweph.solcross_ut(targetDesignSunLon, designStart, MOSEPH_FLAGS);
-  }
-  const jdDesign = cross.date;
-  if (!(jdDesign > designStart && jdDesign < jdBirth)) {
-    throw new Error(cross.error || 'Unable to compute design date from Swiss Ephemeris.');
-  }
-
-  const buildData = (jdUt: number) => {
-    const sunLon = calcLongitudeUT(jdUt, C.SE_SUN);
-    const northNodeLon = calcLongitudeUT(jdUt, C.SE_TRUE_NODE);
-    const planets: Array<{ name: string; lon: number }> = [
-      { name: 'Sun', lon: sunLon },
-      { name: 'Earth', lon: mod360(sunLon + 180) },
-      { name: 'Moon', lon: calcLongitudeUT(jdUt, C.SE_MOON) },
-      { name: 'North Node', lon: northNodeLon },
-      { name: 'South Node', lon: mod360(northNodeLon + 180) },
-      { name: 'Mercury', lon: calcLongitudeUT(jdUt, C.SE_MERCURY) },
-      { name: 'Venus', lon: calcLongitudeUT(jdUt, C.SE_VENUS) },
-      { name: 'Mars', lon: calcLongitudeUT(jdUt, C.SE_MARS) },
-      { name: 'Jupiter', lon: calcLongitudeUT(jdUt, C.SE_JUPITER) },
-      { name: 'Saturn', lon: calcLongitudeUT(jdUt, C.SE_SATURN) },
-      { name: 'Uranus', lon: calcLongitudeUT(jdUt, C.SE_URANUS) },
-      { name: 'Neptune', lon: calcLongitudeUT(jdUt, C.SE_NEPTUNE) },
-      { name: 'Pluto', lon: calcLongitudeUT(jdUt, C.SE_PLUTO) },
-    ];
-    return planets.map(({ name, lon }) => {
-      const mapped = longitudeToGateLine(lon);
-      return { planet: name, longitude: lon, gate: mapped.gate, line: mapped.line };
-    });
-  };
-
-  return finalizeChart(input, buildData(jdBirth), buildData(jdDesign));
-}
-
-export async function calculateChart(rawInput: ChartInput) {
-  const birthTime = rawInput.unknownBirthTime ? '12:00' : rawInput.birthTime;
-  const dt = DateTime.fromISO(`${rawInput.birthDate}T${birthTime}`, {
-    zone: rawInput.timezone,
-  });
-  if (!dt.isValid) {
-    throw new Error('Invalid date/time/timezone combination.');
-  }
-
-  const input = { ...rawInput, birthTime };
-
-  try {
-    return await calculateWithSweph(input);
-  } catch {
-    return calculateWithAstronomy(input);
-  }
 }

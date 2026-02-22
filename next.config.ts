@@ -2,6 +2,14 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  serverExternalPackages: ['sweph'],
+  outputFileTracingIncludes: {
+    '/api/chart/calculate': [
+      './node_modules/sweph/build/Release/**/*',
+      './node_modules/sweph/build/**/*',
+      './node_modules/sweph/swisseph/**/*',
+    ],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
