@@ -3,7 +3,7 @@ import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import { Gift, BookOpen, MessageSquareHeart } from 'lucide-react';
 
 export function BookPromoCampaign() {
-    const TALLY_FORM_URL = 'https://tally.so/r/rj6bYv';
+    const TALLY_FORM_URL = '#tally-open=rj6bYv&tally-layout=modal&tally-width=800&tally-emoji-text=👋&tally-emoji-animation=wave';
 
     return (
         <section className="py-24 md:py-32 bg-[#2B2218] relative overflow-hidden text-[#F0EBE3]">
@@ -64,8 +64,6 @@ export function BookPromoCampaign() {
                         <FadeUp delay={0.6}>
                             <a
                                 href={TALLY_FORM_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 className="inline-flex items-center justify-center bg-[#C96A45] text-white px-8 py-4 rounded-full font-sans text-[13px] font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#C96A45] transition-all duration-300 shadow-xl"
                             >
                                 Claim My Free Access

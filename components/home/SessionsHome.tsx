@@ -57,12 +57,12 @@ export function SessionsHome() {
                 </div>
             </div>
 
-            <div className="flex overflow-x-auto pb-16 px-6 md:px-12 gap-8 snap-x snap-mandatory hide-scrollbar">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 px-6 md:px-12 pb-16 max-w-[1440px] mx-auto">
                 {sessionCards.map((card, i) => (
-                    <FadeUp delay={0.15 + i * 0.1} key={card.title}>
+                    <FadeUp delay={0.15 + i * 0.1} key={card.title} className="h-full">
                         <Link
                             href={card.href}
-                            className="group block min-w-[85vw] md:min-w-[380px] w-[380px] h-full bg-[#F0EBE3] rounded-[16px] p-[40px] snap-start transition-all duration-350 ease-out hover:-translate-y-[10px] hover:shadow-[0_24px_48px_rgba(43,34,24,0.12)] relative overflow-hidden"
+                            className="group flex flex-col justify-between h-full w-full bg-[#F0EBE3] rounded-[16px] p-[32px] lg:p-[40px] transition-all duration-350 ease-out hover:-translate-y-[10px] hover:shadow-[0_24px_48px_rgba(43,34,24,0.12)] relative overflow-hidden"
                         >
                             {/* Expanding 3px terracotta top border */}
                             <div className="absolute top-0 left-0 h-[3px] bg-[#C96A45] w-0 transition-all duration-400 ease-out group-hover:w-full" />
@@ -84,7 +84,7 @@ export function SessionsHome() {
                                     <span className="font-sans text-[14px] font-medium opacity-60 group-hover:opacity-100 group-hover:text-[#C96A45] transition-colors">
                                         Find out more
                                     </span>
-                                    <div className="w-8 h-8 rounded-full border border-[#2B2218]/20 flex items-center justify-center group-hover:bg-[#C96A45] group-hover:border-[#C96A45] group-hover:text-[#F0EBE3] transition-colors">
+                                    <div className="w-8 h-8 rounded-full border border-[#2B2218]/20 flex items-center justify-center group-hover:bg-[#C96A45] group-hover:border-[#C96A45] group-hover:text-[#F0EBE3] transition-colors bg-white/50">
                                         <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                                     </div>
                                 </div>
@@ -92,8 +92,6 @@ export function SessionsHome() {
                         </Link>
                     </FadeUp>
                 ))}
-                {/* Spacer to allow full scroll to the right element */}
-                <div className="min-w-[48px] w-[48px] flex-shrink-0" />
             </div>
         </section>
     );

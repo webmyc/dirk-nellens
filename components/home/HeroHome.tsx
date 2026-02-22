@@ -36,6 +36,12 @@ export function HeroBookTilt() {
             className="relative w-full h-full flex items-center justify-center perspective-[800px] z-10 hidden md:flex"
             style={{ perspective: '800px' }}
         >
+            {/* Ground shadow */}
+            <motion.div
+                className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[55%] h-[25px] bg-black/40 blur-2xl rounded-[100%]"
+                animate={{ scale: isHovered ? 1.05 : [1, 0.95, 1], opacity: isHovered ? 0.3 : [0.3, 0.2, 0.3] }}
+                transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity }}
+            />
             <motion.div
                 animate={{
                     rotateY: tilt.x,
@@ -116,6 +122,7 @@ export function HeroHome() {
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full relative z-10 grid md:grid-cols-[55%_45%] gap-10 items-center py-20 pb-32">
                 {/* Left Column - Mobile puts book above text */}
                 <div className="flex flex-col md:hidden items-center justify-center mb-12 mt-12 w-full max-w-[420px] mx-auto aspect-[4/5] relative">
+                    <div className="absolute bottom-[-5%] left-1/2 -translate-x-1/2 w-[60%] h-[20px] bg-black/40 blur-xl rounded-[100%]" />
                     <Image
                         src="/images/book-transparent.png"
                         alt="Understanding Our Energetic Architecture"
