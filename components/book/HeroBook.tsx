@@ -26,11 +26,11 @@ export function HeroBook() {
                     <div className="md:sticky md:top-32 lg:top-40 w-full aspect-[3/4] max-w-[540px] mx-auto md:mx-0">
                         <motion.div style={{ y }} className="relative w-full h-full animate-[float-large_7s_ease-in-out_infinite]">
                             <Image
-                                src="/images/book-cover.jpg" // Using the solid cover for the book page if available, else book-transparent
+                                src="/images/book-3.jpg"
                                 alt="Understanding Our Energetic Architecture"
                                 fill
                                 priority
-                                className="object-contain drop-shadow-[0_40px_80px_rgba(43,34,24,0.35)]"
+                                className="object-cover rounded-3xl overflow-hidden drop-shadow-[0_20px_40px_rgba(43,34,24,0.15)]"
                                 sizes="(max-width: 768px) 100vw, 50vw"
                             />
                             {/* Fallback to book-transparent if book-cover doesn't look right:

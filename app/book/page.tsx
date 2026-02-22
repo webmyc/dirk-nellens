@@ -5,6 +5,7 @@ import { HeroBook } from '@/components/book/HeroBook';
 import { BookIntroCards } from '@/components/book/BookIntroCards';
 import { QuoteBook } from '@/components/book/QuoteBook';
 import { BookDescription } from '@/components/book/BookDescription';
+import { BookImageDivider } from '@/components/book/BookImageDivider';
 import { AuthorBioBook } from '@/components/book/AuthorBioBook';
 import { NewsletterHome } from '@/components/home/NewsletterHome';
 import { BookPromoCampaign } from '@/components/BookPromoCampaign';
@@ -28,6 +29,7 @@ export default function BookPage() {
       <BookIntroCards />
       <QuoteBook />
       <BookDescription />
+      <BookImageDivider />
       <AuthorBioBook />
       <BookPromoCampaign />
       <NewsletterHome />
