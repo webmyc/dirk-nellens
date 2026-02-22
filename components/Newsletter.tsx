@@ -77,7 +77,7 @@ export default function Newsletter() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="relative aspect-square max-w-[380px] w-full mx-auto md:mx-0 rounded-[2rem] overflow-hidden shadow-lg"
+          className="relative aspect-square max-w-[420px] w-full mx-auto rounded-[2rem] overflow-hidden shadow-lg"
         >
           <Image
             src="/images/collage-sacral-composition.png"

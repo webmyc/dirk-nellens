@@ -114,6 +114,23 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                 <span>Dirk Nellens</span>
                             </div>
                         </FadeUp>
+
+                        {/* Audio Player for Podcasts moved to Hero */}
+                        {article.audioUrl && (
+                            <FadeUp delay={0.4} className="w-full mt-10">
+                                <div className="mb-8 w-full bg-white/10 backdrop-blur-md border border-white/20 text-[#F0EBE3] p-6 md:p-8 rounded-[24px] shadow-lg flex flex-col items-center gap-4 max-w-2xl mx-auto">
+                                    <div className="flex items-center gap-3 w-full justify-center text-center">
+                                        <div className="flex flex-col">
+                                            <span className="font-sans text-[12px] font-semibold tracking-widest uppercase text-[#FF9900]">Listen to the Podcast</span>
+                                        </div>
+                                    </div>
+                                    <audio controls className="w-full mt-2 custom-audio-player">
+                                        <source src={article.audioUrl} type="audio/mpeg" />
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            </FadeUp>
+                        )}
                     </div>
                 </header>
 
@@ -144,35 +161,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             </div>
                         </div>
 
-                        {/* Audio Player for Podcasts */}
-                        {article.audioUrl && (
-                            <div className="mb-12 w-full bg-[#2B2218] text-[#F0EBE3] p-6 md:p-8 rounded-[24px] shadow-lg flex flex-col gap-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-[#C96A45] flex items-center justify-center flex-shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                                            <path fillRule="evenodd" d="M19.952 1.651a.75.75 0 0 1 .298.599V16.303a3 3 0 0 1-2.176 2.884l-1.32.377a2.553 2.553 0 1 1-1.403-4.909l2.311-.66a1.5 1.5 0 0 0 1.088-1.442V6.994l-9 2.572v9.737a3 3 0 0 1-2.176 2.884l-1.32.377a2.553 2.553 0 1 1-1.402-4.909l2.31-.66a1.5 1.5 0 0 0 1.088-1.442V5.25a.75.75 0 0 1 .544-.721l10.5-3a.75.75 0 0 1 .65.122Z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="font-sans text-[12px] font-semibold tracking-widest uppercase text-[#C96A45]">Listen</span>
-                                        <span className="font-serif text-[20px]">Podcast Episode</span>
-                                    </div>
-                                </div>
-                                <audio controls className="w-full mt-2 custom-audio-player">
-                                    <source src={article.audioUrl} type="audio/mpeg" />
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-                        )}
-
                         {/* Injected Content */}
                         <div
                             className="prose prose-xl md:prose-2xl prose-stone max-w-none 
                          prose-headings:font-serif prose-headings:text-[#2B2218] prose-headings:leading-tight
-                         prose-p:font-sans prose-p:text-[#2B2218] prose-p:opacity-[0.88] prose-p:leading-[1.85] prose-p:text-[20px] md:prose-p:text-[22px]
+                         prose-p:font-sans prose-p:text-[#2B2218] prose-p:opacity-[0.88] prose-p:leading-[2.1] prose-p:text-[22px] md:prose-p:text-[25px] prose-p:tracking-tight prose-p:font-light
                          prose-a:text-[#C96A45] prose-a:underline prose-a:underline-offset-4
                          prose-strong:font-semibold prose-strong:text-[#2B2218]
-                         prose-blockquote:font-serif prose-blockquote:text-[#2B2218] prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:border-[#C96A45] prose-blockquote:bg-[#F7F4EF] prose-blockquote:py-6 prose-blockquote:px-8 prose-blockquote:rounded-r-2xl prose-blockquote:text-[26px] prose-blockquote:my-12 prose-blockquote:leading-snug
+                         prose-blockquote:font-serif prose-blockquote:text-[#2B2218] prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:border-[#C96A45] prose-blockquote:bg-[#F7F4EF] prose-blockquote:py-8 prose-blockquote:px-10 prose-blockquote:rounded-r-2xl prose-blockquote:text-[28px] prose-blockquote:my-16 prose-blockquote:leading-snug
                          prose-img:rounded-[24px] prose-img:w-full prose-img:shadow-sm prose-img:my-16
                          prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-[24px] prose-iframe:shadow-sm prose-iframe:my-16 mt-16"
                             dangerouslySetInnerHTML={{ __html: article.content }}

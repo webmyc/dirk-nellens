@@ -3,6 +3,8 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import Image from 'next/image';
 import { Podcast, Headphones } from 'lucide-react';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 
 export const metadata = {
     title: 'Podcasts | Dirk Nellens',
@@ -27,6 +29,7 @@ export const metadata = {
 export default function PodcastsPage() {
     return (
         <main className="min-h-screen bg-[#F0EBE3]">
+            <Navigation />
             {/* Header section with padding to account for fixed nav */}
             <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-6 md:px-12 max-w-7xl mx-auto">
                 <Breadcrumbs
@@ -103,6 +106,7 @@ export default function PodcastsPage() {
                     </FadeUpStaggerGroup>
                 </div>
             </section>
+            <Footer />
         </main>
     );
 }

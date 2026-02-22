@@ -99,25 +99,25 @@ export default function Navigation() {
               <DropdownLink href="/sessions" accent>View All Sessions</DropdownLink>
             </DesktopDropdown>
 
-            <Link href="/blog/newsletter" className="relative py-1 group/link hover:text-[#C96A45] transition-colors">
-              Substack
+            <Link href="/blog/newsletter" className="relative py-1 group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
+              Reflections
             </Link>
 
-            <Link href="/podcasts" className="relative py-1 group/link hover:text-[#C96A45] transition-colors">
+            <Link href="/podcasts" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
               Podcasts
             </Link>
 
-            <Link href="/community" className="relative py-1 group/link hover:text-[#C96A45] transition-colors">
+            <Link href="/community" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
               Community
             </Link>
 
-            <Link href="/about" className="relative py-1 group/link hover:text-[#C96A45] transition-colors">
+            <Link href="/about" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
               About
             </Link>
 
             <Link
               href="/book"
-              className="flex items-center justify-center gap-2 rounded-full px-7 h-[42px] bg-[#C96A45] text-[#F0EBE3] text-[15px] font-semibold tracking-wide hover:scale-[1.03] hover:bg-[#b05c3b] hover:shadow-md transition-all duration-300 transform ml-2"
+              className="flex items-center justify-center rounded-full px-7 py-2 bg-[#C96A45] text-[#F0EBE3] text-[15px] font-semibold tracking-wide hover:scale-[1.03] hover:bg-[#b05c3b] hover:shadow-md transition-all duration-300 ml-2"
             >
               The Book
             </Link>
