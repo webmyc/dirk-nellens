@@ -2,6 +2,7 @@ node_modules/
 .next/
 coverage/
 .DS_Store
+filesfromdesigner/
 *.log
 .env*
 !.env.example
