@@ -154,7 +154,7 @@ export function HeroHome() {
                     >
                         {/* Official Amazon Button */}
                         <a
-                            href="https://amzn.to/4svseEs"
+                            href="https://mybook.to/dirk-nellens"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group flex items-center justify-center gap-3 bg-[#FF9900] text-[#111111] hover:bg-[#E38800] px-8 py-4 rounded-full font-sans font-[600] text-[17px] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 w-full sm:w-auto overflow-hidden"

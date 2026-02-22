@@ -127,7 +127,7 @@ export function BookDescription() {
                         </FadeUp>
 
                         <FadeUp delay={0.3}>
-                            <Button href="https://amazon.com" variant="primary">
+                            <Button href="https://mybook.to/dirk-nellens" variant="primary">
                                 Shop the book
                             </Button>
                         </FadeUp>

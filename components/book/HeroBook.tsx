@@ -76,12 +76,12 @@ export function HeroBook() {
 
                     <FadeUp delay={0.6}>
                         <div className="flex flex-col sm:flex-row gap-6 mt-4">
-                            {/* Official Amazon Button */}
+                            {/* Primary Button */}
                             <a
-                                href="https://amzn.to/4svseEs"
+                                href="https://mybook.to/dirk-nellens"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group flex items-center justify-center gap-3 bg-[#FF9900] text-[#111111] hover:bg-[#E38800] px-8 py-4 rounded-full font-sans font-bold text-[16px] transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1"
+                                className="group flex items-center justify-center bg-[#FF9900] text-[#111111] hover:bg-[#E38800] px-8 py-4 rounded-full font-sans font-[600] text-[17px] transition-all duration-300 shadow-xl hover:-translate-y-1 w-full sm:w-auto"
                             >
                                 <span>Buy on</span>
                                 <svg viewBox="0 0 100 30" fill="currentColor" className="h-6 mt-1">
