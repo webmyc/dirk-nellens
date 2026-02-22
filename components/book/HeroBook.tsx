@@ -1,48 +1,28 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'motion/react';
 import { Button } from '../ui/Button';
 import { FadeUp, FadeUpStaggerGroup } from '../ui/FadeUp';
 
 export function HeroBook() {
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    // Optional: subtle parallax on the book image itself as we scroll past
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end start"]
-    });
-
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-
     return (
-        <section ref={containerRef} className="relative bg-[#F0EBE3] min-h-[120vh] pt-32 pb-24 px-6 md:px-12">
-            <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 lg:gap-24 relative">
+        <section className="relative bg-[#F0EBE3] min-h-screen flex flex-col md:flex-row">
+            {/* Left Side: Full height image flush to the edge */}
+            <div className="w-full md:w-[45%] lg:w-[50%] relative min-h-[60vh] md:min-h-screen order-last md:order-first">
+                <Image
+                    src="/images/book-3.jpg"
+                    alt="Understanding Our Energetic Architecture"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                />
+            </div>
 
-                {/* Left Side: Sticky Book Container */}
-                <div className="w-full md:w-[45%] lg:w-[50%] relative">
-                    <div className="md:sticky md:top-32 lg:top-40 w-full aspect-[3/4] max-w-[540px] mx-auto md:mx-0">
-                        <motion.div style={{ y }} className="relative w-full h-full animate-[float-large_7s_ease-in-out_infinite]">
-                            <Image
-                                src="/images/book-3.jpg"
-                                alt="Understanding Our Energetic Architecture"
-                                fill
-                                priority
-                                className="object-cover rounded-3xl overflow-hidden drop-shadow-[0_20px_40px_rgba(43,34,24,0.15)]"
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                            />
-                            {/* Fallback to book-transparent if book-cover doesn't look right:
-                src="/images/book-transparent.png"
-              */}
-                        </motion.div>
-                    </div>
-                </div>
-
-                {/* Right Side: Scrolling Text Content */}
-                <div className="w-full md:w-[55%] lg:w-[50%] flex flex-col justify-center pt-8 md:pt-16 pb-32">
-
+            {/* Right Side: Text Content */}
+            <div className="w-full md:w-[55%] lg:w-[50%] flex flex-col justify-center px-6 md:px-16 lg:px-24 xl:px-32 py-32 md:py-40">
+                <div className="max-w-2xl mx-auto md:mx-0">
                     <FadeUp delay={0.1}>
                         <div className="font-sans text-[12px] font-semibold tracking-[0.2em] uppercase text-[#C96A45] mb-8">
                             The Book
@@ -96,7 +76,6 @@ export function HeroBook() {
                             </Button>
                         </div>
                     </FadeUp>
-
                 </div>
             </div>
         </section>

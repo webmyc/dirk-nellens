@@ -71,7 +71,7 @@ export default function PodcastsPage() {
 
                         {/* Spotify Panel */}
                         <FadeUp delay={0.2}>
-                            <a href="https://open.spotify.com/search/dirk%20nellens%20human%20design/episodes" target="_blank" rel="noopener noreferrer" className="group block bg-[#1ed760]/10 rounded-[24px] p-8 h-full shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 border border-[#1ed760]/20 text-[#2B2218]">
+                            <a href="https://open.spotify.com/show/6uezr2HxhrhqLNuJoLmCnH?si=16a58c52e8b54f54" target="_blank" rel="noopener noreferrer" className="group block bg-[#1ed760]/10 rounded-[24px] p-8 h-full shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 border border-[#1ed760]/20 text-[#2B2218]">
                                 <div className="w-14 h-14 bg-[#1ed760] text-white rounded-full flex items-center justify-center mb-8">
                                     {/* Spotify Icon SVG */}
                                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
@@ -80,7 +80,7 @@ export default function PodcastsPage() {
                                 </div>
                                 <h3 className="font-serif text-[28px] mb-3">Spotify</h3>
                                 <p className="font-sans text-[15px] opacity-70 mb-8 line-clamp-3">
-                                    Find my interviews and guest appearances on various Human Design and wellness podcasts across Spotify.
+                                    Listen to my podcast directly on Spotify, featuring insights, interviews, and human design reflections.
                                 </p>
                                 <div className="font-sans font-medium text-[#1ed760] flex items-center gap-2 group-hover:gap-3 transition-all">
                                     Open in Spotify <span>&rarr;</span>
@@ -102,6 +102,63 @@ export default function PodcastsPage() {
                                     Listen on Apple <span>&rarr;</span>
                                 </div>
                             </a>
+                        </FadeUp>
+                    </FadeUpStaggerGroup>
+
+                    {/* Featured Spotify Episodes */}
+                    <FadeUp delay={0.4}>
+                        <div className="pt-24 pb-8 flex flex-col items-center max-w-3xl mx-auto text-center border-t border-[#2B2218]/10 mt-8">
+                            <h2 className="font-serif text-[36px] md:text-[44px] text-[#2B2218] mb-4">
+                                Featured Episodes
+                            </h2>
+                            <p className="font-sans text-[18px] text-[#2B2218] opacity-[0.85] leading-[1.6]">
+                                Dive straight into a few of my most insightful episodes directly from the page.
+                            </p>
+                        </div>
+                    </FadeUp>
+
+                    <FadeUpStaggerGroup className="grid md:grid-cols-3 gap-8 pb-16">
+                        <FadeUp delay={0.1}>
+                            <iframe
+                                data-testid="embed-iframe"
+                                style={{ borderRadius: '12px' }}
+                                src="https://open.spotify.com/embed/episode/24KJfAhoLmYMjghmHhJkQ8?utm_source=generator"
+                                width="100%"
+                                height="352"
+                                frameBorder="0"
+                                allowFullScreen
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                loading="lazy"
+                                className="shadow-lg"
+                            ></iframe>
+                        </FadeUp>
+                        <FadeUp delay={0.2}>
+                            <iframe
+                                data-testid="embed-iframe"
+                                style={{ borderRadius: '12px' }}
+                                src="https://open.spotify.com/embed/episode/3YqlkvJmRvXQBcTXIxeWMf?utm_source=generator"
+                                width="100%"
+                                height="352"
+                                frameBorder="0"
+                                allowFullScreen
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                loading="lazy"
+                                className="shadow-lg"
+                            ></iframe>
+                        </FadeUp>
+                        <FadeUp delay={0.3}>
+                            <iframe
+                                data-testid="embed-iframe"
+                                style={{ borderRadius: '12px' }}
+                                src="https://open.spotify.com/embed/episode/6aAbvTqXG3PR2LQ8Ia7Fsm?utm_source=generator"
+                                width="100%"
+                                height="352"
+                                frameBorder="0"
+                                allowFullScreen
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                loading="lazy"
+                                className="shadow-lg"
+                            ></iframe>
                         </FadeUp>
                     </FadeUpStaggerGroup>
                 </div>
