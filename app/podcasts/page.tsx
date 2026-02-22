@@ -90,7 +90,7 @@ export default function PodcastsPage() {
 
                         {/* Apple Podcasts Panel */}
                         <FadeUp delay={0.3}>
-                            <a href="https://podcasts.apple.com/us/search?q=dirk%20nellens" target="_blank" rel="noopener noreferrer" className="group block bg-[#b52d9a]/10 rounded-[24px] p-8 h-full shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 border border-[#b52d9a]/20 text-[#2B2218]">
+                            <a href="https://podcasts.apple.com/us/podcast/human-design-reflectors-reflections-with-dirk-nellens/id1731551459" target="_blank" rel="noopener noreferrer" className="group block bg-[#b52d9a]/10 rounded-[24px] p-8 h-full shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 border border-[#b52d9a]/20 text-[#2B2218]">
                                 <div className="w-14 h-14 bg-gradient-to-br from-[#b52d9a] to-[#592cb5] text-white rounded-full flex items-center justify-center mb-8">
                                     <Podcast className="w-7 h-7" />
                                 </div>
