@@ -19,6 +19,7 @@ type PlanetActivation = { planet: string; gate: number; line: number; longitude:
 
 const C = sweph.constants;
 const SWISS_FLAGS = C.SEFLG_SWIEPH | C.SEFLG_SPEED;
+const MOSEPH_FLAGS = C.SEFLG_MOSEPH | C.SEFLG_SPEED;
 
 const GATE_ORDER = [41, 19, 13, 49, 30, 55, 37, 63, 22, 36, 25, 17, 21, 51, 42, 3, 27, 24, 2, 23, 8, 20, 16, 35, 45, 12, 15, 52, 39, 53, 62, 56, 31, 33, 7, 4, 29, 59, 40, 64, 47, 6, 46, 18, 48, 57, 32, 50, 28, 44, 1, 43, 14, 34, 9, 5, 26, 11, 10, 58, 38, 54, 61, 60] as const;
 
@@ -97,7 +98,10 @@ function jdFromUtc(utcDate: Date): number {
 }
 
 function calcLongitudeUT(jdUt: number, planetId: number): number {
-  const result = sweph.calc_ut(jdUt, planetId, SWISS_FLAGS);
+  let result = sweph.calc_ut(jdUt, planetId, SWISS_FLAGS);
+  if (result.flag === C.ERR) {
+    result = sweph.calc_ut(jdUt, planetId, MOSEPH_FLAGS);
+  }
   if (result.flag === C.ERR) {
     throw new Error(result.error || `Swiss Ephemeris failed for planet id ${planetId}`);
   }
@@ -188,7 +192,10 @@ export function calculateChart(input: { name: string; birthDate: string; birthTi
   const targetDesignSunLon = mod360(sunLonBirth - 88);
 
   const designStart = jdBirth - 110;
-  const cross = sweph.solcross_ut(targetDesignSunLon, designStart, SWISS_FLAGS);
+  let cross = sweph.solcross_ut(targetDesignSunLon, designStart, SWISS_FLAGS);
+  if (!(cross.date > designStart && cross.date < jdBirth)) {
+    cross = sweph.solcross_ut(targetDesignSunLon, designStart, MOSEPH_FLAGS);
+  }
   const jdDesign = cross.date;
 
   if (!(jdDesign > designStart && jdDesign < jdBirth)) {

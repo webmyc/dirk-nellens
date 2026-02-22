@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { calculateChart } from '@/lib/human-design';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,6 +15,8 @@ export async function POST(req: NextRequest) {
     if (!unknownBirthTime && !birthTime) {
       return NextResponse.json({ error: 'Birth time is required unless unknown birth time is selected.' }, { status: 400 });
     }
+
+    const { calculateChart } = await import('@/lib/human-design');
 
     const chart = calculateChart({
       name,

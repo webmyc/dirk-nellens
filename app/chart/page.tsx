@@ -189,10 +189,22 @@ export default function ChartPage() {
         }),
       });
 
-      const payload = await res.json();
-      if (!res.ok) throw new Error(payload?.error || 'Failed to calculate chart.');
+      const raw = await res.text();
+      let payload: { error?: string; chart?: ChartData } = {};
+      try {
+        payload = raw ? (JSON.parse(raw) as { error?: string; chart?: ChartData }) : {};
+      } catch {
+        payload = {};
+      }
 
-      setChart(payload.chart as ChartData);
+      if (!res.ok) {
+        throw new Error(payload?.error || raw || 'Failed to calculate chart.');
+      }
+      if (!payload?.chart) {
+        throw new Error('Chart service returned an empty response.');
+      }
+
+      setChart(payload.chart);
       window.setTimeout(() => setPhase('preview'), 900);
     } catch (error) {
       setPhase('form');
