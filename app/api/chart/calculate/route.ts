@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
     const { calculateChart } = await import('@/lib/human-design');
 
-    const chart = calculateChart({
+    const chart = await calculateChart({
       name,
       birthDate,
       birthTime: birthTime || '12:00',
