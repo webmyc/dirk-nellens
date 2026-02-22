@@ -138,8 +138,40 @@ function buildPlanetActivationsFromJd(jdUt: number): PlanetActivation[] {
   });
 }
 
-function deriveDefinition(centersDefinedCount: number): 'Single' | 'None' {
-  return centersDefinedCount === 0 ? 'None' : 'Single';
+function deriveDefinitionFromCenters(
+  definedCenters: Set<CenterKey>,
+  definedChannels: Array<{ centerA: CenterKey; centerB: CenterKey }>,
+): 'Single' | 'Split' | 'Triple-Split' | 'Quadruple-Split' | 'None' {
+  if (definedCenters.size === 0) return 'None';
+
+  const adjacency = new Map<CenterKey, Set<CenterKey>>();
+  definedCenters.forEach((center) => adjacency.set(center, new Set()));
+  definedChannels.forEach((ch) => {
+    adjacency.get(ch.centerA)?.add(ch.centerB);
+    adjacency.get(ch.centerB)?.add(ch.centerA);
+  });
+
+  const visited = new Set<CenterKey>();
+  let components = 0;
+
+  for (const center of definedCenters) {
+    if (visited.has(center)) continue;
+    components += 1;
+    const stack = [center];
+    while (stack.length > 0) {
+      const node = stack.pop() as CenterKey;
+      if (visited.has(node)) continue;
+      visited.add(node);
+      adjacency.get(node)?.forEach((n) => {
+        if (!visited.has(n)) stack.push(n);
+      });
+    }
+  }
+
+  if (components <= 1) return 'Single';
+  if (components === 2) return 'Split';
+  if (components === 3) return 'Triple-Split';
+  return 'Quadruple-Split';
 }
 
 function deriveTypeAndAuthority(definedCenters: Set<CenterKey>, motorToThroat: boolean): { type: HdType; authority: HdAuthority; strategy: string; signature: string; notSelfTheme: string } {
@@ -265,13 +297,14 @@ export function calculateChart(input: { name: string; birthDate: string; birthTi
       location: input.location,
       birthDate: input.birthDate,
       birthTime,
+      birthUtc: birthUtc.toISOString().slice(0, 16).replace('T', ' '),
       timezone: normalizedTimezone,
       unknownBirthTime: !!input.unknownBirthTime,
     },
     type: typing.type,
     authority: typing.authority,
     profile,
-    definition: deriveDefinition(definedCenters.size),
+    definition: deriveDefinitionFromCenters(definedCenters, definedChannels),
     strategy: typing.strategy,
     notSelfTheme: typing.notSelfTheme,
     signature: typing.signature,

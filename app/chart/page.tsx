@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { jsPDF } from 'jspdf';
+import { DateTime } from 'luxon';
+import { Compass, Sparkles, Footprints, Frown, Target, Orbit, Waypoints, Clock3 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
@@ -32,19 +34,22 @@ type ChartData = {
     location: string;
     birthDate: string;
     birthTime: string;
+    birthUtc: string;
     timezone: string;
     unknownBirthTime: boolean;
   };
   type: 'Generator' | 'Manifesting Generator' | 'Projector' | 'Manifestor' | 'Reflector';
   authority: 'Sacral' | 'Emotional' | 'Splenic' | 'Ego' | 'Self-Projected' | 'Mental' | 'Lunar';
   profile: string;
-  definition: 'Single' | 'None';
+  definition: 'Single' | 'Split' | 'Triple-Split' | 'Quadruple-Split' | 'None';
   strategy: string;
   notSelfTheme: string;
   signature: string;
   incarnationCross: { name: string; gates: [number, number, number, number] };
   centers: Record<CenterKey, CenterState>;
   definedChannels: Array<{ gateA: number; gateB: number; name: string; definedBy: 'personality' | 'design' | 'both' }>;
+  personalityData: Array<{ planet: string; gate: number; line: number }>;
+  designData: Array<{ planet: string; gate: number; line: number }>;
 };
 
 type FormState = {
@@ -91,19 +96,68 @@ function centerFill(center: CenterState): string {
   return 'url(#both-defined)';
 }
 
-function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
-  const channels = [
-    { key: '43-23', x1: 300, y1: 198, x2: 300, y2: 220, gates: [43, 23] },
-    { key: '34-20', x1: 300, y1: 430, x2: 300, y2: 300, gates: [34, 20] },
-    { key: '9-52', x1: 300, y1: 520, x2: 300, y2: 570, gates: [9, 52] },
-    { key: '10-20', x1: 300, y1: 315, x2: 300, y2: 305, gates: [10, 20] },
-  ];
+const PLANET_ORDER = [
+  'Sun',
+  'Earth',
+  'Moon',
+  'North Node',
+  'South Node',
+  'Mercury',
+  'Venus',
+  'Mars',
+  'Jupiter',
+  'Saturn',
+  'Uranus',
+  'Neptune',
+  'Pluto',
+] as const;
 
+const PLANET_GLYPH: Record<string, string> = {
+  Sun: '☉',
+  Earth: '⊕',
+  Moon: '☽',
+  'North Node': '☊',
+  'South Node': '☋',
+  Mercury: '☿',
+  Venus: '♀',
+  Mars: '♂',
+  Jupiter: '♃',
+  Saturn: '♄',
+  Uranus: '♅',
+  Neptune: '♆',
+  Pluto: '♇',
+};
+
+const GATE_COORDS: Record<number, { x: number; y: number }> = {
+  64: { x: 394, y: 103 }, 61: { x: 420, y: 94 }, 63: { x: 446, y: 103 },
+  47: { x: 392, y: 152 }, 24: { x: 420, y: 166 }, 4: { x: 446, y: 152 }, 17: { x: 374, y: 188 }, 43: { x: 420, y: 206 }, 11: { x: 466, y: 188 },
+  62: { x: 386, y: 258 }, 23: { x: 420, y: 258 }, 56: { x: 454, y: 258 }, 35: { x: 468, y: 284 }, 12: { x: 468, y: 314 }, 45: { x: 452, y: 340 }, 33: { x: 420, y: 348 }, 8: { x: 388, y: 340 }, 31: { x: 372, y: 314 }, 20: { x: 372, y: 284 }, 16: { x: 386, y: 258 },
+  1: { x: 420, y: 378 }, 13: { x: 455, y: 400 }, 25: { x: 452, y: 430 }, 46: { x: 420, y: 453 }, 2: { x: 388, y: 430 }, 15: { x: 385, y: 400 }, 10: { x: 420, y: 414 }, 7: { x: 420, y: 452 },
+  21: { x: 496, y: 396 }, 40: { x: 525, y: 428 }, 26: { x: 496, y: 452 }, 51: { x: 474, y: 428 },
+  5: { x: 390, y: 498 }, 14: { x: 420, y: 492 }, 29: { x: 450, y: 498 }, 59: { x: 456, y: 530 }, 9: { x: 450, y: 560 }, 3: { x: 420, y: 566 }, 42: { x: 390, y: 560 }, 27: { x: 384, y: 530 }, 34: { x: 420, y: 530 },
+  6: { x: 528, y: 490 }, 37: { x: 552, y: 518 }, 22: { x: 552, y: 548 }, 36: { x: 528, y: 575 }, 30: { x: 500, y: 575 }, 55: { x: 488, y: 548 }, 49: { x: 500, y: 518 },
+  48: { x: 305, y: 488 }, 57: { x: 330, y: 518 }, 44: { x: 330, y: 548 }, 50: { x: 305, y: 575 }, 32: { x: 277, y: 575 }, 28: { x: 265, y: 548 }, 18: { x: 277, y: 518 },
+  58: { x: 386, y: 646 }, 38: { x: 410, y: 664 }, 54: { x: 434, y: 664 }, 53: { x: 458, y: 646 }, 60: { x: 458, y: 678 }, 52: { x: 434, y: 692 }, 19: { x: 410, y: 692 }, 39: { x: 386, y: 678 }, 41: { x: 420, y: 678 },
+};
+
+const BODYGRAPH_CHANNELS = [
+  [64, 47], [61, 24], [63, 4], [17, 62], [43, 23], [11, 56], [16, 48], [20, 57],
+  [31, 7], [8, 1], [33, 13], [35, 36], [12, 22], [45, 21], [10, 20], [10, 57],
+  [25, 51], [46, 29], [2, 14], [15, 5], [44, 26], [50, 27], [32, 54], [28, 38],
+  [18, 58], [57, 34], [59, 6], [34, 20], [9, 52], [3, 60], [42, 53], [37, 40],
+  [30, 41], [55, 39], [49, 19], [21, 45],
+] as const;
+
+function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
   const definedMap = new Map(chart.definedChannels.map((c) => [`${c.gateA}-${c.gateB}`, c]));
+  const personalityGateSet = new Set(chart.personalityData.map((p) => p.gate));
+  const designGateSet = new Set(chart.designData.map((p) => p.gate));
+  const designMap = new Map(chart.designData.map((p) => [p.planet, p]));
+  const personalityMap = new Map(chart.personalityData.map((p) => [p.planet, p]));
 
   return (
     <div className={`relative transition-all duration-700 ${blurred ? 'blur-[8px]' : 'blur-0'}`}>
-      <svg viewBox="0 0 600 780" className="w-full h-auto" role="img" aria-label={`Human Design Bodygraph for ${chart.input.name}: ${chart.type} type, Profile ${chart.profile}, ${chart.authority} Authority.`}>
+      <svg viewBox="0 0 840 780" className="w-full h-auto" role="img" aria-label={`Human Design Bodygraph for ${chart.input.name}: ${chart.type} type, Profile ${chart.profile}, ${chart.authority} Authority.`}>
         <defs>
           <pattern id="both-defined" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
             <rect width="4" height="8" fill="#2A2218" />
@@ -111,22 +165,97 @@ function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
           </pattern>
         </defs>
 
-        {channels.map((channel) => {
-          const hit = definedMap.get(`${channel.gates[0]}-${channel.gates[1]}`) || definedMap.get(`${channel.gates[1]}-${channel.gates[0]}`);
-          const color = hit?.definedBy === 'design' ? '#C8643C' : hit?.definedBy === 'personality' ? '#2A2218' : hit?.definedBy === 'both' ? '#2A2218' : '#D4C9B8';
-          const strokeWidth = hit ? 12 : 4;
-          return <line key={channel.key} x1={channel.x1} y1={channel.y1} x2={channel.x2} y2={channel.y2} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />;
+        <path
+          d="M420 60 C450 95 455 130 450 165 C490 200 500 260 490 340 C560 380 590 470 610 580 C620 635 590 670 540 675 L300 675 C250 670 220 635 230 580 C250 470 280 380 350 340 C340 260 350 200 390 165 C385 130 390 95 420 60 Z"
+          fill="#221f1a"
+          opacity="0.08"
+        />
+
+        {BODYGRAPH_CHANNELS.map(([a, b]) => {
+          const ga = GATE_COORDS[a];
+          const gb = GATE_COORDS[b];
+          const hit = definedMap.get(`${a}-${b}`) || definedMap.get(`${b}-${a}`);
+          const key = `${a}-${b}`;
+          const d = `M${ga.x} ${ga.y} L${gb.x} ${gb.y}`;
+
+          if (!hit) {
+            return <path key={key} d={d} fill="none" stroke="#D4C9B8" strokeWidth={4} strokeLinecap="round" opacity={0.62} />;
+          }
+
+          if (hit.definedBy === 'both') {
+            return (
+              <g key={key}>
+                <path d={d} fill="none" stroke="#2A2218" strokeWidth={11} strokeLinecap="round" />
+                <path d={d} fill="none" stroke="#C8643C" strokeWidth={6} strokeLinecap="round" strokeDasharray="14 10" />
+              </g>
+            );
+          }
+
+          const color = hit.definedBy === 'design' ? '#C8643C' : '#2A2218';
+          return <path key={key} d={d} fill="none" stroke={color} strokeWidth={11} strokeLinecap="round" />;
         })}
 
-        <polygon points="250,20 350,20 300,100" fill={centerFill(chart.centers.HEAD)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="250,200 350,200 300,120" fill={centerFill(chart.centers.AJNA)} stroke="#D4C9B8" strokeWidth="2" />
-        <rect x="260" y="220" width="80" height="80" fill={centerFill(chart.centers.THROAT)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="300,315 345,360 300,405 255,360" fill={centerFill(chart.centers.G)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="355,312 425,312 390,368" fill={centerFill(chart.centers.HEART)} stroke="#D4C9B8" strokeWidth="2" />
-        <rect x="250" y="440" width="100" height="80" fill={centerFill(chart.centers.SACRAL)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="385,424 475,424 430,496" fill={centerFill(chart.centers.SOLAR_PLEXUS)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="125,404 215,404 170,476" fill={centerFill(chart.centers.SPLEEN)} stroke="#D4C9B8" strokeWidth="2" />
-        <rect x="250" y="570" width="100" height="60" fill={centerFill(chart.centers.ROOT)} stroke="#D4C9B8" strokeWidth="2" />
+        <polygon points="370,70 470,70 420,145" fill={centerFill(chart.centers.HEAD)} stroke="#D4C9B8" strokeWidth="2" />
+        <polygon points="370,190 470,190 420,115" fill={centerFill(chart.centers.AJNA)} stroke="#D4C9B8" strokeWidth="2" />
+        <rect x="375" y="245" width="90" height="90" fill={centerFill(chart.centers.THROAT)} stroke="#D4C9B8" strokeWidth="2" />
+        <polygon points="420,350 470,400 420,450 370,400" fill={centerFill(chart.centers.G)} stroke="#D4C9B8" strokeWidth="2" />
+        <polygon points="475,380 535,380 505,430" fill={centerFill(chart.centers.HEART)} stroke="#D4C9B8" strokeWidth="2" />
+        <rect x="375" y="480" width="90" height="90" fill={centerFill(chart.centers.SACRAL)} stroke="#D4C9B8" strokeWidth="2" />
+        <polygon points="500,470 565,470 532,530" fill={centerFill(chart.centers.SOLAR_PLEXUS)} stroke="#D4C9B8" strokeWidth="2" />
+        <polygon points="275,445 340,445 307,505" fill={centerFill(chart.centers.SPLEEN)} stroke="#D4C9B8" strokeWidth="2" />
+        <rect x="375" y="620" width="90" height="72" fill={centerFill(chart.centers.ROOT)} stroke="#D4C9B8" strokeWidth="2" />
+
+        <g fill="#D4C9B8" fontSize="11" textAnchor="middle" fontFamily="var(--font-sans)">
+          <text x="420" y="112">HEAD</text>
+          <text x="420" y="163">AJNA</text>
+          <text x="420" y="292">THROAT</text>
+          <text x="420" y="404">G</text>
+          <text x="505" y="412">EGO</text>
+          <text x="420" y="528">SACRAL</text>
+          <text x="532" y="504">SP</text>
+          <text x="307" y="480">SPLEEN</text>
+          <text x="420" y="662">ROOT</text>
+        </g>
+
+        <g fontSize="10" fontFamily="var(--font-sans)" textAnchor="middle">
+          {Object.entries(GATE_COORDS).map(([gate, pos]) => {
+            const gateNum = Number(gate);
+            const inP = personalityGateSet.has(gateNum);
+            const inD = designGateSet.has(gateNum);
+            const active = inP || inD;
+            const fill = inP && inD ? '#2A2218' : inD ? '#C8643C' : inP ? '#2A2218' : '#EFE7DB';
+            const text = inP && inD ? '#F7F4EF' : inD ? '#F7F4EF' : inP ? '#F7F4EF' : '#B8A898';
+            return (
+              <g key={`gate-${gate}`}>
+                <circle cx={pos.x} cy={pos.y} r={active ? 9 : 7} fill={fill} stroke={active ? '#1A1714' : '#D4C9B8'} strokeWidth={active ? 1.4 : 1} />
+                <text x={pos.x} y={pos.y + 3} fill={text} fontWeight={active ? 600 : 400}>
+                  {gate}
+                </text>
+              </g>
+            );
+          })}
+        </g>
+
+        <g fill="#2A2218" fontSize="18" fontFamily="var(--font-sans)">
+          {PLANET_ORDER.map((planet, idx) => {
+            const p = designMap.get(planet);
+            return (
+              <text key={`d-${planet}`} x="58" y={116 + idx * 38}>
+                {PLANET_GLYPH[planet]} {p ? `${p.gate}.${p.line}` : '--'}
+              </text>
+            );
+          })}
+        </g>
+        <g fill="#C8643C" fontSize="18" fontFamily="var(--font-sans)" textAnchor="end">
+          {PLANET_ORDER.map((planet, idx) => {
+            const p = personalityMap.get(planet);
+            return (
+              <text key={`p-${planet}`} x="785" y={116 + idx * 38}>
+                {p ? `${p.gate}.${p.line}` : '--'} {PLANET_GLYPH[planet]}
+              </text>
+            );
+          })}
+        </g>
       </svg>
     </div>
   );
@@ -170,6 +299,20 @@ export default function ChartPage() {
     if (!form.timezone.trim()) next.timezone = 'Timezone is required.';
     return next;
   }, [form]);
+
+  const utcPreview = useMemo(() => {
+    const hasDate = !!form.dateOfBirth;
+    const hasTime = form.unknownBirthTime || !!form.timeOfBirth;
+    if (!hasDate || !hasTime || !form.timezone) return '';
+
+    const localTime = form.unknownBirthTime ? '12:00' : form.timeOfBirth;
+    const dt = DateTime.fromISO(`${form.dateOfBirth}T${localTime}`, {
+      zone: normalizeTimezone(form.timezone),
+    });
+
+    if (!dt.isValid) return '';
+    return dt.toUTC().toFormat("dd LLL yyyy 'at' HH:mm 'UTC'");
+  }, [form.dateOfBirth, form.timeOfBirth, form.unknownBirthTime, form.timezone]);
 
   const onCalculate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -277,9 +420,8 @@ export default function ChartPage() {
     <main className="min-h-screen bg-[#FAFAF7] text-[#1A1714]">
       <Navigation />
 
-      <section className="pt-36 pb-20 px-6 md:px-12">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,640px)_minmax(0,1fr)] gap-12 lg:gap-16 items-start">
-          <div className="bg-[#F5F0E8] border border-[#D4C9B8] rounded-xl p-6 md:p-8">
+      <section className="pt-36 pb-12 px-6 md:px-12">
+        <div className="max-w-5xl mx-auto bg-[#F5F0E8] border border-[#D4C9B8] rounded-xl p-6 md:p-8">
             <p className="text-[12px] uppercase tracking-[0.14em] text-[#5A4F47] mb-4">Get Your Chart</p>
             <h1 className="font-serif text-4xl md:text-5xl leading-tight mb-5">Human Design Bodygraph</h1>
             <blockquote className="italic text-[#5A4F47] leading-relaxed mb-8">
@@ -342,6 +484,11 @@ export default function ChartPage() {
                     </option>
                   ))}
                 </select>
+                {utcPreview ? (
+                  <p className="text-[13px] text-[#5A4F47]">
+                    UTC preview: <span className="font-medium">{utcPreview}</span>
+                  </p>
+                ) : null}
                 {errors.timezone ? <p className="text-sm text-[#A84E2C]">{errors.timezone}</p> : null}
               </Field>
 
@@ -370,55 +517,56 @@ export default function ChartPage() {
                 We calculate your chart in real time and do not store your birth data on our servers.
               </p>
             </form>
-          </div>
+        </div>
+      </section>
 
-          <div className="space-y-5">
-            <div className="bg-white border border-[#D4C9B8] rounded-xl p-6 md:p-8 relative overflow-hidden">
-              <div className="mb-6">
-                <p className="text-[12px] uppercase tracking-[0.14em] text-[#5A4F47]">Preview</p>
-                <h2 className="font-serif text-3xl mt-1">{chart ? `${chart.type} · ${chart.profile}` : 'Your Type · Your Profile'}</h2>
-                <p className="text-[#5A4F47] mt-2">Authority: {chart?.authority ?? 'Pending calculation'}</p>
-              </div>
-
-              {phase === 'loading' ? (
-                <div className="h-[600px] flex flex-col items-center justify-center text-center">
-                  <motion.div
-                    animate={{ scale: [1, 1.04, 1], opacity: [0.7, 1, 0.8] }}
-                    transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-                    className="w-[160px] h-[160px] border-2 border-[#C8643C] rounded-full border-dashed"
-                  />
-                  <p className="mt-6 text-[#5A4F47]">Calculating your chart...</p>
-                </div>
-              ) : chart ? (
-                <>
-                  <BodyGraph chart={chart} blurred={phase === 'preview'} />
-
-                  {phase === 'preview' ? (
-                    <div className="absolute inset-0 flex items-center justify-center p-6 bg-[#F5F0E8]/55">
-                      <div className="w-full max-w-[420px] bg-white rounded-xl border border-[#D4C9B8] p-6 shadow-2xl">
-                        <p className="text-[22px] leading-tight text-[#1A1714] mb-3 font-serif italic">Your chart is ready.</p>
-                        <p className="text-[15px] text-[#5A4F47] mb-6">Enter your email to reveal your Human Design and unlock a downloadable PDF.</p>
-                        <input
-                          value={form.email}
-                          onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
-                          placeholder="your@email.com"
-                          className="w-full h-[52px] border border-[#D4C9B8] rounded-md px-4 text-[16px] mb-3"
-                        />
-                        {errors.email ? <p className="text-sm text-[#A84E2C] mb-3">{errors.email}</p> : null}
-                        <button
-                          onClick={onReveal}
-                          className="w-full h-[52px] bg-[#C8643C] text-white rounded-md text-[15px] tracking-[0.05em] hover:bg-[#B95733] transition-colors"
-                        >
-                          Reveal My Chart →
-                        </button>
-                      </div>
-                    </div>
-                  ) : null}
-                </>
-              ) : (
-                <div className="h-[600px] flex items-center justify-center text-[#8A7B72]">Generate your chart to see the bodygraph preview.</div>
-              )}
+      <section className="pb-16 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white border border-[#D4C9B8] rounded-xl p-6 md:p-8 relative overflow-hidden">
+            <div className="mb-6">
+              <p className="text-[12px] uppercase tracking-[0.14em] text-[#5A4F47]">Preview</p>
+              <h2 className="font-serif text-3xl mt-1">{chart ? `${chart.type} · ${chart.profile}` : 'Your Type · Your Profile'}</h2>
+              <p className="text-[#5A4F47] mt-2">Authority: {chart?.authority ?? 'Pending calculation'}</p>
             </div>
+
+            {phase === 'loading' ? (
+              <div className="h-[680px] flex flex-col items-center justify-center text-center">
+                <motion.div
+                  animate={{ scale: [1, 1.04, 1], opacity: [0.7, 1, 0.8] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                  className="w-[160px] h-[160px] border-2 border-[#C8643C] rounded-full border-dashed"
+                />
+                <p className="mt-6 text-[#5A4F47]">Calculating your chart...</p>
+              </div>
+            ) : chart ? (
+              <>
+                <BodyGraph chart={chart} blurred={phase === 'preview'} />
+
+                {phase === 'preview' ? (
+                  <div className="absolute inset-0 flex items-center justify-center p-6 bg-[#F5F0E8]/55">
+                    <div className="w-full max-w-[420px] bg-white rounded-xl border border-[#D4C9B8] p-6 shadow-2xl">
+                      <p className="text-[22px] leading-tight text-[#1A1714] mb-3 font-serif italic">Your chart is ready.</p>
+                      <p className="text-[15px] text-[#5A4F47] mb-6">Enter your email to reveal your Human Design and unlock a downloadable PDF.</p>
+                      <input
+                        value={form.email}
+                        onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+                        placeholder="your@email.com"
+                        className="w-full h-[52px] border border-[#D4C9B8] rounded-md px-4 text-[16px] mb-3"
+                      />
+                      {errors.email ? <p className="text-sm text-[#A84E2C] mb-3">{errors.email}</p> : null}
+                      <button
+                        onClick={onReveal}
+                        className="w-full h-[52px] bg-[#C8643C] text-white rounded-md text-[15px] tracking-[0.05em] hover:bg-[#B95733] transition-colors"
+                      >
+                        Reveal My Chart →
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <div className="h-[680px] flex items-center justify-center text-[#8A7B72]">Generate your chart to see the bodygraph preview.</div>
+            )}
           </div>
         </div>
       </section>
@@ -426,6 +574,83 @@ export default function ChartPage() {
       {phase === 'revealed' && chart ? (
         <section className="pb-24 px-6 md:px-12">
           <div className="max-w-6xl mx-auto space-y-10">
+            <div className="rounded-2xl p-6 md:p-10 text-[#ECE7DD] bg-[radial-gradient(circle_at_top_left,_#383838_0%,_#1F1F23_45%,_#17171A_100%)] border border-white/10">
+              <div className="flex items-center gap-3 text-[#C9B7A0]">
+                <Clock3 className="h-5 w-5" />
+                <p className="text-sm tracking-wide uppercase">Birth Data (UTC)</p>
+              </div>
+              <p className="mt-2 text-3xl font-semibold font-sans">{chart.input.birthUtc}</p>
+
+              <h3 className="mt-10 text-4xl font-serif">Foundational Properties</h3>
+
+              <div className="mt-8 grid md:grid-cols-3 gap-8">
+                <div className="space-y-8">
+                  <div className="flex items-start gap-4">
+                    <Sparkles className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Type</p>
+                      <p className="text-5xl font-semibold text-white">{chart.type}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Target className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Signature</p>
+                      <p className="text-5xl font-semibold text-white">{chart.signature}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Orbit className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Profile</p>
+                      <p className="text-5xl font-semibold text-white">{chart.profile}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-8">
+                  <div className="flex items-start gap-4">
+                    <Footprints className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Strategy</p>
+                      <p className="text-5xl font-semibold text-white">{chart.strategy}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Waypoints className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Definition</p>
+                      <p className="text-5xl font-semibold text-white">{chart.definition}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Compass className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Incarnation Cross</p>
+                      <p className="text-3xl font-semibold text-white">{chart.incarnationCross.name}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-8">
+                  <div className="flex items-start gap-4">
+                    <Frown className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Not-Self Theme</p>
+                      <p className="text-5xl font-semibold text-white">{chart.notSelfTheme}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Compass className="h-8 w-8 mt-1 text-[#F2E9DB]" />
+                    <div>
+                      <p className="text-[#B5AA98] text-2xl">Authority</p>
+                      <p className="text-5xl font-semibold text-white">{chart.authority}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-white border border-[#D4C9B8] rounded-xl p-6 md:p-8">
               <p className="font-serif text-[36px] leading-tight text-[#2B2218]">You are a {chart.type} · Profile {chart.profile}</p>
               <div className="grid md:grid-cols-2 gap-4 mt-6 text-[#5A4F47]">
