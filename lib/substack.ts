@@ -28,15 +28,26 @@ export async function getSubstackFeed(): Promise<SubstackArticle[]> {
             const slugMatch = item.link?.match(/\/p\/([^/?]+)/);
             const slug = slugMatch ? slugMatch[1] : '';
 
-            const contentEncoded = item['content:encoded'] || item.content || '';
+            let contentEncoded = item['content:encoded'] || item.content || '';
+
+            // Clean up Substack UI artifacts (like the expand/maximize SVGs on images)
+            contentEncoded = contentEncoded.replace(/<svg\b[^>]*?(?:lucide|maximize)[^>]*?>.*?<\/svg>/gi, '');
 
             // Extract first image from content:encoded for cover image
             let coverImage;
-            const imgMatches = contentEncoded.matchAll(/<img[^>]+src="([^">]+)"/g);
-            for (const match of imgMatches) {
-                if (!match[1].includes('substackcdn.com/image/fetch/w_120') && !match[1].includes('twemoji')) {
-                    coverImage = match[1];
-                    break;
+
+            // Substack actually sends iTunes images for podcast episodes. Prioritize that if it exists.
+            const itunesData = (item as any)['itunes'];
+            if (itunesData && itunesData['image']) {
+                coverImage = itunesData['image'];
+            } else {
+                // Otherwise comb the content for an image
+                const imgMatches = contentEncoded.matchAll(/<img[^>]+src="([^">]+)"/g);
+                for (const match of imgMatches) {
+                    if (!match[1].includes('substackcdn.com/image/fetch/w_120') && !match[1].includes('twemoji')) {
+                        coverImage = match[1];
+                        break;
+                    }
                 }
             }
 

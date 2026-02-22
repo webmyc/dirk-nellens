@@ -8,6 +8,7 @@ import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import Newsletter from '@/components/Newsletter';
 import { PlayCircle, Headphones } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { BookPromoCampaign } from '@/components/BookPromoCampaign';
 
 export const metadata = {
     title: 'Reflector\'s Reflections',
@@ -186,6 +187,11 @@ export default async function NewsletterIndex() {
                     </div>
                 </section>
             )}
+
+            {/* Promotional Campaign Injection */}
+            <section className="bg-white border-y border-[#2B2218]/5 py-0 pt-24 pb-12">
+                <BookPromoCampaign />
+            </section>
 
             {/* General Grid */}
             <section className="py-24 px-6 md:px-12 bg-[#F0EBE3]">

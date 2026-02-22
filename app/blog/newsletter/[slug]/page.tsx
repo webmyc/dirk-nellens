@@ -82,26 +82,39 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <article className="pt-32 md:pt-40 pb-24">
-                {/* Article Header */}
-                <header className="max-w-3xl mx-auto px-6 mb-16 md:mb-24 text-center flex flex-col items-center gap-6">
-                    <FadeUp delay={0.1} className="w-full flex justify-center">
-                        <Breadcrumbs items={[{ label: 'Blog', href: '/blog/newsletter' }, { label: article.title, href: `/blog/newsletter/${article.slug}` }]} className="text-[#2B2218]/50" />
-                    </FadeUp>
-
-                    <FadeUp delay={0.2}>
-                        <h1 className="font-serif text-[42px] md:text-[56px] lg:text-[64px] leading-[1.1] text-[#2B2218] tracking-[-0.01em]">
-                            {article.title}
-                        </h1>
-                    </FadeUp>
-
-                    <FadeUp delay={0.3}>
-                        <div className="flex items-center justify-center gap-4 font-sans text-[14px] text-[#2B2218]/60 mt-4">
-                            <time dateTime={new Date(article.pubDate).toISOString()}>{formatDate(article.pubDate)}</time>
-                            <span>•</span>
-                            <span>Dirk Nellens</span>
+            <article className="pb-24">
+                {/* Article Hero */}
+                <header className="relative pt-32 md:pt-40 pb-16 md:pb-24 mb-16 px-6 overflow-hidden bg-[#2B2218] text-[#F0EBE3]">
+                    {article.coverImage && (
+                        <div className="absolute inset-0 opacity-20 max-w-7xl mx-auto">
+                            <Image
+                                src={article.coverImage}
+                                alt=""
+                                fill
+                                className="object-cover blur-[80px]"
+                                priority
+                            />
                         </div>
-                    </FadeUp>
+                    )}
+                    <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
+                        <FadeUp delay={0.1} className="w-full flex justify-center mb-6">
+                            <Breadcrumbs items={[{ label: 'Blog', href: '/blog/newsletter' }, { label: article.title, href: `/blog/newsletter/${article.slug}` }]} className="text-white/60" />
+                        </FadeUp>
+
+                        <FadeUp delay={0.2}>
+                            <h1 className="font-serif text-[48px] md:text-[64px] lg:text-[76px] leading-[1.05] tracking-[-0.01em]">
+                                {article.title}
+                            </h1>
+                        </FadeUp>
+
+                        <FadeUp delay={0.3}>
+                            <div className="flex items-center justify-center gap-4 font-sans text-[16px] text-[#F0EBE3]/70 mt-6 md:mt-8">
+                                <time dateTime={new Date(article.pubDate).toISOString()}>{formatDate(article.pubDate)}</time>
+                                <span>•</span>
+                                <span>Dirk Nellens</span>
+                            </div>
+                        </FadeUp>
+                    </div>
                 </header>
 
                 {/* Article Content Container */}
@@ -154,14 +167,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
                         {/* Injected Content */}
                         <div
-                            className="prose prose-lg md:prose-xl prose-stone max-w-none 
-                         prose-headings:font-serif prose-headings:text-[#2B2218]
-                         prose-p:font-sans prose-p:text-[#2B2218] prose-p:opacity-[0.85] prose-p:leading-[1.8]
+                            className="prose prose-xl md:prose-2xl prose-stone max-w-none 
+                         prose-headings:font-serif prose-headings:text-[#2B2218] prose-headings:leading-tight
+                         prose-p:font-sans prose-p:text-[#2B2218] prose-p:opacity-[0.88] prose-p:leading-[1.85] prose-p:text-[20px] md:prose-p:text-[22px]
                          prose-a:text-[#C96A45] prose-a:underline prose-a:underline-offset-4
                          prose-strong:font-semibold prose-strong:text-[#2B2218]
-                         prose-blockquote:font-serif prose-blockquote:text-[#2B2218] prose-blockquote:italic prose-blockquote:border-[#C96A45]
-                         prose-img:rounded-[16px] prose-img:w-full prose-img:shadow-sm 
-                         prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-[16px] prose-iframe:shadow-sm mt-12"
+                         prose-blockquote:font-serif prose-blockquote:text-[#2B2218] prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:border-[#C96A45] prose-blockquote:bg-[#F7F4EF] prose-blockquote:py-6 prose-blockquote:px-8 prose-blockquote:rounded-r-2xl prose-blockquote:text-[26px] prose-blockquote:my-12 prose-blockquote:leading-snug
+                         prose-img:rounded-[24px] prose-img:w-full prose-img:shadow-sm prose-img:my-16
+                         prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-[24px] prose-iframe:shadow-sm prose-iframe:my-16 mt-16"
                             dangerouslySetInnerHTML={{ __html: article.content }}
                         />
                     </div>
