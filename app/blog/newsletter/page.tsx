@@ -205,11 +205,11 @@ export default async function NewsletterIndex() {
                         </div>
                     </FadeUp>
 
-                    <FadeUpStaggerGroup className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
+                    <FadeUpStaggerGroup className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
                         {recentGridArticles.map((article, i) => (
-                            <FadeUp delay={0.1 + (i % 3) * 0.1} key={article.id}>
-                                <Link href={`/blog/newsletter/${article.slug}`} className="group flex flex-col gap-6">
-                                    <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-white border border-[#2B2218]/5">
+                            <FadeUp delay={0.1 + (i % 3) * 0.1} key={article.id} className="break-inside-avoid">
+                                <Link href={`/blog/newsletter/${article.slug}`} className="group flex flex-col gap-6 mb-8">
+                                    <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-[#EBE4D8]/50 border border-[#2B2218]/5">
                                         {article.coverImage ? (
                                             <Image
                                                 src={article.coverImage}

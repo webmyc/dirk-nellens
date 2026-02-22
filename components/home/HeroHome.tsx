@@ -157,10 +157,15 @@ export function HeroHome() {
                             href="https://mybook.to/dirk-nellens"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group flex items-center justify-center gap-3 bg-[#FF9900] text-[#111111] hover:bg-[#E38800] px-8 py-4 rounded-full font-sans font-[600] text-[17px] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 w-full sm:w-auto overflow-hidden"
-                            style={{ boxShadow: '0 8px 30px rgba(255, 153, 0, 0.4)' }}
+                            className="group inline-flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
                         >
-                            <span>Buy on Amazon</span>
+                            <Image
+                                src="/images/amazon.png"
+                                alt="Buy on Amazon"
+                                width={220}
+                                height={80}
+                                className="object-contain h-[56px] w-auto drop-shadow-lg group-hover:drop-shadow-xl transition-all"
+                            />
                         </a>
                         <Button
                             href="/book"
