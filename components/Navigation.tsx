@@ -92,7 +92,15 @@ export default function Navigation() {
               <DropdownLink href="/courses">View All Courses</DropdownLink>
             </DesktopDropdown>
 
-            <DesktopDropdown label="Human Design & Therapy Sessions" isScrolled={isScrolled}>
+            <DesktopDropdown
+              label={
+                <div className="flex flex-col items-center leading-tight">
+                  <span>Human Design & Therapy</span>
+                  <span>Sessions</span>
+                </div>
+              }
+              isScrolled={isScrolled}
+            >
               {sessions.map(s => (
                 <DropdownLink key={s.href} href={s.href}>{s.label}</DropdownLink>
               ))}
@@ -108,7 +116,7 @@ export default function Navigation() {
             </Link>
 
             <Link href="/community" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
-              Community
+              Inner Circle
             </Link>
 
             <Link href="/about" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
@@ -263,7 +271,7 @@ export default function Navigation() {
   );
 }
 
-function DesktopDropdown({ label, children, isScrolled }: { label: string; children: React.ReactNode; isScrolled: boolean }) {
+function DesktopDropdown({ label, children, isScrolled }: { label: React.ReactNode; children: React.ReactNode; isScrolled: boolean }) {
   return (
     <div className="relative group/link py-1 cursor-pointer">
       <div className="flex items-center gap-1 transition-colors duration-200">
