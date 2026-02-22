@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Newsletter from '@/components/Newsletter';
+import { BookSessionButton } from '@/components/ui/BookSessionButton';
 
 const sessions = [
   {
@@ -145,12 +146,7 @@ export default function SessionsPage() {
                 <p>Sessions take place via Zoom.</p>
               </div>
 
-              <a
-                href="mailto:dirknellens@nellens.com"
-                className="inline-block bg-[#D96C40] text-white px-8 py-4 rounded-full font-sans font-medium text-sm hover:bg-[#c25a30] transition-colors w-fit shadow-md hover:shadow-lg hover:-translate-y-0.5 transform duration-300"
-              >
-                Book a session
-              </a>
+              <BookSessionButton className="w-fit" />
             </motion.div>
 
             {/* Collage image */}

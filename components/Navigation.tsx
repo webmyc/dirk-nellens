@@ -24,10 +24,19 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>('sessions');
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 80);
+
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (scrollHeight > 0) {
+        setScrollProgress((scrollTop / scrollHeight) * 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -44,64 +53,73 @@ export default function Navigation() {
   return (
     <>
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-[#F9F6F0]/95 backdrop-blur-md shadow-sm py-4'
-            : 'bg-transparent py-6'
-        }`}
+        className={`fixed top-0 w-full z-100 transition-all duration-400 ease-in-out ${isScrolled
+          ? 'bg-[#F7F4EF]/88 backdrop-blur-md shadow-sm py-3 text-[#2B2218]'
+          : 'bg-transparent py-5 text-[#F0EBE3]'
+          }`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 relative flex-shrink-0">
+        <div
+          className="absolute top-0 left-0 h-[2px] bg-[#C96A45] z-[60]"
+          style={{ width: `${scrollProgress}%` }}
+        />
+        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between relative mt-[2px]">
+          <Link href="/" className="flex items-center gap-4 group">
+            <div
+              className={`relative flex-shrink-0 transition-all duration-300 ease-in-out ${isScrolled ? 'w-12 h-12' : 'w-[52px] h-[52px] md:w-[68px] md:h-[68px]'
+                }`}
+            >
               <Image
-                src="/logo/logo-symbol-black.png"
+                src={isScrolled ? "/logo/logo-symbol-black.png" : "/logo/logo-symbol-white.png"}
                 alt="Dirk Nellens logo"
                 fill
-                className="object-contain group-hover:scale-110 transition-transform duration-500"
+                className="object-contain"
               />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-serif text-[1.1rem] font-normal tracking-wide text-[#2C2C2C]">
+              <span className={`font-serif tracking-wide transition-all duration-300 ${isScrolled ? 'text-[1.1rem]' : 'text-[1.25rem] md:text-[1.5rem]'
+                }`}>
                 Dirk Nellens
               </span>
-              <span className="font-sans text-[9px] uppercase tracking-[0.18em] text-[#2C2C2C]/55 mt-0.5">
+              <span className="font-sans text-[10px] uppercase tracking-[0.2em] opacity-70 mt-1">
                 Human Design
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-sans font-normal text-[#2C2C2C]">
-            <DesktopDropdown label="Online Courses">
+          <nav className="hidden lg:flex items-center gap-8 text-[15px] font-sans font-normal tracking-[-0.06em]">
+            <DesktopDropdown label="Online Courses" isScrolled={isScrolled}>
               <DropdownLink href="/courses">View All Courses</DropdownLink>
             </DesktopDropdown>
 
-            <DesktopDropdown label="Human Design & Therapy Sessions">
+            <DesktopDropdown label="Human Design & Therapy Sessions" isScrolled={isScrolled}>
               {sessions.map(s => (
                 <DropdownLink key={s.href} href={s.href}>{s.label}</DropdownLink>
               ))}
               <DropdownLink href="/sessions" accent>View All Sessions</DropdownLink>
             </DesktopDropdown>
 
-            <Link href="/book" className="hover:text-[#D96C40] transition-colors duration-200">
+            <Link href="/book" className="relative py-1 group/link">
               Book
+              <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover/link:scale-x-100" />
             </Link>
 
-            <DesktopDropdown label="Media">
+            <DesktopDropdown label="Media" isScrolled={isScrolled}>
               {media.map(m => (
                 <DropdownLink key={m.href} href={m.href}>{m.label}</DropdownLink>
               ))}
             </DesktopDropdown>
 
-            <Link href="/about" className="hover:text-[#D96C40] transition-colors duration-200">
+            <Link href="/about" className="relative py-1 group/link">
               About
+              <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover/link:scale-x-100" />
             </Link>
 
             <a
-              href="https://substack.com"
+              href="https://reflectorsreflections.substack.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 border border-[#2C2C2C]/20 rounded-full px-4 py-2 hover:bg-[#2C2C2C] hover:text-white hover:border-[#2C2C2C] transition-all duration-300 group/sub"
+              className="flex items-center justify-center gap-2 rounded-full px-5 h-[38px] bg-[#C96A45] text-[#F0EBE3] text-[14px] hover:scale-[1.03] hover:bg-[#b05c3b] transition-all duration-300 transform"
             >
               Articles on Substack
               <div className="relative w-3.5 h-3.5 flex-shrink-0">
@@ -109,7 +127,7 @@ export default function Navigation() {
                   src="/images/substack-orange.png"
                   alt="Substack"
                   fill
-                  className="object-contain group-hover/sub:brightness-0 group-hover/sub:invert transition-all"
+                  className="object-contain brightness-0 invert"
                 />
               </div>
             </a>
@@ -248,15 +266,18 @@ export default function Navigation() {
   );
 }
 
-function DesktopDropdown({ label, children }: { label: string; children: React.ReactNode }) {
+function DesktopDropdown({ label, children, isScrolled }: { label: string; children: React.ReactNode; isScrolled: boolean }) {
   return (
-    <div className="relative group">
-      <button className="flex items-center gap-1 hover:text-[#D96C40] transition-colors duration-200 py-2">
+    <div className="relative group/link py-1 cursor-pointer">
+      <div className="flex items-center gap-1 transition-colors duration-200">
         {label}
-        <ChevronDown className="w-3.5 h-3.5 mt-0.5 group-hover:rotate-180 transition-transform duration-200" />
-      </button>
-      <div className="absolute top-full left-0 mt-1 bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl py-2 px-2 min-w-[230px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0 border border-black/5">
-        {children}
+        <ChevronDown className="w-3.5 h-3.5 mt-0.5 group-hover/link:rotate-180 transition-transform duration-200" />
+      </div>
+      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover/link:scale-x-100" />
+      <div className={`absolute top-full left-0 mt-[1px] pt-4 min-w-[240px] opacity-0 invisible group-hover/link:opacity-100 group-hover/link:visible transition-all duration-200 translate-y-1 group-hover/link:translate-y-0`}>
+        <div className="bg-[#F7F4EF]/95 backdrop-blur-md shadow-xl rounded-2xl py-2 px-2 border border-[#2B2218]/5 text-[#2B2218]">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -266,11 +287,10 @@ function DropdownLink({ href, children, accent }: { href: string; children: Reac
   return (
     <Link
       href={href}
-      className={`block py-2 px-3 text-sm rounded-xl transition-colors ${
-        accent
-          ? 'text-[#D96C40] font-medium hover:bg-[#D96C40]/5'
-          : 'text-[#2C2C2C] hover:text-[#D96C40] hover:bg-[#F9F6F0]'
-      }`}
+      className={`block py-2.5 px-3 text-[15px] rounded-xl transition-colors ${accent
+        ? 'text-[#C96A45] font-medium hover:bg-[#C96A45]/10'
+        : 'hover:text-[#C96A45] hover:bg-[#2B2218]/5'
+        }`}
     >
       {children}
     </Link>

@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif), ui-serif, Georgia, serif;
+
+  --color-terracotta: #C96A45;
+  --color-cream: #F0EBE3;
+  --color-charcoal: #2B2218;
+  --color-offwhite: #F7F4EF;
+}
+
 @layer utilities {
   .hide-scrollbar {
     -ms-overflow-style: none;
@@ -8,4 +18,32 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+  
+  /* Utilities for the scroll animations */
+  .reveal-word {
+    clip-path: inset(100% 0 0 0);
+  }
+  .text-shadow-hero {
+    text-shadow: 0 4px 24px rgba(43,34,24,0.15);
+  }
+}
+
+/* Global Keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-large {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+html.scroll-smooth {
+  scroll-behavior: smooth;
 }

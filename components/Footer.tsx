@@ -21,77 +21,80 @@ const socialIcons = [
 ];
 
 export default function Footer() {
+  const headingClass = "text-[#C96A45] text-[11px] uppercase tracking-[0.22em] font-medium";
+  const linkClass = "text-[#2B2218] opacity-75 hover:opacity-100 hover:text-[#C96A45] transition-all duration-200";
+
   return (
-    <footer className="bg-[#F4EFE6] pt-16 pb-10 border-t border-[#2C2C2C]/10">
+    <footer className="bg-[#F0EBE3] py-20">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-14">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-20">
           {/* Courses */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[#2C2C2C]/45 text-[11px] uppercase tracking-widest font-medium">Courses</h4>
-            <div className="flex flex-col gap-3 text-sm">
-              <span className="text-[#2C2C2C]/40 line-through decoration-[#2C2C2C]/25">Human Design Analysis</span>
-              <span className="text-[#2C2C2C]/40 line-through decoration-[#2C2C2C]/25">Connection Chart Analysis</span>
-              <span className="text-[#2C2C2C]/40 line-through decoration-[#2C2C2C]/25">Human Design & Personal Guidance</span>
-              <Link href="/courses" className="text-[#D96C40] underline underline-offset-4 hover:text-[#c25a30] transition-colors">
-                View All Courses
+            <h4 className={headingClass}>Courses</h4>
+            <div className="flex flex-col gap-3 text-[15px]">
+              <span className="text-[#2B2218]/40 line-through decoration-[#2B2218]/25">Human Design Analysis</span>
+              <span className="text-[#2B2218]/40 line-through decoration-[#2B2218]/25">Connection Chart Analysis</span>
+              <span className="text-[#2B2218]/40 line-through decoration-[#2B2218]/25">Human Design & Personal Guidance</span>
+              <Link href="/courses" className="text-[#C96A45] hover:text-[#b05c3b] transition-colors mt-2">
+                View All Courses →
               </Link>
             </div>
           </div>
 
           {/* Sessions */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[#2C2C2C]/45 text-[11px] uppercase tracking-widest font-medium">Human Design & Therapy Sessions</h4>
-            <div className="flex flex-col gap-3 text-sm">
-              <Link href="/sessions#chart-analysis" className="hover:text-[#D96C40] transition-colors">Personal Chart Analysis</Link>
-              <Link href="/sessions#connection" className="hover:text-[#D96C40] transition-colors">Connection Chart Analysis</Link>
-              <Link href="/sessions#guidance" className="hover:text-[#D96C40] transition-colors">Human Design & Personal Guidance</Link>
-              <Link href="/sessions#opening-to-change" className="hover:text-[#D96C40] transition-colors">'Opening to Change' Session</Link>
-              <Link href="/sessions" className="text-[#D96C40] underline underline-offset-4 hover:text-[#c25a30] transition-colors">
-                View All Sessions
+            <h4 className={headingClass}>Human Design & Therapy Sessions</h4>
+            <div className="flex flex-col gap-3 text-[15px]">
+              <Link href="/sessions#chart-analysis" className={linkClass}>Personal Chart Analysis</Link>
+              <Link href="/sessions#connection" className={linkClass}>Connection Chart Analysis</Link>
+              <Link href="/sessions#guidance" className={linkClass}>Human Design & Personal Guidance</Link>
+              <Link href="/sessions#opening-to-change" className={linkClass}>'Opening to Change' Session</Link>
+              <Link href="/sessions" className="text-[#C96A45] hover:text-[#b05c3b] transition-colors mt-2">
+                View All Sessions →
               </Link>
             </div>
           </div>
 
           {/* Media + About */}
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 lg:col-span-1">
             <div className="flex flex-col gap-4">
-              <h4 className="text-[#2C2C2C]/45 text-[11px] uppercase tracking-widest font-medium">Media</h4>
-              <div className="flex flex-col gap-3 text-sm">
-                <Link href="#podcasts" className="hover:text-[#D96C40] transition-colors">Podcasts</Link>
-                <Link href="#videos" className="hover:text-[#D96C40] transition-colors">Videos</Link>
+              <h4 className={headingClass}>Media</h4>
+              <div className="flex flex-col gap-3 text-[15px]">
+                <Link href="#podcasts" className={linkClass}>Podcasts</Link>
+                <Link href="#videos" className={linkClass}>Videos</Link>
               </div>
             </div>
             <div className="flex flex-col gap-4">
-              <h4 className="text-[#2C2C2C]/45 text-[11px] uppercase tracking-widest font-medium">About</h4>
-              <div className="flex flex-col gap-3 text-sm">
-                <Link href="/about" className="hover:text-[#D96C40] transition-colors">Dirk</Link>
-                <Link href="/about#speaking" className="hover:text-[#D96C40] transition-colors">Speaking</Link>
-                <Link href="/about#contact" className="hover:text-[#D96C40] transition-colors">Contact</Link>
+              <h4 className={headingClass}>About</h4>
+              <div className="flex flex-col gap-3 text-[15px]">
+                <Link href="/about" className={linkClass}>Dirk</Link>
+                <Link href="/about#speaking" className={linkClass}>Speaking</Link>
+                <Link href="/about#contact" className={linkClass}>Contact</Link>
               </div>
             </div>
           </div>
 
           {/* Writings */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[#2C2C2C]/45 text-[11px] uppercase tracking-widest font-medium">Writings</h4>
-            <div className="flex flex-col gap-3 text-sm">
-              <Link href="/book" className="hover:text-[#D96C40] transition-colors">Books</Link>
-              <Link href="https://substack.com" target="_blank" className="hover:text-[#D96C40] transition-colors">Articles on Substack</Link>
+            <h4 className={headingClass}>Writings</h4>
+            <div className="flex flex-col gap-3 text-[15px]">
+              <Link href="/book" className={linkClass}>Books</Link>
+              <Link href="https://reflectorsreflections.substack.com/" target="_blank" className={linkClass}>Articles on Substack</Link>
             </div>
           </div>
 
           {/* Social */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[#2C2C2C]/45 text-[11px] uppercase tracking-widest font-medium">Social Links</h4>
-            <div className="flex flex-wrap gap-2.5">
+            <h4 className={headingClass}>Social Links</h4>
+            <div className="flex flex-wrap gap-4 mt-1">
               {socialIcons.map(({ label, path }) => (
                 <a
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="w-9 h-9 rounded-full border border-[#2C2C2C]/20 flex items-center justify-center text-[#2C2C2C] hover:bg-[#2C2C2C] hover:text-white hover:border-[#2C2C2C] transition-all duration-200"
+                  className="text-[#2B2218] opacity-75 hover:opacity-100 hover:text-[#C96A45] hover:scale-115 transition-all duration-200"
                 >
-                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-[28px] h-[28px]" fill="currentColor" viewBox="0 0 24 24">
                     <path d={path} />
                   </svg>
                 </a>
@@ -100,11 +103,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-[#2C2C2C]/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#2C2C2C]/35">
+        <div className="border-t border-[#C96A45]/20 pt-8 mt-12 flex flex-col items-center justify-center gap-2 text-[13px] text-[#2B2218]/50 text-center">
+          <p>
+            Bespoke site heart crafted by <a href="https://respira.cafe" target="_blank" rel="noopener noreferrer" className="hover:text-[#C96A45] underline underline-offset-2 transition-colors">Mihai @ respira.cafe</a>. Thank you Sophia for the initial design.
+          </p>
           <p>© {new Date().getFullYear()} Dirk Nellens. All rights reserved.</p>
-          <div className="relative w-5 h-5 opacity-30">
-            <Image src="/logo/logo-symbol-black.png" alt="" fill className="object-contain" />
-          </div>
         </div>
       </div>
     </footer>
