@@ -11,6 +11,7 @@ import { TestimonialsHome } from '@/components/home/TestimonialsHome';
 import { BookPreviewHome } from '@/components/home/BookPreviewHome';
 import { NewsletterHome } from '@/components/home/NewsletterHome';
 import { MediaHome } from '@/components/home/MediaHome';
+import { BookPromoCampaign } from '@/components/BookPromoCampaign';
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       <AboutBio />
       <CoursesHome />
       <SessionsHome />
+      <BookPromoCampaign />
       <TestimonialsHome />
       <BookPreviewHome />
       <NewsletterHome />

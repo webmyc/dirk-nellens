@@ -23,8 +23,33 @@ const sans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Dirk Nellens — Human Design',
+  title: {
+    default: 'Dirk Nellens — Human Design Analyst',
+    template: '%s | Dirk Nellens',
+  },
   description: 'Understand your unique energetic architecture with an anthropologist and Certified Human Design Analyst of 20+ years.',
+  metadataBase: new URL('https://dirk.respira.cafe'),
+  openGraph: {
+    title: 'Dirk Nellens — Human Design Analyst',
+    description: 'Understand your unique energetic architecture with an anthropologist and Certified Human Design Analyst.',
+    url: 'https://dirk.respira.cafe',
+    siteName: 'Dirk Nellens',
+    locale: 'en_US',
+    type: 'website',
+    images: [
+      {
+        url: '/logo/logo-black.png',
+        width: 1200,
+        height: 630,
+        alt: 'Dirk Nellens — Human Design',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dirk Nellens — Human Design Analyst',
+    description: 'Understand your unique energetic architecture with an anthropologist and Certified Human Design Analyst of 20+ years.',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

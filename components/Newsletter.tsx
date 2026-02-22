@@ -3,14 +3,29 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'motion/react';
+import { subscribeToSubstack } from '@/app/actions/subscribe';
+import { Loader2 } from 'lucide-react';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (email) setSubmitted(true);
+    if (!email) return;
+
+    setStatus('loading');
+    const formData = new FormData(e.currentTarget);
+    const result = await subscribeToSubstack(formData);
+
+    if (result.success) {
+      setStatus('success');
+      setMessage(result.message);
+    } else {
+      setStatus('error');
+      setMessage(result.message);
+    }
   };
 
   return (
@@ -27,25 +42,33 @@ export default function Newsletter() {
             Deepen your life journey with Dirk's Reflector Reflections, including Human Design insights and Neutrino reports.
           </h2>
 
-          {submitted ? (
-            <p className="text-[#D96C40] font-sans">Thank you for subscribing!</p>
+          {status === 'success' ? (
+            <p className="text-[#D96C40] font-sans font-medium text-lg">{message}</p>
           ) : (
-            <form className="relative max-w-md" onSubmit={handleSubmit}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                required
-                className="w-full bg-white px-6 py-4 rounded-full outline-none focus:ring-2 focus:ring-[#D96C40]/40 shadow-sm font-sans text-sm"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white border border-[#2C2C2C]/20 px-5 py-2 rounded-full text-sm font-medium hover:bg-[#2C2C2C] hover:text-white hover:border-[#2C2C2C] transition-all duration-300"
-              >
-                Sign up
-              </button>
-            </form>
+            <div className="flex flex-col gap-2">
+              <form className="relative max-w-md" onSubmit={handleSubmit}>
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your best email"
+                  required
+                  disabled={status === 'loading'}
+                  className="w-full bg-white px-6 py-4 rounded-full outline-none focus:ring-2 focus:ring-[#D96C40]/40 shadow-sm font-sans text-sm disabled:opacity-70"
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-white border border-[#2C2C2C]/20 px-6 py-2 rounded-full text-sm font-medium hover:bg-[#2C2C2C] hover:text-white hover:border-[#2C2C2C] transition-all duration-300 disabled:opacity-70 disabled:hover:bg-white disabled:hover:text-[#2C2C2C] flex items-center gap-2"
+                >
+                  {status === 'loading' ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Subscribe'}
+                </button>
+              </form>
+              {status === 'error' && (
+                <p className="text-red-500 font-sans text-sm ml-4">{message}</p>
+              )}
+            </div>
           )}
         </motion.div>
 

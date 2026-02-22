@@ -10,8 +10,13 @@ import { PlayCircle, Headphones } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export const metadata = {
-    title: 'Reflector\'s Reflections | Dirk Nellens',
-    description: 'Articles, essays, and reports on Human Design.',
+    title: 'Reflector\'s Reflections',
+    description: 'Weekly Human Design reflections, neutrino reports, and psychological explorations through the lens of a Reflector.',
+    openGraph: {
+        title: 'Reflector\'s Reflections | Dirk Nellens',
+        description: 'Weekly Human Design reflections, neutrino reports, and psychological explorations through the lens of a Reflector.',
+        images: [{ url: '/images/dirk-3.jpg' }],
+    }
 };
 
 export default async function NewsletterIndex() {

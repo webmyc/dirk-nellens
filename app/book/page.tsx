@@ -7,10 +7,16 @@ import { QuoteBook } from '@/components/book/QuoteBook';
 import { BookDescription } from '@/components/book/BookDescription';
 import { AuthorBioBook } from '@/components/book/AuthorBioBook';
 import { NewsletterHome } from '@/components/home/NewsletterHome';
+import { BookPromoCampaign } from '@/components/BookPromoCampaign';
 
 export const metadata = {
-  title: 'Understanding Our Energetic Architecture | Dirk Nellens',
+  title: 'Understanding Our Energetic Architecture', // template will append " | Dirk Nellens"
   description: 'A transformative understanding of our shared energetic blueprint.',
+  openGraph: {
+    title: 'Understanding Our Energetic Architecture | Dirk Nellens',
+    description: 'A transformative understanding of our shared energetic blueprint.',
+    images: [{ url: '/images/book-cover.jpg' }],
+  }
 };
 
 export default function BookPage() {
@@ -23,6 +29,7 @@ export default function BookPage() {
       <QuoteBook />
       <BookDescription />
       <AuthorBioBook />
+      <BookPromoCampaign />
       <NewsletterHome />
 
       <Footer />
