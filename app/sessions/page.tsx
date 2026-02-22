@@ -19,7 +19,7 @@ const sessions = [
       'The conditioning patterns that pull you off course—and how to return to clarity.',
     ],
     after: `A Personal Chart Analysis is both practical and deeply intuitive, blending energetic insight with grounded understanding. It's a chance to see yourself with fresh eyes, to feel the quiet relief of recognising your natural way of being.\n\nWhether you're seeking clarity in relationships, career, or your creative path, a Human Design analysis helps you live your life—not someone else's pattern. Begin the journey back to the truth of your own design.\n\nEvery session is recorded, so you can revisit the insights whenever you wish.`,
-    bullet_label: 'Through this session, you'll explore:',
+    bullet_label: "Through this session, you'll explore:",
   },
   {
     id: 'connection',
