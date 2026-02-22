@@ -78,7 +78,7 @@ export default function BookPage() {
                   'A clear understanding of our energetic architecture and how it shapes every aspect of life.',
                   'Practical tools for psychological healing and personal growth.',
                   'Insights into how childhood conditioning influences energetic expression.',
-                  'A framework for honoring children's authentic nature from birth.',
+                  "A framework for honoring children's authentic nature from birth.",
                   'A deeper appreciation of human diversity through the lens of our shared energetic architecture.',
                 ].map((item, i) => (
                   <li key={i} className="flex gap-3">

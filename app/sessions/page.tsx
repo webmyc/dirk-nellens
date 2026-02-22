@@ -15,7 +15,7 @@ const sessions = [
     bullets: [
       'Your energetic architecture—how your design is meant to express itself in daily life.',
       'The way you interact with others and navigate relationships with authenticity.',
-      'How to align with your inherent body-intelligence, making decisions based on life's intelligence expressing itself through your body.',
+      "How to align with your inherent body-intelligence, making decisions based on life's intelligence expressing itself through your body.",
       'The conditioning patterns that pull you off course—and how to return to clarity.',
     ],
     after: `A Personal Chart Analysis is both practical and deeply intuitive, blending energetic insight with grounded understanding. It's a chance to see yourself with fresh eyes, to feel the quiet relief of recognising your natural way of being.\n\nWhether you're seeking clarity in relationships, career, or your creative path, a Human Design analysis helps you live your life—not someone else's pattern. Begin the journey back to the truth of your own design.\n\nEvery session is recorded, so you can revisit the insights whenever you wish.`,
