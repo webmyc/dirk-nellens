@@ -86,9 +86,9 @@ export function HeroBook() {
                                 <Image
                                     src="/images/amazon.png"
                                     alt="Buy on Amazon"
-                                    width={220}
-                                    height={80}
-                                    className="object-contain h-[56px] w-auto drop-shadow-lg group-hover:drop-shadow-xl transition-all"
+                                    width={280}
+                                    height={100}
+                                    className="object-contain h-[73px] w-auto drop-shadow-lg group-hover:drop-shadow-xl transition-all"
                                 />
                             </a>
                             <Button href="#excerpt" variant="outline">

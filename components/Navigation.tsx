@@ -28,7 +28,7 @@ export default function Navigation() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const pathname = usePathname();
-  const darkHeroPages = ['/', '/about', '/courses', '/sessions', '/community', '/book'];
+  const darkHeroPages = ['/', '/about', '/courses', '/sessions', '/community'];
   const isDarkHero = darkHeroPages.includes(pathname);
 
   useEffect(() => {
