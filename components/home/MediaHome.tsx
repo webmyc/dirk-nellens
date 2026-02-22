@@ -113,7 +113,7 @@ export async function MediaHome() {
                                     <FadeUp delay={0.1 + i * 0.1} key={article.id}>
                                         <Link href={`/blog/newsletter/${article.slug}`} className="group flex flex-col sm:flex-row gap-6 p-6 bg-white rounded-[20px] shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 border border-[#2B2218]/5">
                                             {article.coverImage && (
-                                                <div className="relative w-full sm:w-[140px] aspect-[4/3] rounded-xl overflow-hidden flex-shrink-0 bg-[#2B2218]/5">
+                                                <div className="relative w-full sm:min-w-[140px] sm:max-w-[140px] aspect-[4/3] rounded-xl overflow-hidden flex-shrink-0 bg-[#2B2218]/5">
                                                     <Image src={article.coverImage} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="140px" />
                                                 </div>
                                             )}
@@ -136,7 +136,7 @@ export async function MediaHome() {
                         {/* Podcasts Promo Card */}
                         <FadeUp delay={0.4} className="h-full">
                             <Link
-                                href="#podcasts"
+                                href="/podcasts"
                                 className="group flex flex-col justify-between p-10 bg-[#2B2218] text-[#F0EBE3] rounded-[24px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-400 h-full relative overflow-hidden min-h-[320px]"
                             >
                                 {/* Visual accent */}

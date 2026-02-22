@@ -16,8 +16,8 @@ const sessions = [
 ];
 
 const media = [
-  { label: 'Podcasts', href: '#podcasts' },
-  { label: 'Videos', href: '#videos' },
+  { label: 'Podcasts', href: '/podcasts' },
+  { label: 'Videos', href: '/#videos' },
 ];
 
 export default function Navigation() {
@@ -65,7 +65,7 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between relative mt-[2px]">
           <Link href="/" className="flex items-center gap-4 group">
             <div
-              className={`relative flex-shrink-0 transition-all duration-300 ease-in-out ${isScrolled ? 'w-12 h-12' : 'w-[52px] h-[52px] md:w-[68px] md:h-[68px]'
+              className={`relative flex-shrink-0 transition-all duration-300 ease-in-out ${isScrolled ? 'w-[58px] h-[58px]' : 'w-[62px] h-[62px] md:w-[82px] md:h-[82px]'
                 }`}
             >
               <Image
@@ -101,6 +101,16 @@ export default function Navigation() {
 
             <Link href="/book" className="relative py-1 group/link">
               Book
+              <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover/link:scale-x-100" />
+            </Link>
+
+            <Link href="/blog/newsletter" className="relative py-1 group/link">
+              Substack
+              <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover/link:scale-x-100" />
+            </Link>
+
+            <Link href="/community" className="relative py-1 group/link">
+              Community
               <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover/link:scale-x-100" />
             </Link>
 
@@ -213,20 +223,38 @@ export default function Navigation() {
                 </Link>
 
                 <Link
-                  href="https://substack.com"
+                  href="/blog/newsletter"
+                  className="border border-[#2C2C2C]/12 rounded-2xl px-5 py-4 font-sans text-[#2C2C2C] hover:border-[#D96C40] hover:text-[#D96C40] transition-colors bg-white/40"
+                  onClick={closeMobile}
+                >
+                  Substack
+                </Link>
+
+                <Link
+                  href="/community"
+                  className="border border-[#2C2C2C]/12 rounded-2xl px-5 py-4 font-sans text-[#2C2C2C] hover:border-[#D96C40] hover:text-[#D96C40] transition-colors bg-white/40"
+                  onClick={closeMobile}
+                >
+                  Community
+                </Link>
+
+                <a
+                  href="https://reflectorsreflections.substack.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="border border-[#2C2C2C]/12 rounded-2xl px-5 py-4 font-sans text-[#2C2C2C] hover:border-[#D96C40] hover:text-[#D96C40] transition-colors bg-white/40"
                   onClick={closeMobile}
                 >
                   Articles on Substack
-                </Link>
+                </a>
 
                 <AccordionItem
                   label="Media"
                   isOpen={openAccordion === 'media'}
                   onToggle={() => toggleAccordion('media')}
                 >
-                  <Link href="#podcasts" className="block py-1 text-sm text-[#2C2C2C]/65 hover:text-[#D96C40] transition-colors" onClick={closeMobile}>Podcasts</Link>
-                  <Link href="#videos" className="block py-1 text-sm text-[#2C2C2C]/65 hover:text-[#D96C40] transition-colors" onClick={closeMobile}>Videos</Link>
+                  <Link href="/podcasts" className="block py-1 text-sm text-[#2C2C2C]/65 hover:text-[#D96C40] transition-colors" onClick={closeMobile}>Podcasts</Link>
+                  <Link href="/#videos" className="block py-1 text-sm text-[#2C2C2C]/65 hover:text-[#D96C40] transition-colors" onClick={closeMobile}>Videos</Link>
                 </AccordionItem>
 
                 <Link
