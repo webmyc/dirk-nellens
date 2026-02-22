@@ -74,6 +74,10 @@ const CHANNELS: Array<{ gateA: number; gateB: number; centerA: CenterKey; center
   { gateA: 21, gateB: 45, centerA: 'HEART', centerB: 'THROAT', name: 'Money Line' },
 ];
 
+function normalizeTimezone(input: string): string {
+  return input.trim().replace(/\s*\/\s*/g, '/').replace(/\s+/g, '_');
+}
+
 function mod360(x: number): number {
   const m = x % 360;
   return m < 0 ? m + 360 : m;
@@ -181,7 +185,8 @@ function deriveTypeAndAuthority(definedCenters: Set<CenterKey>, motorToThroat: b
 
 export function calculateChart(input: { name: string; birthDate: string; birthTime: string; timezone: string; location: string; unknownBirthTime?: boolean }) {
   const birthTime = input.unknownBirthTime ? '12:00' : input.birthTime;
-  const dt = DateTime.fromISO(`${input.birthDate}T${birthTime}`, { zone: input.timezone });
+  const normalizedTimezone = normalizeTimezone(input.timezone);
+  const dt = DateTime.fromISO(`${input.birthDate}T${birthTime}`, { zone: normalizedTimezone });
   if (!dt.isValid) {
     throw new Error('Invalid date/time/timezone combination.');
   }
@@ -260,7 +265,7 @@ export function calculateChart(input: { name: string; birthDate: string; birthTi
       location: input.location,
       birthDate: input.birthDate,
       birthTime,
-      timezone: input.timezone,
+      timezone: normalizedTimezone,
       unknownBirthTime: !!input.unknownBirthTime,
     },
     type: typing.type,

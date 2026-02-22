@@ -80,6 +80,10 @@ const fallbackTimezones = [
   'Australia/Sydney',
 ];
 
+function normalizeTimezone(input: string): string {
+  return input.trim().replace(/\s*\/\s*/g, '/').replace(/\s+/g, '_');
+}
+
 function centerFill(center: CenterState): string {
   if (!center.defined) return '#FFFFFF';
   if (center.definedBy === 'design') return '#C8643C';
@@ -183,7 +187,7 @@ export default function ChartPage() {
           name: form.name,
           birthDate: form.dateOfBirth,
           birthTime: form.timeOfBirth,
-          timezone: form.timezone,
+          timezone: normalizeTimezone(form.timezone),
           location: form.location,
           unknownBirthTime: form.unknownBirthTime,
         }),
@@ -327,18 +331,17 @@ export default function ChartPage() {
               </Field>
 
               <Field label="Timezone" helper="Required for accurate universal time conversion.">
-                <input
-                  list="timezone-options"
+                <select
                   value={form.timezone}
                   onChange={(e) => setForm((prev) => ({ ...prev, timezone: e.target.value }))}
                   className="h-[52px] w-full rounded-md border border-[#D4C9B8] bg-white px-4 text-[16px] focus:outline-none focus:border-[#C8643C] focus:shadow-[0_0_0_3px_rgba(200,100,60,0.15)]"
-                  placeholder="e.g. Europe/Brussels"
-                />
-                <datalist id="timezone-options">
+                >
                   {timezones.map((tz) => (
-                    <option key={tz} value={tz} />
+                    <option key={tz} value={tz}>
+                      {tz}
+                    </option>
                   ))}
-                </datalist>
+                </select>
                 {errors.timezone ? <p className="text-sm text-[#A84E2C]">{errors.timezone}</p> : null}
               </Field>
 
