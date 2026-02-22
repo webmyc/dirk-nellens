@@ -15,7 +15,7 @@ export const metadata = {
   openGraph: {
     title: 'Understanding Our Energetic Architecture | Dirk Nellens',
     description: 'A transformative understanding of our shared energetic blueprint.',
-    images: [{ url: '/images/book-cover.jpg' }],
+    images: [{ url: '/images/dirk-3.jpg' }],
   }
 };
 

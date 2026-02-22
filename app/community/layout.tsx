@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Community | Dirk Nellens',
         description: 'Join the premium Substack community for live monthly calls, human design archive access, and ongoing therapeutic support.',
-        images: [{ url: '/images/dirk-2.jpg' }],
+        images: [{ url: '/images/dirk-3.jpg' }],
     }
 };
 

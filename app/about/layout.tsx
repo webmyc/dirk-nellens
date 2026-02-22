@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'About Dirk | Dirk Nellens',
         description: 'Learn about Dirk Nellens, a Social Anthropologist and Human Design Analyst.',
-        images: [{ url: '/images/dirk-1.jpg' }],
+        images: [{ url: '/images/dirk-3.jpg' }],
     }
 };
 

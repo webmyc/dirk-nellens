@@ -16,7 +16,7 @@ export const metadata = {
         siteName: 'Dirk Nellens',
         images: [
             {
-                url: '/images/hero-bg.jpg',
+                url: '/images/dirk-3.jpg',
                 width: 1200,
                 height: 630,
             }

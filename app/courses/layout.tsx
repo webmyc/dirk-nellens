@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Education | Dirk Nellens',
         description: 'Online Human Design courses and educational frameworks offered by Dirk Nellens.',
-        images: [{ url: '/images/bg-black.jpg' }],
+        images: [{ url: '/images/dirk-3.jpg' }],
     }
 };
 

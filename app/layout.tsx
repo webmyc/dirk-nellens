@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/dirk-2.jpg',
+        url: '/images/dirk-3.jpg',
         width: 1200,
         height: 630,
         alt: 'Dirk Nellens — Human Design',

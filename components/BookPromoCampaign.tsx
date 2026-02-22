@@ -3,8 +3,7 @@ import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import { Gift, BookOpen, MessageSquareHeart } from 'lucide-react';
 
 export function BookPromoCampaign() {
-    // TODO: USER -> Replace this with your generated Tally Form URL
-    const TALLY_FORM_URL = '#';
+    const TALLY_FORM_URL = 'https://tally.so/r/rj6bYv';
 
     return (
         <section className="py-24 md:py-32 bg-[#2B2218] relative overflow-hidden text-[#F0EBE3]">

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Private Sessions | Dirk Nellens',
         description: 'Book a private 1-on-1 session, connection chart analysis, or ongoing guidance with Dirk Nellens.',
-        images: [{ url: '/images/collage-ajna.png' }],
+        images: [{ url: '/images/dirk-3.jpg' }],
     }
 };
 
