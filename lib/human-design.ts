@@ -1,4 +1,4 @@
-import { Body, EclipticLongitude, SearchMoonNode, NextMoonNode, SearchSunLongitude } from 'astronomy-engine';
+import sweph from 'sweph';
 import { DateTime } from 'luxon';
 
 export type HdType = 'Generator' | 'Manifesting Generator' | 'Projector' | 'Manifestor' | 'Reflector';
@@ -16,6 +16,9 @@ type CenterKey =
   | 'ROOT';
 
 type PlanetActivation = { planet: string; gate: number; line: number; longitude: number };
+
+const C = sweph.constants;
+const SWISS_FLAGS = C.SEFLG_SWIEPH | C.SEFLG_SPEED;
 
 const GATE_ORDER = [41, 19, 13, 49, 30, 55, 37, 63, 22, 36, 25, 17, 21, 51, 42, 3, 27, 24, 2, 23, 8, 20, 16, 35, 45, 12, 15, 52, 39, 53, 62, 56, 31, 33, 7, 4, 29, 59, 40, 64, 47, 6, 46, 18, 48, 57, 32, 50, 28, 44, 1, 43, 14, 34, 9, 5, 26, 11, 10, 58, 38, 54, 61, 60] as const;
 
@@ -85,46 +88,40 @@ function longitudeToGateLine(longitude: number): { gate: number; line: number } 
   return { gate: GATE_ORDER[gateIndex], line };
 }
 
-function findNearestNodeLongitudes(date: Date): { northNodeLon: number; southNodeLon: number } {
-  const start = new Date(date.getTime() - 40 * 24 * 60 * 60 * 1000);
-  let node = SearchMoonNode(start);
-  let prev = node;
-
-  while (node.time.date.getTime() <= date.getTime()) {
-    prev = node;
-    node = NextMoonNode(node);
-  }
-
-  const prevDiff = Math.abs(date.getTime() - prev.time.date.getTime());
-  const nextDiff = Math.abs(node.time.date.getTime() - date.getTime());
-  const nearest = prevDiff <= nextDiff ? prev : node;
-
-  const nodeLon = mod360(EclipticLongitude(Body.Moon, nearest.time.date));
-  if (nearest.kind === 1) {
-    return { northNodeLon: nodeLon, southNodeLon: mod360(nodeLon + 180) };
-  }
-
-  return { northNodeLon: mod360(nodeLon + 180), southNodeLon: nodeLon };
+function jdFromUtc(utcDate: Date): number {
+  const year = utcDate.getUTCFullYear();
+  const month = utcDate.getUTCMonth() + 1;
+  const day = utcDate.getUTCDate();
+  const hour = utcDate.getUTCHours() + utcDate.getUTCMinutes() / 60 + utcDate.getUTCSeconds() / 3600 + utcDate.getUTCMilliseconds() / 3600000;
+  return sweph.julday(year, month, day, hour, C.SE_GREG_CAL);
 }
 
-function buildPlanetActivations(date: Date): PlanetActivation[] {
-  const northSouth = findNearestNodeLongitudes(date);
-  const sunLon = mod360(EclipticLongitude(Body.Sun, date));
+function calcLongitudeUT(jdUt: number, planetId: number): number {
+  const result = sweph.calc_ut(jdUt, planetId, SWISS_FLAGS);
+  if (result.flag === C.ERR) {
+    throw new Error(result.error || `Swiss Ephemeris failed for planet id ${planetId}`);
+  }
+  return mod360(result.data[0]);
+}
+
+function buildPlanetActivationsFromJd(jdUt: number): PlanetActivation[] {
+  const sunLon = calcLongitudeUT(jdUt, C.SE_SUN);
+  const northNodeLon = calcLongitudeUT(jdUt, C.SE_TRUE_NODE);
 
   const planets: Array<{ name: string; lon: number }> = [
     { name: 'Sun', lon: sunLon },
     { name: 'Earth', lon: mod360(sunLon + 180) },
-    { name: 'Moon', lon: mod360(EclipticLongitude(Body.Moon, date)) },
-    { name: 'North Node', lon: northSouth.northNodeLon },
-    { name: 'South Node', lon: northSouth.southNodeLon },
-    { name: 'Mercury', lon: mod360(EclipticLongitude(Body.Mercury, date)) },
-    { name: 'Venus', lon: mod360(EclipticLongitude(Body.Venus, date)) },
-    { name: 'Mars', lon: mod360(EclipticLongitude(Body.Mars, date)) },
-    { name: 'Jupiter', lon: mod360(EclipticLongitude(Body.Jupiter, date)) },
-    { name: 'Saturn', lon: mod360(EclipticLongitude(Body.Saturn, date)) },
-    { name: 'Uranus', lon: mod360(EclipticLongitude(Body.Uranus, date)) },
-    { name: 'Neptune', lon: mod360(EclipticLongitude(Body.Neptune, date)) },
-    { name: 'Pluto', lon: mod360(EclipticLongitude(Body.Pluto, date)) },
+    { name: 'Moon', lon: calcLongitudeUT(jdUt, C.SE_MOON) },
+    { name: 'North Node', lon: northNodeLon },
+    { name: 'South Node', lon: mod360(northNodeLon + 180) },
+    { name: 'Mercury', lon: calcLongitudeUT(jdUt, C.SE_MERCURY) },
+    { name: 'Venus', lon: calcLongitudeUT(jdUt, C.SE_VENUS) },
+    { name: 'Mars', lon: calcLongitudeUT(jdUt, C.SE_MARS) },
+    { name: 'Jupiter', lon: calcLongitudeUT(jdUt, C.SE_JUPITER) },
+    { name: 'Saturn', lon: calcLongitudeUT(jdUt, C.SE_SATURN) },
+    { name: 'Uranus', lon: calcLongitudeUT(jdUt, C.SE_URANUS) },
+    { name: 'Neptune', lon: calcLongitudeUT(jdUt, C.SE_NEPTUNE) },
+    { name: 'Pluto', lon: calcLongitudeUT(jdUt, C.SE_PLUTO) },
   ];
 
   return planets.map(({ name, lon }) => {
@@ -186,17 +183,20 @@ export function calculateChart(input: { name: string; birthDate: string; birthTi
   }
 
   const birthUtc = dt.toUTC().toJSDate();
-  const sunAtBirth = mod360(EclipticLongitude(Body.Sun, birthUtc));
-  const targetDesignSun = mod360(sunAtBirth - 88);
-  const designSearchStart = new Date(birthUtc.getTime() - 110 * 24 * 60 * 60 * 1000);
-  const designTime = SearchSunLongitude(targetDesignSun, designSearchStart, 40);
+  const jdBirth = jdFromUtc(birthUtc);
+  const sunLonBirth = calcLongitudeUT(jdBirth, C.SE_SUN);
+  const targetDesignSunLon = mod360(sunLonBirth - 88);
 
-  if (!designTime) {
-    throw new Error('Unable to compute design date from solar arc.');
+  const designStart = jdBirth - 110;
+  const cross = sweph.solcross_ut(targetDesignSunLon, designStart, SWISS_FLAGS);
+  const jdDesign = cross.date;
+
+  if (!(jdDesign > designStart && jdDesign < jdBirth)) {
+    throw new Error(cross.error || 'Unable to compute design date from Swiss Ephemeris solar crossing.');
   }
 
-  const personalityData = buildPlanetActivations(birthUtc);
-  const designData = buildPlanetActivations(designTime.date);
+  const personalityData = buildPlanetActivationsFromJd(jdBirth);
+  const designData = buildPlanetActivationsFromJd(jdDesign);
 
   const personalityGates = new Set(personalityData.map((p) => p.gate));
   const designGates = new Set(designData.map((p) => p.gate));
@@ -245,7 +245,6 @@ export function calculateChart(input: { name: string; birthDate: string; birthTi
   });
 
   const typing = deriveTypeAndAuthority(definedCenters, motorToThroat);
-
   const profile = `${personalityData.find((p) => p.planet === 'Sun')?.line ?? 1}/${designData.find((p) => p.planet === 'Sun')?.line ?? 3}`;
 
   return {
