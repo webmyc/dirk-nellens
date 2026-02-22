@@ -47,7 +47,7 @@ export function HeroBookTilt() {
                     rotateX: { type: 'spring', stiffness: 100, damping: 30, mass: 0.5 },
                     y: isHovered ? { duration: 0.5 } : { duration: 5, ease: 'easeInOut', repeat: Infinity },
                 }}
-                className="relative w-full max-w-[460px] aspect-[3/4]"
+                className="relative w-full max-w-[560px] lg:max-w-[640px] aspect-[4/5] md:ml-auto"
             >
                 <Image
                     src="/images/book-transparent.png"
@@ -55,7 +55,7 @@ export function HeroBookTilt() {
                     fill
                     priority
                     className="object-contain drop-shadow-[0_40px_60px_rgba(43,34,24,0.35)]"
-                    sizes="(max-width: 768px) 100vw, 460px"
+                    sizes="(max-width: 768px) 100vw, 640px"
                 />
             </motion.div>
         </motion.div>
@@ -115,12 +115,11 @@ export function HeroHome() {
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full relative z-10 grid md:grid-cols-[55%_45%] gap-10 items-center py-20 pb-32">
                 {/* Left Column - Mobile puts book above text */}
-                <div className="flex flex-col md:hidden items-center justify-center mb-10 mt-10">
+                <div className="flex flex-col md:hidden items-center justify-center mb-12 mt-12 w-full max-w-[420px] mx-auto aspect-[4/5] relative">
                     <Image
                         src="/images/book-transparent.png"
                         alt="Understanding Our Energetic Architecture"
-                        width={320}
-                        height={420}
+                        fill
                         priority
                         className="object-contain drop-shadow-[0_20px_40px_rgba(43,34,24,0.35)]"
                     />

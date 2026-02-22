@@ -1,11 +1,11 @@
 'use client';
 
-import { motion } from 'motion/react';
 import Image from 'next/image';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Newsletter from '@/components/Newsletter';
 import { BookSessionButton } from '@/components/ui/BookSessionButton';
+import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 
 const sessions = [
   {
@@ -62,112 +62,125 @@ const sessions = [
 
 export default function SessionsPage() {
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-[#F7F4EF]">
       <Navigation />
 
       {/* Hero */}
-      <section className="relative pt-40 pb-24 bg-[#2C2C2C] text-white overflow-hidden">
+      <section className="relative pt-40 md:pt-48 pb-24 md:pb-32 bg-[#2B2218] text-[#F0EBE3] overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/images/bg-black.jpg" alt="" fill className="object-cover opacity-30" priority />
+          <Image src="/images/bg-black.jpg" alt="" fill className="object-cover opacity-20" priority />
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-2xl flex flex-col gap-6"
-          >
-            <p className="font-sans text-xs uppercase tracking-widest text-white/50">Sessions</p>
-            <blockquote className="font-serif text-3xl md:text-4xl lg:text-5xl leading-tight italic">
-              "Our journey is one of peeling away what is not truly us. Human Design and psychotherapy can work in powerful synergy towards this."
-            </blockquote>
-          </motion.div>
+          <FadeUpStaggerGroup className="max-w-3xl flex flex-col gap-8 mx-auto text-center">
+            <FadeUp delay={0.1}>
+              <p className="font-sans text-[12px] md:text-[14px] font-semibold tracking-[0.2em] uppercase text-[#C96A45]">
+                Human Design & Therapy
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.2}>
+              <blockquote className="font-serif text-[42px] md:text-[56px] lg:text-[72px] leading-[1.05] italic tracking-[-0.01em]">
+                "Our journey is one of peeling away what is not truly us."
+              </blockquote>
+            </FadeUp>
+          </FadeUpStaggerGroup>
         </div>
       </section>
 
       {/* Section heading */}
-      <section className="py-16 bg-[#F4EFE6]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <h1 className="font-serif text-3xl md:text-4xl text-[#2C2C2C]">Human Design & Therapy Sessions</h1>
+      <section className="py-24 md:py-32 bg-[#EBE4D8] border-b border-[#2B2218]/5">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 text-center">
+          <FadeUp delay={0.1}>
+            <h2 className="font-serif text-[48px] md:text-[64px] text-[#2B2218] tracking-[-0.01em]">
+              Private Sessions
+            </h2>
+          </FadeUp>
         </div>
       </section>
 
       {/* Session cards */}
-      {sessions.map((session, i) => (
-        <section
-          key={session.id}
-          id={session.id}
-          className={`py-24 ${i % 2 === 0 ? 'bg-white' : 'bg-[#F9F6F0]'}`}
-        >
-          <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-16 items-center">
-            {/* Text: alternates sides */}
-            <motion.div
-              initial={{ opacity: 0, x: i % 2 === 0 ? -24 : 24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className={`flex flex-col gap-6 ${i % 2 !== 0 ? 'md:order-2' : ''}`}
-            >
-              <h2 className="font-serif text-2xl md:text-3xl text-[#2C2C2C]">{session.title}</h2>
+      <div className="flex flex-col">
+        {sessions.map((session, i) => (
+          <section
+            key={session.id}
+            id={session.id}
+            className={`py-24 md:py-32 ${i % 2 === 0 ? 'bg-[#F7F4EF]' : 'bg-white'}`}
+          >
+            <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-16 md:gap-24 items-center">
 
-              <div className="space-y-4 font-sans text-[#2C2C2C]/70 leading-relaxed text-[0.97rem]">
-                {session.body.split('\n\n').map((para, j) => (
-                  para.startsWith('\n') ? null : <p key={j}>{para}</p>
-                ))}
-              </div>
+              {/* Text Content */}
+              <FadeUpStaggerGroup className={`flex flex-col gap-8 ${i % 2 !== 0 ? 'md:order-2' : ''}`}>
+                <FadeUp delay={0.1}>
+                  <h2 className="font-serif text-[36px] md:text-[48px] leading-[1.1] text-[#2B2218]">
+                    {session.title}
+                  </h2>
+                </FadeUp>
 
-              {session.bullets && (
-                <div>
-                  {session.bullet_label && (
-                    <p className="font-sans text-[#2C2C2C]/75 mb-3 text-[0.95rem]">{session.bullet_label}</p>
-                  )}
-                  <ul className="space-y-2.5">
-                    {session.bullets.map((b, j) => (
-                      <li key={j} className="flex gap-3 font-sans text-[#2C2C2C]/70 text-[0.95rem]">
-                        <span className="text-[#D96C40] flex-shrink-0 mt-0.5">•</span>
-                        <span>{b}</span>
-                      </li>
+                <FadeUp delay={0.2}>
+                  <div className="space-y-6 font-sans text-[#2B2218] opacity-[0.85] leading-[1.7] text-[16px] md:text-[18px]">
+                    {session.body.split('\n\n').map((para, j) => (
+                      para.startsWith('\n') ? null : <p key={j}>{para}</p>
                     ))}
-                  </ul>
-                </div>
-              )}
+                  </div>
+                </FadeUp>
 
-              {session.after && (
-                <div className="space-y-4 font-sans text-[#2C2C2C]/70 leading-relaxed text-[0.97rem]">
-                  {session.after.split('\n\n').map((para, j) => (
-                    <p key={j}>{para}</p>
-                  ))}
-                </div>
-              )}
+                {session.bullets && (
+                  <FadeUp delay={0.3}>
+                    <div className="mt-4">
+                      {session.bullet_label && (
+                        <p className="font-sans font-semibold text-[#2B2218] mb-4 text-[16px] md:text-[18px]">
+                          {session.bullet_label}
+                        </p>
+                      )}
+                      <ul className="space-y-4">
+                        {session.bullets.map((b, j) => (
+                          <li key={j} className="flex gap-4 font-sans text-[#2B2218] opacity-80 text-[16px] md:text-[17px]">
+                            <span className="text-[#C96A45] flex-shrink-0 mt-0.5 font-bold">•</span>
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </FadeUp>
+                )}
 
-              <div className="pt-2 space-y-1.5 font-sans text-[#2C2C2C]/45 text-sm">
-                <p>Duration: <em>to be confirmed</em></p>
-                <p>Price: <em>to be confirmed</em></p>
-                <p>Sessions take place via Zoom.</p>
-              </div>
+                {session.after && (
+                  <FadeUp delay={0.4}>
+                    <div className="mt-4 space-y-6 font-sans text-[#2B2218] opacity-[0.85] leading-[1.7] text-[16px] md:text-[18px]">
+                      {session.after.split('\n\n').map((para, j) => (
+                        <p key={j}>{para}</p>
+                      ))}
+                    </div>
+                  </FadeUp>
+                )}
 
-              <BookSessionButton className="w-fit" />
-            </motion.div>
+                <FadeUp delay={0.5}>
+                  <div className="pt-6 mt-4 border-t border-[#2B2218]/10 space-y-2 font-sans text-[#2B2218] opacity-60 text-[14px]">
+                    <p>Duration: <em>to be confirmed</em></p>
+                    <p>Price: <em>to be confirmed</em></p>
+                    <p>Sessions take place via Zoom.</p>
+                  </div>
+                </FadeUp>
 
-            {/* Collage image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.93 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className={`relative aspect-square max-w-[420px] w-full mx-auto rounded-[2rem] overflow-hidden shadow-lg ${i % 2 !== 0 ? 'md:order-1' : ''}`}
-            >
-              <Image
-                src={session.collage}
-                alt={session.title}
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 90vw, 420px"
-              />
-            </motion.div>
-          </div>
-        </section>
-      ))}
+                <FadeUp delay={0.6}>
+                  <BookSessionButton className="w-fit mt-4" />
+                </FadeUp>
+              </FadeUpStaggerGroup>
+
+              {/* Visual Image */}
+              <FadeUp delay={0.2} className={`relative aspect-[4/5] max-w-[500px] w-full mx-auto rounded-[2rem] overflow-hidden shadow-2xl ${i % 2 !== 0 ? 'md:order-1' : ''}`}>
+                <Image
+                  src={session.collage}
+                  alt={session.title}
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-[1.5s]"
+                  sizes="(max-width: 768px) 90vw, 500px"
+                />
+                <div className="absolute inset-0 bg-[#2B2218]/5 pointer-events-none" />
+              </FadeUp>
+            </div>
+          </section>
+        ))}
+      </div>
 
       <Newsletter />
       <Footer />
