@@ -7,6 +7,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Newsletter from '@/components/Newsletter';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export default function AboutPage() {
   return (
@@ -14,7 +15,15 @@ export default function AboutPage() {
       <Navigation />
 
       {/* Hero quote – massive editorial typography */}
-      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-40 pb-24 bg-[#2B2218]">
+      <section className="relative min-h-[70vh] flex flex-col justify-center overflow-hidden pt-32 pb-24 bg-[#2B2218]">
+
+        {/* Breadcrumb row */}
+        <div className="absolute top-28 left-0 w-full z-20">
+          <div className="max-w-7xl mx-auto px-6 md:px-12">
+            <Breadcrumbs items={[{ label: 'About Dirk', href: '/about' }]} className="text-[#F0EBE3]/60" />
+          </div>
+        </div>
+
         {/* Abstract animated geometry background */}
         <div className="absolute inset-0 opacity-10 overflow-hidden pointer-events-none flex items-center justify-center">
           <motion.div

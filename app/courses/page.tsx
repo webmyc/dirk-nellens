@@ -6,6 +6,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Newsletter from '@/components/Newsletter';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export default function CoursesPage() {
   return (
@@ -13,7 +14,12 @@ export default function CoursesPage() {
       <Navigation />
 
       {/* Hero */}
-      <section className="relative pt-40 md:pt-48 pb-24 md:pb-32 bg-[#2B2218] text-[#F0EBE3] overflow-hidden">
+      <section className="relative pt-32 md:pt-40 pb-24 md:pb-32 bg-[#2B2218] text-[#F0EBE3] overflow-hidden">
+
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-20 mb-8 md:mb-12">
+          <Breadcrumbs items={[{ label: 'Education', href: '/courses' }]} className="text-[#F0EBE3]/60" />
+        </div>
+
         {/* Subtle dot matrix background */}
         <div
           className="absolute inset-0 opacity-10 pointer-events-none"

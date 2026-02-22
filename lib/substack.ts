@@ -9,11 +9,13 @@ export interface SubstackArticle {
     content: string;
     slug: string;
     coverImage?: string;
+    videoIframe?: string;
+    audioUrl?: string;
 }
 
 const parser = new Parser({
     customFields: {
-        item: ['content:encoded'],
+        item: ['content:encoded', 'enclosure'],
     },
 });
 
@@ -26,17 +28,30 @@ export async function getSubstackFeed(): Promise<SubstackArticle[]> {
             const slugMatch = item.link?.match(/\/p\/([^/?]+)/);
             const slug = slugMatch ? slugMatch[1] : '';
 
-            // Extract first image from content:encoded for cover image
-            let coverImage;
             const contentEncoded = item['content:encoded'] || item.content || '';
 
-            // Look for images excluding tiny trackers like substackcdn 120w or twemoji
+            // Extract first image from content:encoded for cover image
+            let coverImage;
             const imgMatches = contentEncoded.matchAll(/<img[^>]+src="([^">]+)"/g);
             for (const match of imgMatches) {
                 if (!match[1].includes('substackcdn.com/image/fetch/w_120') && !match[1].includes('twemoji')) {
                     coverImage = match[1];
                     break;
                 }
+            }
+
+            // Extract iframe for video (e.g. YouTube embeds)
+            let videoIframe;
+            const iframeMatch = contentEncoded.match(/<iframe[^>]*src="([^">]*youtube\.com[^">]*|[^">]*vimeo\.com[^">]*)"[^>]*>/i);
+            if (iframeMatch) {
+                // Return the whole iframe tag but rewrite the width/height to be responsive or just keep the tag
+                videoIframe = iframeMatch[0];
+            }
+
+            // Extract Audio Enclosure
+            let audioUrl;
+            if (item.enclosure && item.enclosure.url && item.enclosure.type?.startsWith('audio/')) {
+                audioUrl = item.enclosure.url;
             }
 
             return {
@@ -48,6 +63,8 @@ export async function getSubstackFeed(): Promise<SubstackArticle[]> {
                 content: contentEncoded,
                 slug,
                 coverImage,
+                videoIframe,
+                audioUrl,
             };
         });
     } catch (error) {

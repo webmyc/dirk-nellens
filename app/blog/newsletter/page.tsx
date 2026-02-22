@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { getSubstackFeed, getFeaturedTherapyGridArticles } from '@/lib/substack';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import Newsletter from '@/components/Newsletter';
+import { PlayCircle, Headphones } from 'lucide-react';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export const metadata = {
     title: 'Reflector\'s Reflections | Dirk Nellens',
@@ -32,7 +34,10 @@ export default async function NewsletterIndex() {
             <Navigation />
 
             {/* Header */}
-            <section className="pt-40 md:pt-48 pb-16 px-6 md:px-12 text-center border-b border-[#2B2218]/5">
+            <section className="pt-32 md:pt-40 pb-16 px-6 md:px-12 text-center border-b border-[#2B2218]/5">
+                <div className="max-w-7xl mx-auto mb-8 md:mb-12 flex justify-start">
+                    <Breadcrumbs items={[{ label: 'Blog', href: '/blog/newsletter' }]} className="text-[#2B2218]/50" />
+                </div>
                 <div className="max-w-4xl mx-auto flex flex-col items-center gap-6">
                     <FadeUp delay={0.1}>
                         <p className="font-sans text-[12px] font-semibold tracking-[0.2em] uppercase text-[#C96A45]">
@@ -75,6 +80,16 @@ export default async function NewsletterIndex() {
                                     ) : (
                                         <div className="absolute inset-0 flex items-center justify-center opacity-10">
                                             <Image src="/images/substack-orange.png" alt="" width={100} height={100} className="object-contain" />
+                                        </div>
+                                    )}
+                                    {featuredArticle.videoIframe && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors z-10">
+                                            <PlayCircle className="w-16 h-16 text-white opacity-90 drop-shadow-md group-hover:scale-110 transition-transform duration-500" />
+                                        </div>
+                                    )}
+                                    {!featuredArticle.videoIframe && featuredArticle.audioUrl && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors z-10">
+                                            <Headphones className="w-16 h-16 text-white opacity-90 drop-shadow-md group-hover:scale-110 transition-transform duration-500" />
                                         </div>
                                     )}
                                 </div>
@@ -137,6 +152,16 @@ export default async function NewsletterIndex() {
                                                     <Image src="/images/substack-orange.png" alt="" width={60} height={60} className="object-contain" />
                                                 </div>
                                             )}
+                                            {article.videoIframe && (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors z-10">
+                                                    <PlayCircle className="w-12 h-12 text-white opacity-90 drop-shadow-md group-hover:scale-110 transition-transform duration-500" />
+                                                </div>
+                                            )}
+                                            {!article.videoIframe && article.audioUrl && (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors z-10">
+                                                    <Headphones className="w-12 h-12 text-white opacity-90 drop-shadow-md group-hover:scale-110 transition-transform duration-500" />
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="flex flex-col flex-1 p-8 gap-4">
                                             <div className="flex items-center gap-3 font-sans text-[12px] font-semibold tracking-widest uppercase text-[#2B2218]/40">
@@ -185,6 +210,16 @@ export default async function NewsletterIndex() {
                                         ) : (
                                             <div className="absolute inset-0 flex items-center justify-center opacity-10">
                                                 <Image src="/images/substack-orange.png" alt="" width={50} height={50} className="object-contain" />
+                                            </div>
+                                        )}
+                                        {article.videoIframe && (
+                                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors z-10">
+                                                <PlayCircle className="w-12 h-12 text-white opacity-90 drop-shadow-md group-hover:scale-110 transition-transform duration-500" />
+                                            </div>
+                                        )}
+                                        {!article.videoIframe && article.audioUrl && (
+                                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors z-10">
+                                                <Headphones className="w-12 h-12 text-white opacity-90 drop-shadow-md group-hover:scale-110 transition-transform duration-500" />
                                             </div>
                                         )}
                                     </div>

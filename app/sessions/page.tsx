@@ -6,6 +6,8 @@ import Footer from '@/components/Footer';
 import Newsletter from '@/components/Newsletter';
 import { BookSessionButton } from '@/components/ui/BookSessionButton';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { FAQ } from '@/components/home/FAQ';
 
 const sessions = [
   {
@@ -66,10 +68,16 @@ export default function SessionsPage() {
       <Navigation />
 
       {/* Hero */}
-      <section className="relative pt-40 md:pt-48 pb-24 md:pb-32 bg-[#2B2218] text-[#F0EBE3] overflow-hidden">
+      <section className="relative pt-32 md:pt-40 pb-24 md:pb-32 bg-[#2B2218] text-[#F0EBE3] overflow-hidden">
+
         <div className="absolute inset-0">
           <Image src="/images/bg-black.jpg" alt="" fill className="object-cover opacity-20" priority />
         </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-20 mb-8 md:mb-12">
+          <Breadcrumbs items={[{ label: 'Sessions', href: '/sessions' }]} className="text-[#F0EBE3]/60" />
+        </div>
+
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
           <FadeUpStaggerGroup className="max-w-3xl flex flex-col gap-8 mx-auto text-center">
             <FadeUp delay={0.1}>
@@ -181,6 +189,8 @@ export default function SessionsPage() {
           </section>
         ))}
       </div>
+
+      <FAQ />
 
       <Newsletter />
       <Footer />

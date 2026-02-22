@@ -5,10 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getSubstackFeed } from '@/lib/substack';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import { FadeUp } from '@/components/ui/FadeUp';
 import Newsletter from '@/components/Newsletter';
 import Script from 'next/script';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 // Generate dynamic metadata for the article
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -85,13 +85,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <article className="pt-32 md:pt-40 pb-24">
                 {/* Article Header */}
                 <header className="max-w-3xl mx-auto px-6 mb-16 md:mb-24 text-center flex flex-col items-center gap-6">
-                    <FadeUp delay={0.1}>
-                        <Link
-                            href="/blog/newsletter"
-                            className="inline-flex items-center gap-2 text-[#C96A45] font-sans text-[13px] font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity"
-                        >
-                            <ArrowLeft className="w-4 h-4" /> Back to Articles
-                        </Link>
+                    <FadeUp delay={0.1} className="w-full flex justify-center">
+                        <Breadcrumbs items={[{ label: 'Blog', href: '/blog/newsletter' }, { label: article.title, href: `/blog/newsletter/${article.slug}` }]} className="text-[#2B2218]/50" />
                     </FadeUp>
 
                     <FadeUp delay={0.2}>
@@ -136,6 +131,27 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             </div>
                         </div>
 
+                        {/* Audio Player for Podcasts */}
+                        {article.audioUrl && (
+                            <div className="mb-12 w-full bg-[#2B2218] text-[#F0EBE3] p-6 md:p-8 rounded-[24px] shadow-lg flex flex-col gap-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-[#C96A45] flex items-center justify-center flex-shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                            <path fillRule="evenodd" d="M19.952 1.651a.75.75 0 0 1 .298.599V16.303a3 3 0 0 1-2.176 2.884l-1.32.377a2.553 2.553 0 1 1-1.403-4.909l2.311-.66a1.5 1.5 0 0 0 1.088-1.442V6.994l-9 2.572v9.737a3 3 0 0 1-2.176 2.884l-1.32.377a2.553 2.553 0 1 1-1.402-4.909l2.31-.66a1.5 1.5 0 0 0 1.088-1.442V5.25a.75.75 0 0 1 .544-.721l10.5-3a.75.75 0 0 1 .65.122Z" clipRule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-sans text-[12px] font-semibold tracking-widest uppercase text-[#C96A45]">Listen</span>
+                                        <span className="font-serif text-[20px]">Podcast Episode</span>
+                                    </div>
+                                </div>
+                                <audio controls className="w-full mt-2 custom-audio-player">
+                                    <source src={article.audioUrl} type="audio/mpeg" />
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        )}
+
                         {/* Injected Content */}
                         <div
                             className="prose prose-lg md:prose-xl prose-stone max-w-none 
@@ -144,7 +160,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                          prose-a:text-[#C96A45] prose-a:underline prose-a:underline-offset-4
                          prose-strong:font-semibold prose-strong:text-[#2B2218]
                          prose-blockquote:font-serif prose-blockquote:text-[#2B2218] prose-blockquote:italic prose-blockquote:border-[#C96A45]
-                         prose-img:rounded-[16px] prose-img:w-full prose-img:shadow-sm mt-12"
+                         prose-img:rounded-[16px] prose-img:w-full prose-img:shadow-sm 
+                         prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-[16px] prose-iframe:shadow-sm mt-12"
                             dangerouslySetInnerHTML={{ __html: article.content }}
                         />
                     </div>
