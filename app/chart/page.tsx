@@ -91,6 +91,24 @@ function normalizeTimezone(input: string): string {
 
 type GateActivation = 'none' | 'personality' | 'design' | 'both';
 
+const CHART_TOKENS = {
+  chartBg: '#FAFAF7',
+  chartCream: '#F5F0E8',
+  chartBorder: '#D4C9B8',
+  centerOpen: '#FFFFFF',
+  centerOpenStroke: '#D4C9B8',
+  centerUndefinedStroke: '#B8A898',
+  centerPersonality: '#2A2218',
+  centerDesign: '#C8643C',
+  channelUndefined: '#E0D9CF',
+  channelPersonality: '#2A2218',
+  channelDesign: '#C8643C',
+  gateActivePersonality: '#1A1714',
+  gateActiveDesign: '#C8643C',
+  gateActiveBoth: '#8B4513',
+  gateInactive: '#D4C9B8',
+} as const;
+
 const CENTER_DEFINED_FILL: Record<CenterKey, string> = {
   HEAD: '#0F1116',
   AJNA: '#86B9B0',
@@ -104,12 +122,19 @@ const CENTER_DEFINED_FILL: Record<CenterKey, string> = {
 };
 
 function centerFill(centerKey: CenterKey, center: CenterState): string {
-  if (!center.defined) return '#F8F5EF';
+  if (!center.defined) return CHART_TOKENS.centerOpen;
+  if (center.definedBy === 'both') return 'url(#both-defined)';
   return CENTER_DEFINED_FILL[centerKey];
 }
 
 function centerStroke(center: CenterState): string {
-  return center.defined ? '#0E1016' : '#CEC5B6';
+  if (center.defined) return '#1A1714';
+  return center.open ? CHART_TOKENS.centerOpenStroke : CHART_TOKENS.centerUndefinedStroke;
+}
+
+function centerStrokeDash(center: CenterState): string | undefined {
+  if (center.defined) return undefined;
+  return center.open ? undefined : '4 3';
 }
 
 const PLANET_ORDER = [
@@ -148,12 +173,12 @@ const GATE_COORDS: Record<number, { x: number; y: number }> = {
   64: { x: 394, y: 103 }, 61: { x: 420, y: 94 }, 63: { x: 446, y: 103 },
   47: { x: 392, y: 152 }, 24: { x: 420, y: 166 }, 4: { x: 446, y: 152 }, 17: { x: 374, y: 188 }, 43: { x: 420, y: 206 }, 11: { x: 466, y: 188 },
   62: { x: 386, y: 258 }, 23: { x: 420, y: 258 }, 56: { x: 454, y: 258 }, 35: { x: 468, y: 284 }, 12: { x: 468, y: 314 }, 45: { x: 452, y: 340 }, 33: { x: 420, y: 348 }, 8: { x: 388, y: 340 }, 31: { x: 372, y: 314 }, 20: { x: 372, y: 284 }, 16: { x: 386, y: 258 },
-  1: { x: 420, y: 378 }, 13: { x: 455, y: 400 }, 25: { x: 452, y: 430 }, 46: { x: 420, y: 453 }, 2: { x: 388, y: 430 }, 15: { x: 385, y: 400 }, 10: { x: 420, y: 414 }, 7: { x: 420, y: 452 },
-  21: { x: 496, y: 396 }, 40: { x: 525, y: 428 }, 26: { x: 496, y: 452 }, 51: { x: 474, y: 428 },
-  5: { x: 390, y: 498 }, 14: { x: 420, y: 492 }, 29: { x: 450, y: 498 }, 59: { x: 456, y: 530 }, 9: { x: 450, y: 560 }, 3: { x: 420, y: 566 }, 42: { x: 390, y: 560 }, 27: { x: 384, y: 530 }, 34: { x: 420, y: 530 },
-  6: { x: 528, y: 490 }, 37: { x: 552, y: 518 }, 22: { x: 552, y: 548 }, 36: { x: 528, y: 575 }, 30: { x: 500, y: 575 }, 55: { x: 488, y: 548 }, 49: { x: 500, y: 518 },
-  48: { x: 305, y: 488 }, 57: { x: 330, y: 518 }, 44: { x: 330, y: 548 }, 50: { x: 305, y: 575 }, 32: { x: 277, y: 575 }, 28: { x: 265, y: 548 }, 18: { x: 277, y: 518 },
-  58: { x: 386, y: 646 }, 38: { x: 410, y: 664 }, 54: { x: 434, y: 664 }, 53: { x: 458, y: 646 }, 60: { x: 458, y: 678 }, 52: { x: 434, y: 692 }, 19: { x: 410, y: 692 }, 39: { x: 386, y: 678 }, 41: { x: 420, y: 678 },
+  1: { x: 420, y: 383 }, 13: { x: 455, y: 411 }, 25: { x: 452, y: 450 }, 46: { x: 420, y: 479 }, 2: { x: 388, y: 450 }, 15: { x: 385, y: 411 }, 10: { x: 420, y: 429 }, 7: { x: 420, y: 478 },
+  21: { x: 496, y: 406 }, 40: { x: 525, y: 447 }, 26: { x: 496, y: 478 }, 51: { x: 474, y: 447 },
+  5: { x: 390, y: 537 }, 14: { x: 420, y: 529 }, 29: { x: 450, y: 537 }, 59: { x: 456, y: 578 }, 9: { x: 450, y: 616 }, 3: { x: 420, y: 624 }, 42: { x: 390, y: 616 }, 27: { x: 384, y: 578 }, 34: { x: 420, y: 578 },
+  6: { x: 528, y: 526 }, 37: { x: 552, y: 562 }, 22: { x: 552, y: 601 }, 36: { x: 528, y: 635 }, 30: { x: 500, y: 635 }, 55: { x: 488, y: 601 }, 49: { x: 500, y: 562 },
+  48: { x: 305, y: 524 }, 57: { x: 330, y: 562 }, 44: { x: 330, y: 601 }, 50: { x: 305, y: 635 }, 32: { x: 277, y: 635 }, 28: { x: 265, y: 601 }, 18: { x: 277, y: 562 },
+  58: { x: 386, y: 726 }, 38: { x: 410, y: 749 }, 54: { x: 434, y: 749 }, 53: { x: 458, y: 726 }, 60: { x: 458, y: 767 }, 52: { x: 434, y: 785 }, 19: { x: 410, y: 785 }, 39: { x: 386, y: 767 }, 41: { x: 420, y: 767 },
 };
 
 const BODYGRAPH_CHANNELS = [
@@ -164,12 +189,92 @@ const BODYGRAPH_CHANNELS = [
   [30, 41], [55, 39], [49, 19], [21, 45],
 ] as const;
 
+const CHANNEL_CURVE_OFFSETS: Record<string, { x: number; y: number }> = {
+  '16-48': { x: -60, y: -8 },
+  '57-34': { x: -58, y: 12 },
+  '32-54': { x: -54, y: 16 },
+  '28-38': { x: -52, y: 10 },
+  '18-58': { x: -56, y: 10 },
+  '44-26': { x: -40, y: -14 },
+  '50-27': { x: -36, y: -10 },
+  '35-36': { x: 44, y: 8 },
+  '12-22': { x: 46, y: 8 },
+  '37-40': { x: 42, y: 5 },
+  '55-39': { x: 44, y: 10 },
+  '49-19': { x: 42, y: 6 },
+  '30-41': { x: 38, y: 12 },
+  '59-6': { x: 30, y: 0 },
+};
+
+const CENTER_GATES_BY_CENTER: Record<CenterKey, number[]> = {
+  HEAD: [64, 61, 63],
+  AJNA: [47, 24, 4, 17, 43, 11],
+  THROAT: [62, 23, 56, 35, 12, 45, 33, 8, 31, 20, 16],
+  G: [1, 13, 25, 46, 2, 15, 10, 7],
+  HEART: [21, 40, 26, 51],
+  SACRAL: [5, 14, 29, 59, 9, 3, 42, 27, 34],
+  SOLAR_PLEXUS: [6, 37, 22, 36, 30, 55, 49],
+  SPLEEN: [48, 57, 44, 50, 32, 28, 18],
+  ROOT: [58, 38, 54, 53, 60, 52, 19, 39, 41],
+};
+
+const GATE_TO_CENTER = (Object.entries(CENTER_GATES_BY_CENTER) as Array<[CenterKey, number[]]>).reduce((acc, [center, gates]) => {
+  gates.forEach((gate) => {
+    acc[gate] = center;
+  });
+  return acc;
+}, {} as Record<number, CenterKey>);
+
+const channelKey = (a: number, b: number) => (a < b ? `${a}-${b}` : `${b}-${a}`);
+
+function getChannelSegments(a: number, b: number) {
+  const p1 = GATE_COORDS[a];
+  const p2 = GATE_COORDS[b];
+  const key = channelKey(a, b);
+  const offset = CHANNEL_CURVE_OFFSETS[key];
+
+  if (!offset) {
+    const mx = (p1.x + p2.x) / 2;
+    const my = (p1.y + p2.y) / 2;
+    return {
+      full: `M${p1.x} ${p1.y} L${p2.x} ${p2.y}`,
+      first: `M${p1.x} ${p1.y} L${mx} ${my}`,
+      second: `M${p2.x} ${p2.y} L${mx} ${my}`,
+    };
+  }
+
+  const cx = (p1.x + p2.x) / 2 + offset.x;
+  const cy = (p1.y + p2.y) / 2 + offset.y;
+  const q0x = (p1.x + cx) / 2;
+  const q0y = (p1.y + cy) / 2;
+  const q1x = (cx + p2.x) / 2;
+  const q1y = (cy + p2.y) / 2;
+  const mx = (q0x + q1x) / 2;
+  const my = (q0y + q1y) / 2;
+
+  return {
+    full: `M${p1.x} ${p1.y} Q${cx} ${cy} ${p2.x} ${p2.y}`,
+    first: `M${p1.x} ${p1.y} Q${q0x} ${q0y} ${mx} ${my}`,
+    second: `M${p2.x} ${p2.y} Q${q1x} ${q1y} ${mx} ${my}`,
+  };
+}
+
+type HighlightState = {
+  gate?: number;
+  center?: CenterKey;
+  channel?: [number, number];
+  source?: GateActivation;
+  planet?: string;
+  side?: 'design' | 'personality';
+};
+
 function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
-  const definedMap = new Map(chart.definedChannels.map((c) => [`${c.gateA}-${c.gateB}`, c]));
+  const definedMap = new Map(chart.definedChannels.map((c) => [channelKey(c.gateA, c.gateB), c]));
   const personalityGateSet = new Set(chart.personalityData.map((p) => p.gate));
   const designGateSet = new Set(chart.designData.map((p) => p.gate));
   const designMap = new Map(chart.designData.map((p) => [p.planet, p]));
   const personalityMap = new Map(chart.personalityData.map((p) => [p.planet, p]));
+  const [highlight, setHighlight] = useState<HighlightState | null>(null);
 
   const activationForGate = (gate: number): GateActivation => {
     const inP = personalityGateSet.has(gate);
@@ -181,135 +286,419 @@ function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
   };
 
   const segmentColor = (activation: GateActivation) => {
-    if (activation === 'design') return '#C8643C';
-    if (activation === 'personality') return '#0D0F14';
-    if (activation === 'both') return '#0D0F14';
-    return '#1F232C';
+    if (activation === 'design') return CHART_TOKENS.channelDesign;
+    if (activation === 'personality') return CHART_TOKENS.channelPersonality;
+    if (activation === 'both') return CHART_TOKENS.gateActiveBoth;
+    return CHART_TOKENS.channelUndefined;
+  };
+
+  const hasHighlight = !!highlight;
+
+  const highlightedSets = useMemo(() => {
+    const gates = new Set<number>();
+    const channels = new Set<string>();
+    const centers = new Set<CenterKey>();
+
+    if (!highlight) return { gates, channels, centers };
+
+    const includeChannel = (a: number, b: number) => {
+      const key = channelKey(a, b);
+      if (definedMap.has(key)) channels.add(key);
+      gates.add(a);
+      gates.add(b);
+      centers.add(GATE_TO_CENTER[a]);
+      centers.add(GATE_TO_CENTER[b]);
+    };
+
+    if (highlight.gate) {
+      gates.add(highlight.gate);
+      centers.add(GATE_TO_CENTER[highlight.gate]);
+      BODYGRAPH_CHANNELS.forEach(([a, b]) => {
+        if (a === highlight.gate || b === highlight.gate) {
+          includeChannel(a, b);
+        }
+      });
+    }
+
+    if (highlight.center) {
+      centers.add(highlight.center);
+      CENTER_GATES_BY_CENTER[highlight.center].forEach((gate) => gates.add(gate));
+      BODYGRAPH_CHANNELS.forEach(([a, b]) => {
+        const centerA = GATE_TO_CENTER[a];
+        const centerB = GATE_TO_CENTER[b];
+        if (centerA === highlight.center || centerB === highlight.center) {
+          includeChannel(a, b);
+        }
+      });
+    }
+
+    if (highlight.channel) {
+      includeChannel(highlight.channel[0], highlight.channel[1]);
+    }
+
+    return { gates, channels, centers };
+  }, [highlight, definedMap]);
+
+  const designRows = PLANET_ORDER.map((planet) => ({ planet, data: designMap.get(planet) }));
+  const personalityRows = PLANET_ORDER.map((planet) => ({ planet, data: personalityMap.get(planet) }));
+
+  const centerVisual = (centerKey: CenterKey) => {
+    const center = chart.centers[centerKey];
+    const emphasized = hasHighlight && highlightedSets.centers.has(centerKey);
+    const faded = hasHighlight && !highlightedSets.centers.has(centerKey);
+    return {
+      fill: centerFill(centerKey, center),
+      stroke: emphasized ? '#D4785A' : centerStroke(center),
+      strokeWidth: emphasized ? 3.2 : center.defined ? 2.2 : 1.6,
+      strokeDasharray: centerStrokeDash(center),
+      opacity: faded ? 0.22 : 1,
+      filter: emphasized ? 'url(#center-glow)' : undefined,
+    };
   };
 
   return (
-    <div className={`relative transition-all duration-700 ${blurred ? 'blur-[8px]' : 'blur-0'}`}>
-      <svg viewBox="0 0 860 820" className="w-full h-auto rounded-2xl" role="img" aria-label={`Human Design Bodygraph for ${chart.input.name}: ${chart.type} type, Profile ${chart.profile}, ${chart.authority} Authority.`}>
+    <div
+      className={`relative transition-all duration-700 ${blurred ? 'blur-[8px]' : 'blur-0'}`}
+      onMouseLeave={() => setHighlight(null)}
+    >
+      <svg
+        viewBox="0 0 860 820"
+        className="w-full h-auto rounded-2xl"
+        role="img"
+        aria-label={`Human Design Bodygraph for ${chart.input.name}: ${chart.type} type, Profile ${chart.profile}, ${chart.authority} Authority.`}
+      >
         <defs>
-          <linearGradient id="chart-bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2E2F35" />
-            <stop offset="45%" stopColor="#171922" />
-            <stop offset="100%" stopColor="#11131A" />
+          <linearGradient id="chart-bg-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#23252D" />
+            <stop offset="30%" stopColor="#151820" />
+            <stop offset="50%" stopColor="#0F1219" />
+            <stop offset="70%" stopColor="#151820" />
+            <stop offset="100%" stopColor="#22242D" />
           </linearGradient>
-          <radialGradient id="chart-glow" cx="50%" cy="20%" r="70%">
-            <stop offset="0%" stopColor="#2E3345" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#0E1016" stopOpacity="0" />
+          <radialGradient id="chart-vignette" cx="50%" cy="20%" r="85%">
+            <stop offset="0%" stopColor="#2A2F3F" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#090C12" stopOpacity="0.72" />
           </radialGradient>
-          <pattern id="both-segment" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-            <rect width="4" height="8" fill="#0D0F14" />
-            <rect x="4" width="4" height="8" fill="#C8643C" />
+          <pattern id="both-defined" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+            <rect width="4" height="8" fill={CHART_TOKENS.channelPersonality} />
+            <rect x="4" width="4" height="8" fill={CHART_TOKENS.channelDesign} />
           </pattern>
+          <filter id="center-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3.2" floodColor="#D4785A" floodOpacity="0.5" />
+          </filter>
+          <filter id="channel-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="0" stdDeviation="2.4" floodColor="#CDEAE1" floodOpacity="0.45" />
+          </filter>
         </defs>
 
         <rect x="0" y="0" width="860" height="820" rx="20" fill="url(#chart-bg-grad)" />
-        <rect x="0" y="0" width="860" height="820" rx="20" fill="url(#chart-glow)" />
+        <rect x="0" y="0" width="860" height="820" rx="20" fill="url(#chart-vignette)" />
 
         <path
-          d="M420 64 C455 100 462 140 456 178 C500 214 514 278 503 360 C579 404 612 500 635 620 C646 682 611 720 550 726 L290 726 C229 720 194 682 205 620 C228 500 261 404 337 360 C326 278 340 214 384 178 C378 140 385 100 420 64 Z"
-          fill="#D9DBE3"
-          opacity="0.22"
+          d="M420 58 C456 94 463 138 456 176 C503 212 518 286 506 370 C594 420 632 528 652 662 C661 734 622 788 548 796 L292 796 C218 788 179 734 188 662 C208 528 246 420 334 370 C322 286 337 212 384 176 C377 138 384 94 420 58 Z"
+          fill="#D7D9E2"
+          opacity={hasHighlight ? 0.12 : 0.21}
         />
 
-        {BODYGRAPH_CHANNELS.map(([a, b]) => {
-          const ga = GATE_COORDS[a];
-          const gb = GATE_COORDS[b];
-          const hit = definedMap.get(`${a}-${b}`) || definedMap.get(`${b}-${a}`);
-          const key = `${a}-${b}`;
-          const mx = (ga.x + gb.x) / 2;
-          const my = (ga.y + gb.y) / 2;
-          const firstActivation = activationForGate(a);
-          const secondActivation = activationForGate(b);
-          const dFull = `M${ga.x} ${ga.y} L${gb.x} ${gb.y}`;
-          const dFirst = `M${ga.x} ${ga.y} L${mx} ${my}`;
-          const dSecond = `M${gb.x} ${gb.y} L${mx} ${my}`;
-
-          if (!hit) {
-            return <path key={key} d={dFull} fill="none" stroke="#232730" strokeWidth={8} strokeLinecap="round" opacity={0.92} />;
-          }
-
-          return (
-            <g key={key}>
-              <path d={dFull} fill="none" stroke="#0A0D12" strokeWidth={12} strokeLinecap="round" />
-              {firstActivation === 'both' ? (
-                <path d={dFirst} fill="none" stroke="url(#both-segment)" strokeWidth={8} strokeLinecap="round" />
-              ) : (
-                <path d={dFirst} fill="none" stroke={segmentColor(firstActivation)} strokeWidth={8} strokeLinecap="round" />
-              )}
-              {secondActivation === 'both' ? (
-                <path d={dSecond} fill="none" stroke="url(#both-segment)" strokeWidth={8} strokeLinecap="round" />
-              ) : (
-                <path d={dSecond} fill="none" stroke={segmentColor(secondActivation)} strokeWidth={8} strokeLinecap="round" />
-              )}
-            </g>
-          );
-        })}
-
-        <polygon points="370,70 470,70 420,145" fill={centerFill('HEAD', chart.centers.HEAD)} stroke={centerStroke(chart.centers.HEAD)} strokeWidth="2.3" />
-        <polygon points="370,190 470,190 420,115" fill={centerFill('AJNA', chart.centers.AJNA)} stroke={centerStroke(chart.centers.AJNA)} strokeWidth="2.3" />
-        <rect x="375" y="245" width="90" height="90" rx="16" fill={centerFill('THROAT', chart.centers.THROAT)} stroke={centerStroke(chart.centers.THROAT)} strokeWidth="2.3" />
-        <polygon points="420,350 470,400 420,450 370,400" fill={centerFill('G', chart.centers.G)} stroke={centerStroke(chart.centers.G)} strokeWidth="2.3" />
-        <polygon points="475,380 535,380 505,430" fill={centerFill('HEART', chart.centers.HEART)} stroke={centerStroke(chart.centers.HEART)} strokeWidth="2.3" />
-        <rect x="375" y="480" width="90" height="90" rx="16" fill={centerFill('SACRAL', chart.centers.SACRAL)} stroke={centerStroke(chart.centers.SACRAL)} strokeWidth="2.3" />
-        <polygon points="500,470 565,470 532,530" fill={centerFill('SOLAR_PLEXUS', chart.centers.SOLAR_PLEXUS)} stroke={centerStroke(chart.centers.SOLAR_PLEXUS)} strokeWidth="2.3" />
-        <polygon points="275,445 340,445 307,505" fill={centerFill('SPLEEN', chart.centers.SPLEEN)} stroke={centerStroke(chart.centers.SPLEEN)} strokeWidth="2.3" />
-        <rect x="375" y="620" width="90" height="72" rx="10" fill={centerFill('ROOT', chart.centers.ROOT)} stroke={centerStroke(chart.centers.ROOT)} strokeWidth="2.3" />
-
-        <g fill="#D8D1C4" fontSize="11" textAnchor="middle" fontFamily="var(--font-sans)">
-          <text x="420" y="112">HEAD</text>
-          <text x="420" y="163">AJNA</text>
-          <text x="420" y="292">THROAT</text>
-          <text x="420" y="404">G</text>
-          <text x="505" y="412">EGO</text>
-          <text x="420" y="528">SACRAL</text>
-          <text x="532" y="504">SP</text>
-          <text x="307" y="480">SPLEEN</text>
-          <text x="420" y="662">ROOT</text>
-        </g>
-
-        <g fontSize="10" fontFamily="var(--font-sans)" textAnchor="middle">
-          {Object.entries(GATE_COORDS).map(([gate, pos]) => {
-            const gateNum = Number(gate);
-            const activation = activationForGate(gateNum);
-            const active = activation !== 'none';
-            const fill = activation === 'design' ? '#C8643C' : '#0D0F14';
-            const text = active ? '#F7F4EF' : '#B8A898';
-            const stroke = activation === 'both' ? '#C8643C' : active ? '#06080C' : '#CEC5B6';
+        <g>
+          <text x="66" y="76" fill="#C6B79D" fontSize="12" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" letterSpacing="2.2">
+            DESIGN
+          </text>
+          <line x1="26" y1="86" x2="174" y2="86" stroke="#9CB7E8" strokeWidth="1.4" />
+          {designRows.map(({ planet, data }, idx) => {
+            const y = 110 + idx * 44;
+            const isActive = highlight?.side === 'design' && highlight.planet === planet;
             return (
-              <g key={`gate-${gate}`}>
-                <circle cx={pos.x} cy={pos.y} r={active ? 10.5 : 8.3} fill={active ? fill : '#F6F2EA'} stroke={stroke} strokeWidth={active ? 2 : 1.2} />
-                <text x={pos.x} y={pos.y + 3} fill={text} fontWeight={active ? 600 : 400}>
-                  {gate}
+              <g
+                key={`d-${planet}`}
+                onMouseEnter={() => {
+                  if (!data) return;
+                  setHighlight({ gate: data.gate, source: 'design', planet, side: 'design' });
+                }}
+                style={{ cursor: data ? 'pointer' : 'default' }}
+                opacity={hasHighlight && !isActive && highlight?.side === 'design' ? 0.45 : 1}
+              >
+                {isActive ? (
+                  <rect x={18} y={y - 20} rx={10} ry={10} width={160} height={38} fill="#FFFFFF2A" />
+                ) : null}
+                <text x={30} y={y} fill="#D4785A" fontSize="15" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">
+                  {data ? `${data.gate}.${data.line}` : '--'}
+                </text>
+                <text x={120} y={y} fill="#F1E7DB" fontSize="18" fontFamily="var(--font-sans)">
+                  {PLANET_GLYPH[planet]}
                 </text>
               </g>
             );
           })}
         </g>
 
-        <text x="60" y="72" fill="#C6B79D" fontSize="12" fontFamily="var(--font-sans)" letterSpacing="2.5">DESIGN</text>
-        <text x="790" y="72" fill="#9ACEC2" fontSize="12" fontFamily="var(--font-sans)" letterSpacing="2.5" textAnchor="end">PERSONALITY</text>
-
-        <g fill="#C8643C" fontSize="17" fontFamily="var(--font-sans)">
-          {PLANET_ORDER.map((planet, idx) => {
-            const p = designMap.get(planet);
+        <g textAnchor="end">
+          <text x="794" y="76" fill="#9ACEC2" fontSize="12" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" letterSpacing="2.2">
+            PERSONALITY
+          </text>
+          <line x1="686" y1="86" x2="834" y2="86" stroke="#9ACEC2" strokeWidth="1.4" />
+          {personalityRows.map(({ planet, data }, idx) => {
+            const y = 110 + idx * 44;
+            const isActive = highlight?.side === 'personality' && highlight.planet === planet;
             return (
-              <text key={`d-${planet}`} x="56" y={106 + idx * 40}>
-                {PLANET_GLYPH[planet]} {p ? `${p.gate}.${p.line}` : '--'}
-              </text>
+              <g
+                key={`p-${planet}`}
+                onMouseEnter={() => {
+                  if (!data) return;
+                  setHighlight({ gate: data.gate, source: 'personality', planet, side: 'personality' });
+                }}
+                style={{ cursor: data ? 'pointer' : 'default' }}
+                opacity={hasHighlight && !isActive && highlight?.side === 'personality' ? 0.45 : 1}
+              >
+                {isActive ? (
+                  <rect x={684} y={y - 20} rx={10} ry={10} width={160} height={38} fill="#FFFFFF2A" />
+                ) : null}
+                <text x={734} y={y} fill="#A5DACD" fontSize="15" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">
+                  {data ? `${data.gate}.${data.line}` : '--'}
+                </text>
+                <text x={804} y={y} fill="#A5DACD" fontSize="18" fontFamily="var(--font-sans)">
+                  {PLANET_GLYPH[planet]}
+                </text>
+              </g>
             );
           })}
         </g>
-        <g fill="#DCE2F0" fontSize="17" fontFamily="var(--font-sans)" textAnchor="end">
-          {PLANET_ORDER.map((planet, idx) => {
-            const p = personalityMap.get(planet);
+
+        {BODYGRAPH_CHANNELS.map(([a, b]) => {
+          const key = channelKey(a, b);
+          const hit = definedMap.get(key);
+          const firstActivation = activationForGate(a);
+          const secondActivation = activationForGate(b);
+          const segments = getChannelSegments(a, b);
+          const focused = !hasHighlight || highlightedSets.channels.has(key);
+          const direct = !!(
+            (highlight?.gate && (highlight.gate === a || highlight.gate === b)) ||
+            (highlight?.channel && channelKey(highlight.channel[0], highlight.channel[1]) === key)
+          );
+          const channelOpacity = focused ? 1 : 0.12;
+
+          if (!hit) {
             return (
-              <text key={`p-${planet}`} x="804" y={106 + idx * 40}>
-                {p ? `${p.gate}.${p.line}` : '--'} {PLANET_GLYPH[planet]}
-              </text>
+              <path
+                key={key}
+                d={segments.full}
+                fill="none"
+                stroke={CHART_TOKENS.channelUndefined}
+                strokeWidth={4}
+                strokeLinecap="round"
+                opacity={channelOpacity}
+              />
+            );
+          }
+
+          return (
+            <g
+              key={key}
+              opacity={channelOpacity}
+              style={{ cursor: 'pointer' }}
+              onMouseEnter={() => setHighlight({ channel: [a, b] })}
+            >
+              <path d={segments.full} fill="none" stroke="#0A0D12" strokeWidth={13} strokeLinecap="round" />
+              {direct ? (
+                <path d={segments.full} fill="none" stroke="#CDEAE1" strokeWidth={16} strokeLinecap="round" opacity={0.28} filter="url(#channel-glow)" />
+              ) : null}
+              {firstActivation === 'both' ? (
+                <path d={segments.first} fill="none" stroke="url(#both-defined)" strokeWidth={8.2} strokeLinecap="round" />
+              ) : (
+                <path d={segments.first} fill="none" stroke={segmentColor(firstActivation)} strokeWidth={8.2} strokeLinecap="round" />
+              )}
+              {secondActivation === 'both' ? (
+                <path d={segments.second} fill="none" stroke="url(#both-defined)" strokeWidth={8.2} strokeLinecap="round" />
+              ) : (
+                <path d={segments.second} fill="none" stroke={segmentColor(secondActivation)} strokeWidth={8.2} strokeLinecap="round" />
+              )}
+            </g>
+          );
+        })}
+
+        <g
+          onMouseEnter={() => setHighlight({ center: 'HEAD' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('HEAD').opacity}
+        >
+          <polygon
+            points="370,70 470,70 420,145"
+            fill={centerVisual('HEAD').fill}
+            stroke={centerVisual('HEAD').stroke}
+            strokeWidth={centerVisual('HEAD').strokeWidth}
+            strokeDasharray={centerVisual('HEAD').strokeDasharray}
+            filter={centerVisual('HEAD').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'AJNA' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('AJNA').opacity}
+        >
+          <polygon
+            points="370,190 470,190 420,115"
+            fill={centerVisual('AJNA').fill}
+            stroke={centerVisual('AJNA').stroke}
+            strokeWidth={centerVisual('AJNA').strokeWidth}
+            strokeDasharray={centerVisual('AJNA').strokeDasharray}
+            filter={centerVisual('AJNA').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'THROAT' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('THROAT').opacity}
+        >
+          <rect
+            x="375"
+            y="245"
+            width="90"
+            height="90"
+            rx="16"
+            fill={centerVisual('THROAT').fill}
+            stroke={centerVisual('THROAT').stroke}
+            strokeWidth={centerVisual('THROAT').strokeWidth}
+            strokeDasharray={centerVisual('THROAT').strokeDasharray}
+            filter={centerVisual('THROAT').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'G' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('G').opacity}
+        >
+          <polygon
+            points="420,352 470,412 420,478 370,412"
+            fill={centerVisual('G').fill}
+            stroke={centerVisual('G').stroke}
+            strokeWidth={centerVisual('G').strokeWidth}
+            strokeDasharray={centerVisual('G').strokeDasharray}
+            filter={centerVisual('G').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'HEART' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('HEART').opacity}
+        >
+          <polygon
+            points="475,383 535,383 505,450"
+            fill={centerVisual('HEART').fill}
+            stroke={centerVisual('HEART').stroke}
+            strokeWidth={centerVisual('HEART').strokeWidth}
+            strokeDasharray={centerVisual('HEART').strokeDasharray}
+            filter={centerVisual('HEART').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'SACRAL' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('SACRAL').opacity}
+        >
+          <rect
+            x="375"
+            y="514"
+            width="90"
+            height="108"
+            rx="16"
+            fill={centerVisual('SACRAL').fill}
+            stroke={centerVisual('SACRAL').stroke}
+            strokeWidth={centerVisual('SACRAL').strokeWidth}
+            strokeDasharray={centerVisual('SACRAL').strokeDasharray}
+            filter={centerVisual('SACRAL').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'SOLAR_PLEXUS' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('SOLAR_PLEXUS').opacity}
+        >
+          <polygon
+            points="500,501 565,501 532,578"
+            fill={centerVisual('SOLAR_PLEXUS').fill}
+            stroke={centerVisual('SOLAR_PLEXUS').stroke}
+            strokeWidth={centerVisual('SOLAR_PLEXUS').strokeWidth}
+            strokeDasharray={centerVisual('SOLAR_PLEXUS').strokeDasharray}
+            filter={centerVisual('SOLAR_PLEXUS').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'SPLEEN' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('SPLEEN').opacity}
+        >
+          <polygon
+            points="275,469 340,469 307,546"
+            fill={centerVisual('SPLEEN').fill}
+            stroke={centerVisual('SPLEEN').stroke}
+            strokeWidth={centerVisual('SPLEEN').strokeWidth}
+            strokeDasharray={centerVisual('SPLEEN').strokeDasharray}
+            filter={centerVisual('SPLEEN').filter}
+          />
+        </g>
+        <g
+          onMouseEnter={() => setHighlight({ center: 'ROOT' })}
+          style={{ cursor: 'pointer' }}
+          opacity={centerVisual('ROOT').opacity}
+        >
+          <rect
+            x="375"
+            y="693"
+            width="90"
+            height="92"
+            rx="12"
+            fill={centerVisual('ROOT').fill}
+            stroke={centerVisual('ROOT').stroke}
+            strokeWidth={centerVisual('ROOT').strokeWidth}
+            strokeDasharray={centerVisual('ROOT').strokeDasharray}
+            filter={centerVisual('ROOT').filter}
+          />
+        </g>
+
+        <g fill="#D8D1C4" fontSize="11" textAnchor="middle" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" opacity={hasHighlight ? 0.75 : 1}>
+          <text x="420" y="112">HEAD</text>
+          <text x="420" y="163">AJNA</text>
+          <text x="420" y="292">THROAT</text>
+          <text x="420" y="420">G</text>
+          <text x="505" y="436">EGO</text>
+          <text x="420" y="573">SACRAL</text>
+          <text x="532" y="548">SP</text>
+          <text x="307" y="515">SPLEEN</text>
+          <text x="420" y="746">ROOT</text>
+        </g>
+
+        <g fontSize="10" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" textAnchor="middle">
+          {Object.entries(GATE_COORDS).map(([gate, pos]) => {
+            const gateNum = Number(gate);
+            const activation = activationForGate(gateNum);
+            const active = activation !== 'none';
+            const focused = !hasHighlight || highlightedSets.gates.has(gateNum);
+            const isPrimary = highlight?.gate === gateNum;
+            const fill =
+              activation === 'design'
+                ? CHART_TOKENS.gateActiveDesign
+                : activation === 'personality'
+                  ? CHART_TOKENS.gateActivePersonality
+                  : activation === 'both'
+                    ? CHART_TOKENS.gateActiveBoth
+                    : '#F6F2EA';
+            const text = active ? '#F7F4EF' : '#B8A898';
+            const stroke = active ? '#06080C' : '#CEC5B6';
+            return (
+              <g
+                key={`gate-${gate}`}
+                onMouseEnter={() => setHighlight({ gate: gateNum, source: activation })}
+                style={{ cursor: 'pointer' }}
+                opacity={focused ? 1 : 0.22}
+              >
+                {isPrimary ? (
+                  <circle cx={pos.x} cy={pos.y} r={13.5} fill="none" stroke="#D4785A" strokeWidth={2.6} />
+                ) : null}
+                <circle cx={pos.x} cy={pos.y} r={active ? 10.8 : 8.5} fill={fill} stroke={stroke} strokeWidth={active ? 2.1 : 1.3} />
+                <text x={pos.x} y={pos.y + 3} fill={text} fontWeight={active ? 700 : 500}>
+                  {gate}
+                </text>
+              </g>
             );
           })}
         </g>
