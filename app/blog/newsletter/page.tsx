@@ -70,10 +70,10 @@ export default async function NewsletterIndex() {
                         <FadeUp delay={0.4}>
                             <Link
                                 href={`/blog/newsletter/${featuredArticle.slug}`}
-                                className="group flex flex-col md:flex-row gap-8 md:gap-16 items-center bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-[#2B2218]/5"
+                                className="group flex flex-col md:flex-row md:items-stretch gap-8 md:gap-16 bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-[#2B2218]/5"
                             >
                                 {/* Image */}
-                                <div className="relative w-full md:w-1/2 aspect-[4/3] md:aspect-[5/4] bg-[#F7F4EF] overflow-hidden">
+                                <div className="relative w-full md:w-1/2 aspect-[4/3] md:aspect-auto md:self-stretch bg-[#F7F4EF] overflow-hidden">
                                     {featuredArticle.coverImage ? (
                                         <Image
                                             src={featuredArticle.coverImage}
@@ -205,10 +205,10 @@ export default async function NewsletterIndex() {
                         </div>
                     </FadeUp>
 
-                    <FadeUpStaggerGroup className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
+                    <FadeUpStaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {recentGridArticles.map((article, i) => (
-                            <FadeUp delay={0.1 + (i % 3) * 0.1} key={article.id} className="break-inside-avoid">
-                                <Link href={`/blog/newsletter/${article.slug}`} className="group flex flex-col gap-6 mb-8">
+                            <FadeUp delay={0.1 + (i % 3) * 0.1} key={article.id}>
+                                <Link href={`/blog/newsletter/${article.slug}`} className="group flex flex-col gap-6 h-full">
                                     <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-[#EBE4D8]/50 border border-[#2B2218]/5">
                                         {article.coverImage ? (
                                             <Image
