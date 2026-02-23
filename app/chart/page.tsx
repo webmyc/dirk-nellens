@@ -89,11 +89,27 @@ function normalizeTimezone(input: string): string {
   return input.trim().replace(/\s*\/\s*/g, '/').replace(/\s+/g, '_');
 }
 
-function centerFill(center: CenterState): string {
-  if (!center.defined) return '#FFFFFF';
-  if (center.definedBy === 'design') return '#C8643C';
-  if (center.definedBy === 'personality') return '#2A2218';
-  return 'url(#both-defined)';
+type GateActivation = 'none' | 'personality' | 'design' | 'both';
+
+const CENTER_DEFINED_FILL: Record<CenterKey, string> = {
+  HEAD: '#0F1116',
+  AJNA: '#86B9B0',
+  THROAT: '#5E4F4B',
+  G: '#E5E1A1',
+  HEART: '#D35F5A',
+  SACRAL: '#D65E5E',
+  SOLAR_PLEXUS: '#5E4F4B',
+  SPLEEN: '#0F1116',
+  ROOT: '#5E4F4B',
+};
+
+function centerFill(centerKey: CenterKey, center: CenterState): string {
+  if (!center.defined) return '#F8F5EF';
+  return CENTER_DEFINED_FILL[centerKey];
+}
+
+function centerStroke(center: CenterState): string {
+  return center.defined ? '#0E1016' : '#CEC5B6';
 }
 
 const PLANET_ORDER = [
@@ -155,20 +171,48 @@ function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
   const designMap = new Map(chart.designData.map((p) => [p.planet, p]));
   const personalityMap = new Map(chart.personalityData.map((p) => [p.planet, p]));
 
+  const activationForGate = (gate: number): GateActivation => {
+    const inP = personalityGateSet.has(gate);
+    const inD = designGateSet.has(gate);
+    if (inP && inD) return 'both';
+    if (inP) return 'personality';
+    if (inD) return 'design';
+    return 'none';
+  };
+
+  const segmentColor = (activation: GateActivation) => {
+    if (activation === 'design') return '#C8643C';
+    if (activation === 'personality') return '#0D0F14';
+    if (activation === 'both') return '#0D0F14';
+    return '#1F232C';
+  };
+
   return (
     <div className={`relative transition-all duration-700 ${blurred ? 'blur-[8px]' : 'blur-0'}`}>
-      <svg viewBox="0 0 840 780" className="w-full h-auto" role="img" aria-label={`Human Design Bodygraph for ${chart.input.name}: ${chart.type} type, Profile ${chart.profile}, ${chart.authority} Authority.`}>
+      <svg viewBox="0 0 860 820" className="w-full h-auto rounded-2xl" role="img" aria-label={`Human Design Bodygraph for ${chart.input.name}: ${chart.type} type, Profile ${chart.profile}, ${chart.authority} Authority.`}>
         <defs>
-          <pattern id="both-defined" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-            <rect width="4" height="8" fill="#2A2218" />
+          <linearGradient id="chart-bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#2E2F35" />
+            <stop offset="45%" stopColor="#171922" />
+            <stop offset="100%" stopColor="#11131A" />
+          </linearGradient>
+          <radialGradient id="chart-glow" cx="50%" cy="20%" r="70%">
+            <stop offset="0%" stopColor="#2E3345" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#0E1016" stopOpacity="0" />
+          </radialGradient>
+          <pattern id="both-segment" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+            <rect width="4" height="8" fill="#0D0F14" />
             <rect x="4" width="4" height="8" fill="#C8643C" />
           </pattern>
         </defs>
 
+        <rect x="0" y="0" width="860" height="820" rx="20" fill="url(#chart-bg-grad)" />
+        <rect x="0" y="0" width="860" height="820" rx="20" fill="url(#chart-glow)" />
+
         <path
-          d="M420 60 C450 95 455 130 450 165 C490 200 500 260 490 340 C560 380 590 470 610 580 C620 635 590 670 540 675 L300 675 C250 670 220 635 230 580 C250 470 280 380 350 340 C340 260 350 200 390 165 C385 130 390 95 420 60 Z"
-          fill="#221f1a"
-          opacity="0.08"
+          d="M420 64 C455 100 462 140 456 178 C500 214 514 278 503 360 C579 404 612 500 635 620 C646 682 611 720 550 726 L290 726 C229 720 194 682 205 620 C228 500 261 404 337 360 C326 278 340 214 384 178 C378 140 385 100 420 64 Z"
+          fill="#D9DBE3"
+          opacity="0.22"
         />
 
         {BODYGRAPH_CHANNELS.map(([a, b]) => {
@@ -176,36 +220,46 @@ function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
           const gb = GATE_COORDS[b];
           const hit = definedMap.get(`${a}-${b}`) || definedMap.get(`${b}-${a}`);
           const key = `${a}-${b}`;
-          const d = `M${ga.x} ${ga.y} L${gb.x} ${gb.y}`;
+          const mx = (ga.x + gb.x) / 2;
+          const my = (ga.y + gb.y) / 2;
+          const firstActivation = activationForGate(a);
+          const secondActivation = activationForGate(b);
+          const dFull = `M${ga.x} ${ga.y} L${gb.x} ${gb.y}`;
+          const dFirst = `M${ga.x} ${ga.y} L${mx} ${my}`;
+          const dSecond = `M${gb.x} ${gb.y} L${mx} ${my}`;
 
           if (!hit) {
-            return <path key={key} d={d} fill="none" stroke="#D4C9B8" strokeWidth={4} strokeLinecap="round" opacity={0.62} />;
+            return <path key={key} d={dFull} fill="none" stroke="#232730" strokeWidth={8} strokeLinecap="round" opacity={0.92} />;
           }
 
-          if (hit.definedBy === 'both') {
-            return (
-              <g key={key}>
-                <path d={d} fill="none" stroke="#2A2218" strokeWidth={11} strokeLinecap="round" />
-                <path d={d} fill="none" stroke="#C8643C" strokeWidth={6} strokeLinecap="round" strokeDasharray="14 10" />
-              </g>
-            );
-          }
-
-          const color = hit.definedBy === 'design' ? '#C8643C' : '#2A2218';
-          return <path key={key} d={d} fill="none" stroke={color} strokeWidth={11} strokeLinecap="round" />;
+          return (
+            <g key={key}>
+              <path d={dFull} fill="none" stroke="#0A0D12" strokeWidth={12} strokeLinecap="round" />
+              {firstActivation === 'both' ? (
+                <path d={dFirst} fill="none" stroke="url(#both-segment)" strokeWidth={8} strokeLinecap="round" />
+              ) : (
+                <path d={dFirst} fill="none" stroke={segmentColor(firstActivation)} strokeWidth={8} strokeLinecap="round" />
+              )}
+              {secondActivation === 'both' ? (
+                <path d={dSecond} fill="none" stroke="url(#both-segment)" strokeWidth={8} strokeLinecap="round" />
+              ) : (
+                <path d={dSecond} fill="none" stroke={segmentColor(secondActivation)} strokeWidth={8} strokeLinecap="round" />
+              )}
+            </g>
+          );
         })}
 
-        <polygon points="370,70 470,70 420,145" fill={centerFill(chart.centers.HEAD)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="370,190 470,190 420,115" fill={centerFill(chart.centers.AJNA)} stroke="#D4C9B8" strokeWidth="2" />
-        <rect x="375" y="245" width="90" height="90" fill={centerFill(chart.centers.THROAT)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="420,350 470,400 420,450 370,400" fill={centerFill(chart.centers.G)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="475,380 535,380 505,430" fill={centerFill(chart.centers.HEART)} stroke="#D4C9B8" strokeWidth="2" />
-        <rect x="375" y="480" width="90" height="90" fill={centerFill(chart.centers.SACRAL)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="500,470 565,470 532,530" fill={centerFill(chart.centers.SOLAR_PLEXUS)} stroke="#D4C9B8" strokeWidth="2" />
-        <polygon points="275,445 340,445 307,505" fill={centerFill(chart.centers.SPLEEN)} stroke="#D4C9B8" strokeWidth="2" />
-        <rect x="375" y="620" width="90" height="72" fill={centerFill(chart.centers.ROOT)} stroke="#D4C9B8" strokeWidth="2" />
+        <polygon points="370,70 470,70 420,145" fill={centerFill('HEAD', chart.centers.HEAD)} stroke={centerStroke(chart.centers.HEAD)} strokeWidth="2.3" />
+        <polygon points="370,190 470,190 420,115" fill={centerFill('AJNA', chart.centers.AJNA)} stroke={centerStroke(chart.centers.AJNA)} strokeWidth="2.3" />
+        <rect x="375" y="245" width="90" height="90" rx="16" fill={centerFill('THROAT', chart.centers.THROAT)} stroke={centerStroke(chart.centers.THROAT)} strokeWidth="2.3" />
+        <polygon points="420,350 470,400 420,450 370,400" fill={centerFill('G', chart.centers.G)} stroke={centerStroke(chart.centers.G)} strokeWidth="2.3" />
+        <polygon points="475,380 535,380 505,430" fill={centerFill('HEART', chart.centers.HEART)} stroke={centerStroke(chart.centers.HEART)} strokeWidth="2.3" />
+        <rect x="375" y="480" width="90" height="90" rx="16" fill={centerFill('SACRAL', chart.centers.SACRAL)} stroke={centerStroke(chart.centers.SACRAL)} strokeWidth="2.3" />
+        <polygon points="500,470 565,470 532,530" fill={centerFill('SOLAR_PLEXUS', chart.centers.SOLAR_PLEXUS)} stroke={centerStroke(chart.centers.SOLAR_PLEXUS)} strokeWidth="2.3" />
+        <polygon points="275,445 340,445 307,505" fill={centerFill('SPLEEN', chart.centers.SPLEEN)} stroke={centerStroke(chart.centers.SPLEEN)} strokeWidth="2.3" />
+        <rect x="375" y="620" width="90" height="72" rx="10" fill={centerFill('ROOT', chart.centers.ROOT)} stroke={centerStroke(chart.centers.ROOT)} strokeWidth="2.3" />
 
-        <g fill="#D4C9B8" fontSize="11" textAnchor="middle" fontFamily="var(--font-sans)">
+        <g fill="#D8D1C4" fontSize="11" textAnchor="middle" fontFamily="var(--font-sans)">
           <text x="420" y="112">HEAD</text>
           <text x="420" y="163">AJNA</text>
           <text x="420" y="292">THROAT</text>
@@ -220,14 +274,14 @@ function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
         <g fontSize="10" fontFamily="var(--font-sans)" textAnchor="middle">
           {Object.entries(GATE_COORDS).map(([gate, pos]) => {
             const gateNum = Number(gate);
-            const inP = personalityGateSet.has(gateNum);
-            const inD = designGateSet.has(gateNum);
-            const active = inP || inD;
-            const fill = inP && inD ? '#2A2218' : inD ? '#C8643C' : inP ? '#2A2218' : '#EFE7DB';
-            const text = inP && inD ? '#F7F4EF' : inD ? '#F7F4EF' : inP ? '#F7F4EF' : '#B8A898';
+            const activation = activationForGate(gateNum);
+            const active = activation !== 'none';
+            const fill = activation === 'design' ? '#C8643C' : '#0D0F14';
+            const text = active ? '#F7F4EF' : '#B8A898';
+            const stroke = activation === 'both' ? '#C8643C' : active ? '#06080C' : '#CEC5B6';
             return (
               <g key={`gate-${gate}`}>
-                <circle cx={pos.x} cy={pos.y} r={active ? 9 : 7} fill={fill} stroke={active ? '#1A1714' : '#D4C9B8'} strokeWidth={active ? 1.4 : 1} />
+                <circle cx={pos.x} cy={pos.y} r={active ? 10.5 : 8.3} fill={active ? fill : '#F6F2EA'} stroke={stroke} strokeWidth={active ? 2 : 1.2} />
                 <text x={pos.x} y={pos.y + 3} fill={text} fontWeight={active ? 600 : 400}>
                   {gate}
                 </text>
@@ -236,21 +290,24 @@ function BodyGraph({ chart, blurred }: { chart: ChartData; blurred: boolean }) {
           })}
         </g>
 
-        <g fill="#2A2218" fontSize="18" fontFamily="var(--font-sans)">
+        <text x="60" y="72" fill="#C6B79D" fontSize="12" fontFamily="var(--font-sans)" letterSpacing="2.5">DESIGN</text>
+        <text x="790" y="72" fill="#9ACEC2" fontSize="12" fontFamily="var(--font-sans)" letterSpacing="2.5" textAnchor="end">PERSONALITY</text>
+
+        <g fill="#C8643C" fontSize="17" fontFamily="var(--font-sans)">
           {PLANET_ORDER.map((planet, idx) => {
             const p = designMap.get(planet);
             return (
-              <text key={`d-${planet}`} x="58" y={116 + idx * 38}>
+              <text key={`d-${planet}`} x="56" y={106 + idx * 40}>
                 {PLANET_GLYPH[planet]} {p ? `${p.gate}.${p.line}` : '--'}
               </text>
             );
           })}
         </g>
-        <g fill="#C8643C" fontSize="18" fontFamily="var(--font-sans)" textAnchor="end">
+        <g fill="#DCE2F0" fontSize="17" fontFamily="var(--font-sans)" textAnchor="end">
           {PLANET_ORDER.map((planet, idx) => {
             const p = personalityMap.get(planet);
             return (
-              <text key={`p-${planet}`} x="785" y={116 + idx * 38}>
+              <text key={`p-${planet}`} x="804" y={106 + idx * 40}>
                 {p ? `${p.gate}.${p.line}` : '--'} {PLANET_GLYPH[planet]}
               </text>
             );
@@ -522,21 +579,21 @@ export default function ChartPage() {
 
       <section className="pb-16 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white border border-[#D4C9B8] rounded-xl p-6 md:p-8 relative overflow-hidden">
+          <div className="bg-[#101319] border border-[#2B2F38] rounded-2xl p-4 md:p-6 relative overflow-hidden">
             <div className="mb-6">
-              <p className="text-[12px] uppercase tracking-[0.14em] text-[#5A4F47]">Preview</p>
-              <h2 className="font-serif text-3xl mt-1">{chart ? `${chart.type} · ${chart.profile}` : 'Your Type · Your Profile'}</h2>
-              <p className="text-[#5A4F47] mt-2">Authority: {chart?.authority ?? 'Pending calculation'}</p>
+              <p className="text-[12px] uppercase tracking-[0.14em] text-[#9DA7B8]">Preview</p>
+              <h2 className="font-serif text-3xl mt-1 text-white">{chart ? `${chart.type} · ${chart.profile}` : 'Your Type · Your Profile'}</h2>
+              <p className="text-[#C9D2E3] mt-2">Authority: {chart?.authority ?? 'Pending calculation'}</p>
             </div>
 
             {phase === 'loading' ? (
-              <div className="h-[680px] flex flex-col items-center justify-center text-center">
+              <div className="h-[760px] flex flex-col items-center justify-center text-center">
                 <motion.div
                   animate={{ scale: [1, 1.04, 1], opacity: [0.7, 1, 0.8] }}
                   transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
                   className="w-[160px] h-[160px] border-2 border-[#C8643C] rounded-full border-dashed"
                 />
-                <p className="mt-6 text-[#5A4F47]">Calculating your chart...</p>
+                <p className="mt-6 text-[#C9D2E3]">Calculating your chart...</p>
               </div>
             ) : chart ? (
               <>
@@ -565,7 +622,7 @@ export default function ChartPage() {
                 ) : null}
               </>
             ) : (
-              <div className="h-[680px] flex items-center justify-center text-[#8A7B72]">Generate your chart to see the bodygraph preview.</div>
+              <div className="h-[760px] flex items-center justify-center text-[#A9B3C7]">Generate your chart to see the bodygraph preview.</div>
             )}
           </div>
         </div>
