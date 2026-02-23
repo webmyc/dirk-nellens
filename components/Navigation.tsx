@@ -16,9 +16,11 @@ const sessions = [
   { label: 'Couples Therapy Session', href: '/sessions#couples' },
 ];
 
-const media = [
+const primaryLinks = [
+  { label: 'Reflections', href: '/blog/newsletter' },
   { label: 'Podcasts', href: '/podcasts' },
-  { label: 'Videos', href: '/#videos' },
+  { label: 'Inner Circle', href: '/community' },
+  { label: 'About', href: '/about' },
 ];
 
 export default function Navigation() {
@@ -54,25 +56,26 @@ export default function Navigation() {
     setOpenAccordion(prev => (prev === key ? null : key));
 
   const closeMobile = () => setMobileOpen(false);
+  const isActivePath = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <>
       <header
         className={`fixed top-0 w-full z-[100] transition-all duration-500 ease-in-out border-b ${isScrolled
-          ? 'bg-[#F7F4EF]/90 backdrop-blur-xl border-white/20 shadow-sm py-3 text-[#2B2218]'
+          ? 'bg-[#F7F4EF]/95 backdrop-blur-xl border-[#2B2218]/10 shadow-[0_8px_30px_rgba(43,34,24,0.08)] py-2.5 text-[#2B2218]'
           : isDarkHero
-            ? 'bg-transparent border-transparent py-4 text-white'
-            : 'bg-[#F7F4EF]/60 backdrop-blur-md border-white/10 py-4 text-[#2B2218]'
+            ? 'bg-gradient-to-b from-black/35 to-transparent border-transparent py-4 text-white'
+            : 'bg-[#F7F4EF]/80 backdrop-blur-md border-[#2B2218]/8 py-3.5 text-[#2B2218]'
           }`}
       >
         <div
           className="absolute top-0 left-0 h-[2px] bg-[#C96A45] z-[60]"
           style={{ width: `${scrollProgress}%` }}
         />
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between relative mt-[2px]">
-          <Link href="/" className="flex items-center gap-4 group">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 xl:px-12 flex items-center justify-between relative mt-[2px]">
+          <Link href="/" className="flex items-center gap-3 group">
             <div
-              className={`relative flex-shrink-0 transition-all duration-300 ease-in-out ${isScrolled ? 'w-[58px] h-[58px]' : 'w-[62px] h-[62px] md:w-[82px] md:h-[82px]'}`}
+              className={`relative flex-shrink-0 transition-all duration-300 ease-in-out ${isScrolled ? 'w-[50px] h-[50px]' : 'w-[54px] h-[54px] md:w-[68px] md:h-[68px]'}`}
             >
               <Image
                 src={isDarkHero && !isScrolled ? "/logo/logo-symbol-white.png" : "/logo/logo-symbol-black.png"}
@@ -82,48 +85,49 @@ export default function Navigation() {
               />
             </div>
             <div className="flex flex-col leading-none">
-              <span className={`font-serif tracking-wide transition-all duration-300 ${isScrolled ? 'text-[1.1rem]' : 'text-[1.25rem] md:text-[1.5rem]'}`}>
+              <span className={`font-serif tracking-[0.01em] transition-all duration-300 ${isScrolled ? 'text-[1.28rem]' : 'text-[1.38rem] md:text-[1.52rem]'}`}>
                 Dirk Nellens
               </span>
-              <span className="font-sans text-[10px] uppercase tracking-[0.2em] opacity-70 mt-1">
+              <span className={`font-sans text-[10px] uppercase tracking-[0.22em] mt-1 transition-opacity ${isDarkHero && !isScrolled ? 'opacity-75' : 'opacity-60'}`}>
                 Human Design
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-7 lg:gap-8 text-[15px] font-sans font-medium tracking-tight">
-            <DesktopDropdown label="Online Courses" isScrolled={isScrolled} isDarkHero={isDarkHero}>
-              <DropdownLink href="/courses">View All Courses</DropdownLink>
-            </DesktopDropdown>
+          <nav className="hidden lg:flex items-center text-[15px] font-sans tracking-tight">
+            <div className="flex items-center gap-5 xl:gap-7">
+              <DesktopDropdown
+                label="Online Courses"
+                isScrolled={isScrolled}
+                isDarkHero={isDarkHero}
+                active={isActivePath('/courses')}
+              >
+                <DropdownLink href="/courses">View All Courses</DropdownLink>
+              </DesktopDropdown>
 
-            <Link href="/blog/newsletter" className="relative py-1 group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
-              Reflections
-            </Link>
+              {primaryLinks.map((link) => (
+                <DesktopNavLink
+                  key={link.href}
+                  href={link.href}
+                  isActive={isActivePath(link.href)}
+                  isScrolled={isScrolled}
+                  isDarkHero={isDarkHero}
+                >
+                  {link.label}
+                </DesktopNavLink>
+              ))}
+            </div>
 
-            <Link href="/podcasts" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
-              Podcasts
-            </Link>
-
-            <Link href="/community" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
-              Inner Circle
-            </Link>
-
-            <Link href="/about" className="relative group/link hover:text-[#C96A45] transition-colors flex items-center h-full">
-              About
-            </Link>
+            <div className={`mx-5 xl:mx-6 h-7 w-px ${isDarkHero && !isScrolled ? 'bg-white/25' : 'bg-[#2B2218]/12'}`} />
 
             <DesktopDropdown
-              label={
-                <div className="flex flex-col items-center leading-tight">
-                  <span>Human Design & Therapy</span>
-                  <span>Sessions</span>
-                </div>
-              }
+              label="Sessions"
               isScrolled={isScrolled}
               isDarkHero={isDarkHero}
-              outlineCta
+              active={isActivePath('/sessions')}
               alignRight
+              pill
             >
               {sessions.map(s => (
                 <DropdownLink key={s.href} href={s.href}>{s.label}</DropdownLink>
@@ -133,7 +137,10 @@ export default function Navigation() {
 
             <Link
               href="/book"
-              className="flex items-center justify-center rounded-full px-7 py-2 bg-[#C96A45] text-[#F0EBE3] text-[15px] font-semibold tracking-wide hover:scale-[1.03] hover:bg-[#b05c3b] hover:shadow-md transition-all duration-300 ml-2"
+              className={`ml-3 inline-flex items-center justify-center rounded-full px-6 py-2.5 text-[15px] font-semibold tracking-[0.01em] transition-all duration-300 ${isDarkHero && !isScrolled
+                ? 'bg-[#C96A45] text-[#F7F4EF] hover:bg-[#b45f3d] shadow-[0_10px_24px_rgba(24,12,6,0.35)]'
+                : 'bg-[#C96A45] text-[#F7F4EF] hover:bg-[#b45f3d] shadow-[0_8px_18px_rgba(201,106,69,0.28)]'
+                }`}
             >
               The Book
             </Link>
@@ -281,26 +288,75 @@ export default function Navigation() {
   );
 }
 
-function DesktopDropdown({ label, children, isScrolled, isDarkHero, outlineCta, alignRight }: { label: React.ReactNode; children: React.ReactNode; isScrolled: boolean; isDarkHero?: boolean; outlineCta?: boolean; alignRight?: boolean }) {
+function DesktopDropdown({
+  label,
+  children,
+  isScrolled,
+  isDarkHero,
+  alignRight,
+  pill,
+  active,
+}: {
+  label: React.ReactNode;
+  children: React.ReactNode;
+  isScrolled: boolean;
+  isDarkHero?: boolean;
+  alignRight?: boolean;
+  pill?: boolean;
+  active?: boolean;
+}) {
   const isWhite = isDarkHero && !isScrolled;
+  const triggerClass = pill
+    ? isWhite
+      ? `px-[18px] py-2 rounded-full border transition-all duration-300 ${active ? 'border-white/70 bg-white/15 text-white' : 'border-white/40 hover:border-white/70 hover:bg-white/10 text-white'}`
+      : `px-[18px] py-2 rounded-full border transition-all duration-300 ${active ? 'border-[#C96A45]/55 bg-[#C96A45]/12 text-[#2B2218]' : 'border-[#2B2218]/14 bg-[#2B2218]/5 hover:border-[#C96A45]/45 hover:bg-[#C96A45]/8 text-[#2B2218]'}`
+    : isWhite
+      ? `relative py-1 text-white/90 hover:text-white transition-colors duration-200 ${active ? 'text-white' : ''}`
+      : `relative py-1 text-[#2B2218]/90 hover:text-[#2B2218] transition-colors duration-200 ${active ? 'text-[#2B2218]' : ''}`;
   return (
-    <div className={`relative group/link ${outlineCta ? 'ml-2' : 'py-1'} cursor-pointer`}>
-      <div className={`flex items-center gap-1 transition-all duration-300 ${outlineCta
-        ? `px-5 py-2 rounded-full border ${isWhite ? 'border-white/50 hover:bg-white/10 text-white' : 'border-[#C96A45]/30 hover:border-[#C96A45] bg-[#C96A45]/5 text-[#2B2218]'}`
-        : ''
-        }`}>
-        {label}
-        <ChevronDown className={`w-3.5 h-3.5 mt-0.5 group-hover/link:rotate-180 transition-transform duration-200 ${outlineCta && isWhite ? 'text-white/80' : ''}`} />
+    <div className={`relative group/dropdown ${pill ? '' : 'py-1'} cursor-pointer`}>
+      <div className={`flex items-center gap-1.5 font-medium ${triggerClass}`}>
+        <span>{label}</span>
+        <ChevronDown className={`w-3.5 h-3.5 group-hover/dropdown:rotate-180 transition-transform duration-200 ${isWhite ? 'text-white/80' : 'text-[#2B2218]/55'}`} />
       </div>
-      {!outlineCta && (
-        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover/link:scale-x-100" />
+      {!pill && (
+        <span
+          className={`absolute -bottom-0.5 left-0 h-[1.5px] bg-current origin-left transition-transform duration-300 ease-out ${active ? 'w-full scale-x-100' : 'w-full scale-x-0 group-hover/dropdown:scale-x-100'}`}
+        />
       )}
-      <div className={`absolute top-full flex ${alignRight ? 'right-0 justify-end' : 'left-0 justify-start'} mt-[1px] pt-4 min-w-[240px] opacity-0 invisible group-hover/link:opacity-100 group-hover/link:visible transition-all duration-200 translate-y-1 group-hover/link:translate-y-0`}>
-        <div className="bg-[#F7F4EF]/95 backdrop-blur-md shadow-xl rounded-2xl py-2 px-2 border border-[#2B2218]/5 text-[#2B2218] text-left min-w-[240px]">
+      <div className={`absolute top-full flex ${alignRight ? 'right-0 justify-end' : 'left-0 justify-start'} mt-[2px] pt-4 min-w-[240px] opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-200 translate-y-1 group-hover/dropdown:translate-y-0`}>
+        <div className="bg-[#F7F4EF]/95 backdrop-blur-md shadow-xl rounded-2xl py-2 px-2 border border-[#2B2218]/5 text-[#2B2218] text-left min-w-[260px]">
           {children}
         </div>
       </div>
     </div>
+  );
+}
+
+function DesktopNavLink({
+  href,
+  children,
+  isActive,
+  isScrolled,
+  isDarkHero,
+}: {
+  href: string;
+  children: React.ReactNode;
+  isActive?: boolean;
+  isScrolled: boolean;
+  isDarkHero?: boolean;
+}) {
+  const isWhite = isDarkHero && !isScrolled;
+  return (
+    <Link
+      href={href}
+      className={`group relative py-1 font-medium transition-colors duration-200 ${isWhite ? 'text-white/85 hover:text-white' : 'text-[#2B2218]/90 hover:text-[#2B2218]'} ${isActive ? (isWhite ? 'text-white' : 'text-[#2B2218]') : ''}`}
+    >
+      {children}
+      <span
+        className={`absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-current origin-left transition-transform duration-300 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}
+      />
+    </Link>
   );
 }
 

@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human Design Chart Visualizer — Full Technical Spec</title>
+<style>
+  :root {
+    --terracotta: #C8643C;
+    --cream: #F5F0E8;
+    --cream-dark: #EDE7D8;
+    --ink: #1A1714;
+    --ink-light: #5A4F47;
+    --gold: #B8934A;
+    --defined: #C8643C;
+    --unconscious: #D4785A;
+    --mono: 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #FAFAF8;
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  .cover {
+    background: var(--terracotta);
+    color: white;
+    padding: 120px 80px;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .cover-eyebrow {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 24px;
+  }
+  .cover h1 {
+    font-size: 56px;
+    line-height: 1.05;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    max-width: 700px;
+    margin-bottom: 32px;
+  }
+  .cover-meta {
+    font-size: 14px;
+    opacity: 0.6;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+  }
+  .toc {
+    background: var(--cream);
+    padding: 80px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .toc h2 {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 32px;
+    font-weight: normal;
+    font-family: 'Courier New', monospace;
+  }
+  .toc ol {
+    list-style: none;
+    columns: 2;
+    gap: 40px;
+  }
+  .toc li {
+    margin-bottom: 8px;
+    font-size: 15px;
+    break-inside: avoid;
+  }
+  .toc a {
+    color: var(--terracotta);
+    text-decoration: none;
+  }
+  .toc a:hover { text-decoration: underline; }
+  .toc .section-num {
+    color: var(--ink-light);
+    font-family: var(--mono);
+    font-size: 12px;
+    margin-right: 8px;
+  }
+  .container { max-width: 860px; margin: 0 auto; padding: 0 48px; }
+  section { padding: 80px 0; border-bottom: 1px solid var(--cream-dark); }
+  section:last-child { border-bottom: none; }
+  h2 {
+    font-size: 36px;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 40px;
+    color: var(--ink);
+  }
+  h2 .section-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 12px;
+    font-weight: normal;
+  }
+  h3 {
+    font-size: 22px;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    margin: 48px 0 16px;
+    color: var(--ink);
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin: 32px 0 12px;
+    font-family: var(--mono);
+  }
+  p { margin-bottom: 20px; max-width: 640px; }
+  p.wide { max-width: 100%; }
+  ul, ol { padding-left: 24px; margin-bottom: 20px; max-width: 640px; }
+  li { margin-bottom: 8px; line-height: 1.65; }
+  code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--cream);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--terracotta);
+  }
+  pre {
+    background: var(--ink);
+    color: #E8DDD4;
+    padding: 32px 36px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 24px 0 32px;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  pre .comment { color: #8A7B72; }
+  pre .key { color: #D4A574; }
+  pre .string { color: #8FBC8F; }
+  pre .number { color: #9BB8D4; }
+  pre .keyword { color: #C8B4F0; }
+  .callout {
+    background: var(--cream);
+    border-left: 4px solid var(--terracotta);
+    padding: 24px 28px;
+    border-radius: 0 8px 8px 0;
+    margin: 32px 0;
+    max-width: 100%;
+  }
+  .callout p { max-width: 100%; margin-bottom: 0; }
+  .callout strong { color: var(--terracotta); }
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0 32px;
+    font-size: 15px;
+  }
+  .spec-table th {
+    background: var(--ink);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    font-weight: normal;
+  }
+  .spec-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--cream-dark);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .spec-table tr:nth-child(even) td { background: var(--cream); }
+  .spec-table td code { background: none; padding: 0; }
+  .center-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .center-card {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid var(--cream-dark);
+  }
+  .center-card .shape {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 12px;
+  }
+  .center-card h5 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: var(--terracotta);
+  }
+  .center-card p {
+    font-size: 13px;
+    color: var(--ink-light);
+    margin: 0;
+    max-width: 100%;
+  }
+  .flow-step {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    align-items: flex-start;
+  }
+  .flow-num {
+    background: var(--terracotta);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .flow-content h4 { margin-top: 0; }
+  .flow-content p { max-width: 100%; }
+  .color-swatch {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: var(--mono);
+    margin-right: 6px;
+  }
+  .tag-required { background: #FEE2D5; color: var(--terracotta); }
+  .tag-optional { background: #E8F0FE; color: #4A6FA5; }
+  .tag-api { background: #E8F5E9; color: #2E7D32; }
+  blockquote {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink-light);
+    font-style: italic;
+    padding: 32px 0;
+    border-top: 1px solid var(--cream-dark);
+    border-bottom: 1px solid var(--cream-dark);
+    margin: 40px 0;
+    max-width: 640px;
+  }
+  .pdf-preview {
+    background: white;
+    border: 1px solid var(--cream-dark);
+    border-radius: 12px;
+    padding: 48px;
+    margin: 32px 0;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  }
+  .pdf-preview .pdf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--cream-dark);
+    margin-bottom: 32px;
+  }
+  .pdf-preview .pdf-logo {
+    width: 48px;
+    height: 48px;
+    background: var(--terracotta);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-family: Georgia, serif;
+  }
+  .pdf-preview .pdf-title {
+    font-size: 26px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .pdf-preview .pdf-meta {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-family: var(--mono);
+  }
+  .svg-spec {
+    background: var(--ink);
+    border-radius: 12px;
+    padding: 48px;
+    margin: 32px 0;
+  }
+  .svg-spec svg { display: block; margin: 0 auto; }
+  .implementation-note {
+    background: #FFF8F5;
+    border: 1px solid #F0C4A8;
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 24px 0;
+    font-size: 15px;
+  }
+  .implementation-note h4 { color: var(--terracotta); margin-top: 0; }
+  @media (max-width: 768px) {
+    .cover { padding: 60px 32px; }
+    .cover h1 { font-size: 36px; }
+    .toc { padding: 48px 32px; }
+    .toc ol { columns: 1; }
+    .container { padding: 0 24px; }
+    h2 { font-size: 28px; }
+    .center-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <p class="cover-eyebrow">dirk.respira.cafe — component specification</p>
+  <h1>Human Design Body&shy;graph Visualizer</h1>
+  <p class="cover-meta">Full Technical Spec · v1.0 · February 2026 · For Antigravity / Gemini 2.5 Pro</p>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><span class="section-num">01</span><a href="#overview">What we're building</a></li>
+    <li><span class="section-num">02</span><a href="#hd-primer">Human Design primer for engineers</a></li>
+    <li><span class="section-num">03</span><a href="#user-flow">User flow — all 7 steps</a></li>
+    <li><span class="section-num">04</span><a href="#form-design">Step 1: The intake form</a></li>
+    <li><span class="section-num">05</span><a href="#calculation">Step 2: Chart calculation engine</a></li>
+    <li><span class="section-num">06</span><a href="#bodygraph-svg">Step 3: Bodygraph SVG specification</a></li>
+    <li><span class="section-num">07</span><a href="#chart-data">Step 4: Chart data panel</a></li>
+    <li><span class="section-num">08</span><a href="#email-gate">Step 5: Email gate</a></li>
+    <li><span class="section-num">09</span><a href="#pdf">Step 6: PDF generation spec</a></li>
+    <li><span class="section-num">10</span><a href="#reading-cta">Step 7: Reading CTA</a></li>
+    <li><span class="section-num">11</span><a href="#animations">Animations & transitions</a></li>
+    <li><span class="section-num">12</span><a href="#design-tokens">Design tokens</a></li>
+    <li><span class="section-num">13</span><a href="#api-integration">API & backend</a></li>
+    <li><span class="section-num">14</span><a href="#stack">Tech stack recommendations</a></li>
+  </ol>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+<!-- 01 OVERVIEW -->
+<section id="overview">
+  <h2><span class="section-label">01 — Overview</span>What we're building</h2>
+
+  <p>A fully interactive Human Design Bodygraph generator, embedded as a page or modal on dirk.respira.cafe. A visitor enters their birth data, gets a stunning visual of their unique energetic blueprint, downloads a branded PDF — and is invited to book a session with Dirk to understand what it means.</p>
+
+  <p>This is the site's primary lead generation tool. It should feel as refined as the rest of the site: unhurried, professional, deeply considered. Not a widget — an experience.</p>
+
+  <div class="callout">
+    <p><strong>The strategic arc:</strong> curiosity → engagement → email capture → chart reveal → desire → booking. Every step of the design serves this arc without ever feeling like a funnel.</p>
+  </div>
+
+  <h3>Success metrics this serves</h3>
+  <ul>
+    <li>Email list growth — every chart requires an email address</li>
+    <li>Session bookings — every chart ends with an invitation to work with Dirk</li>
+    <li>Brand authority — a beautiful, accurate chart positions Dirk at the same level as the best in the field</li>
+    <li>Shareability — the downloadable PDF carries Dirk's logo wherever it travels</li>
+  </ul>
+
+  <h3>Route</h3>
+  <p>The chart generator lives at <code>/chart</code>. It is also accessible via a prominent CTA on the homepage and the sessions page. On desktop it can optionally open as a full-screen overlay from anywhere on the site.</p>
+</section>
+
+<!-- 02 HD PRIMER -->
+<section id="hd-primer">
+  <h2><span class="section-label">02 — Technical Context</span>Human Design primer for engineers</h2>
+
+  <p>Before coding anything, the team needs to understand what a Human Design chart actually contains. Here is the minimum viable understanding.</p>
+
+  <h3>The calculation</h3>
+  <p>A Human Design chart requires two astronomical calculations, both using the <strong>Swiss Ephemeris</strong> — the same library used by professional astrology software:</p>
+
+  <ol>
+    <li><strong>Personality (Conscious / Black):</strong> Planetary positions at the exact moment of birth.</li>
+    <li><strong>Design (Unconscious / Red):</strong> Planetary positions approximately 88 days (~88 degrees solar arc) before birth. This represents the "soul's imprint" before incarnation.</li>
+  </ol>
+
+  <p>13 planetary bodies are used: Sun, Earth, Moon, North Node, South Node, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto.</p>
+
+  <p>Each planet's position maps to one of 64 Gates (corresponding to the 64 hexagrams of the I Ching). This mapping uses the Rave Mandala — a 360° wheel where each gate occupies a specific arc.</p>
+
+  <h3>The 9 Centers</h3>
+  <p class="wide">The Bodygraph has 9 energy centers, arranged in a specific geometric pattern representing the human body:</p>
+
+  <div class="center-grid">
+    <div class="center-card">
+      <h5>Head (Crown)</h5>
+      <p>Triangle ▽ at top. Pressure center. Mental inspiration. Gates: 64, 61, 63.</p>
+    </div>
+    <div class="center-card">
+      <h5>Ajna (Mind)</h5>
+      <p>Triangle △. Awareness center. Mental certainty. Gates: 47, 24, 4, 17, 43, 11.</p>
+    </div>
+    <div class="center-card">
+      <h5>Throat</h5>
+      <p>Square □. Expression & manifestation. Gates: 62, 23, 56, 35, 12, 45, 33, 8, 31, 20, 16.</p>
+    </div>
+    <div class="center-card">
+      <h5>G / Identity</h5>
+      <p>Diamond ◇. Love, direction, self. Gates: 1, 13, 25, 46, 2, 15, 10, 7.</p>
+    </div>
+    <div class="center-card">
+      <h5>Heart / Will (Ego)</h5>
+      <p>Small triangle ▽. Willpower, ego. Gates: 21, 40, 26, 51.</p>
+    </div>
+    <div class="center-card">
+      <h5>Sacral</h5>
+      <p>Square □ (large). Life force, sexuality, work. Gates: 5, 14, 29, 59, 9, 3, 42, 27, 34.</p>
+    </div>
+    <div class="center-card">
+      <h5>Solar Plexus</h5>
+      <p>Triangle △. Emotions, desire, spirit. Gates: 6, 37, 22, 36, 30, 55, 49.</p>
+    </div>
+    <div class="center-card">
+      <h5>Spleen</h5>
+      <p>Triangle ▽. Intuition, health, time. Gates: 48, 57, 44, 50, 32, 28, 18.</p>
+    </div>
+    <div class="center-card">
+      <h5>Root</h5>
+      <p>Square □ at bottom. Pressure, adrenaline. Gates: 58, 38, 54, 53, 60, 52, 19, 39, 41.</p>
+    </div>
+  </div>
+
+  <h3>Centers: Defined vs Undefined vs Open</h3>
+  <ul>
+    <li><strong>Defined (colored):</strong> When both gates forming a channel are activated by either Personality or Design calculation. This center runs consistently. Color = terracotta for Design, black for Personality, striped for both.</li>
+    <li><strong>Undefined (white with gate activations):</strong> Has some gate activations but no complete channel.</li>
+    <li><strong>Open (completely white):</strong> No gate activations at all. Maximum receptivity.</li>
+  </ul>
+
+  <h3>The 36 Channels</h3>
+  <p>Channels are the connections between centers. A channel is defined when both of its two gate endpoints are activated. When a channel is defined, it defines both connected centers.</p>
+
+  <p>Complete list of the 36 channels (Gate A – Gate B connecting Center X to Center Y):</p>
+
+  <pre><span class="comment">// THE 36 CHANNELS — Gate pairs that form each channel</span>
+<span class="comment">// Format: [gateA, gateB, centerA, centerB, name]</span>
+const CHANNELS = [
+  [64, 47, 'HEAD', 'AJNA', 'Abstraction'],
+  [61, 24, 'HEAD', 'AJNA', 'Awareness'],
+  [63, 4,  'HEAD', 'AJNA', 'Logic'],
+  [17, 62, 'AJNA', 'THROAT', 'Acceptance'],
+  [43, 23, 'AJNA', 'THROAT', 'Structuring'],
+  [11, 56, 'AJNA', 'THROAT', 'Curiosity'],
+  [16, 48, 'THROAT', 'SPLEEN', 'Wavelength'],
+  [20, 57, 'THROAT', 'SPLEEN', 'Brainwave'],
+  [31, 7,  'THROAT', 'G', 'The Alpha'],
+  [8,  1,  'THROAT', 'G', 'Inspiration'],
+  [33, 13, 'THROAT', 'G', 'Prodigal'],
+  [35, 36, 'THROAT', 'SOLAR_PLEXUS', 'Transitoriness'],
+  [12, 22, 'THROAT', 'SOLAR_PLEXUS', 'Openness'],
+  [45, 21, 'THROAT', 'HEART', 'Money Line'],
+  [10, 20, 'G', 'THROAT', 'Awakening'],
+  [10, 57, 'G', 'SPLEEN', 'Perfected Form'],
+  [25, 51, 'G', 'HEART', 'Initiation'],
+  [46, 29, 'G', 'SACRAL', 'Discovery'],
+  [2,  14, 'G', 'SACRAL', 'The Beat'],
+  [15, 5,  'G', 'SACRAL', 'Rhythm'],
+  [7,  31, 'G', 'THROAT', 'Alpha'],
+  [44, 26, 'SPLEEN', 'HEART', 'Surrender'],
+  [50, 27, 'SPLEEN', 'SACRAL', 'Preservation'],
+  [32, 54, 'SPLEEN', 'ROOT', 'Transformation'],
+  [28, 38, 'SPLEEN', 'ROOT', 'Struggle'],
+  [18, 58, 'SPLEEN', 'ROOT', 'Judgment'],
+  [57, 34, 'SPLEEN', 'SACRAL', 'Power'],
+  [59, 6,  'SACRAL', 'SOLAR_PLEXUS', 'Mating'],
+  [29, 46, 'SACRAL', 'G', 'Discovery'],
+  [27, 50, 'SACRAL', 'SPLEEN', 'Preservation'],
+  [34, 57, 'SACRAL', 'SPLEEN', 'Power'],
+  [34, 20, 'SACRAL', 'THROAT', 'Charisma'],
+  [5,  15, 'SACRAL', 'G', 'Rhythm'],
+  [14, 2,  'SACRAL', 'G', 'The Beat'],
+  [9,  52, 'SACRAL', 'ROOT', 'Concentration'],
+  [3,  60, 'SACRAL', 'ROOT', 'Mutation'],
+  [42, 53, 'SACRAL', 'ROOT', 'Maturation'],
+  [37, 40, 'SOLAR_PLEXUS', 'HEART', 'Community'],
+  [30, 41, 'SOLAR_PLEXUS', 'ROOT', 'Recognition'],
+  [55, 39, 'SOLAR_PLEXUS', 'ROOT', 'Emoting'],
+  [49, 19, 'SOLAR_PLEXUS', 'ROOT', 'Synthesis'],
+  [6,  59, 'SOLAR_PLEXUS', 'SACRAL', 'Mating'],
+  [36, 35, 'SOLAR_PLEXUS', 'THROAT', 'Transitoriness'],
+  [22, 12, 'SOLAR_PLEXUS', 'THROAT', 'Openness'],
+  [40, 37, 'HEART', 'SOLAR_PLEXUS', 'Community'],
+  [21, 45, 'HEART', 'THROAT', 'Money Line'],
+  [26, 44, 'HEART', 'SPLEEN', 'Surrender'],
+  [51, 25, 'HEART', 'G', 'Initiation'],
+  [58, 18, 'ROOT', 'SPLEEN', 'Judgment'],
+  [38, 28, 'ROOT', 'SPLEEN', 'Struggle'],
+  [54, 32, 'ROOT', 'SPLEEN', 'Transformation'],
+  [53, 42, 'ROOT', 'SACRAL', 'Maturation'],
+  [60, 3,  'ROOT', 'SACRAL', 'Mutation'],
+  [52, 9,  'ROOT', 'SACRAL', 'Concentration'],
+  [19, 49, 'ROOT', 'SOLAR_PLEXUS', 'Synthesis'],
+  [39, 55, 'ROOT', 'SOLAR_PLEXUS', 'Emoting'],
+  [41, 30, 'ROOT', 'SOLAR_PLEXUS', 'Recognition'],
+];</pre>
+
+  <h3>Types — determined by defined centers</h3>
+  <table class="spec-table">
+    <thead>
+      <tr><th>Type</th><th>Condition</th><th>% of Pop.</th><th>Strategy</th><th>Authority typical</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Generator</td><td>Sacral defined. No direct motor-to-throat connection unless through defined centers.</td><td>37%</td><td>Respond</td><td>Sacral</td></tr>
+      <tr><td>Manifesting Generator</td><td>Sacral defined + motor connected to Throat.</td><td>33%</td><td>Respond, then inform</td><td>Sacral</td></tr>
+      <tr><td>Projector</td><td>Sacral undefined. No motor to Throat. Some centers defined.</td><td>20%</td><td>Wait for invitation</td><td>Emotional / Splenic / Self-Projected</td></tr>
+      <tr><td>Manifestor</td><td>Motor directly or indirectly connected to Throat. Sacral undefined.</td><td>9%</td><td>Inform</td><td>Emotional / Splenic</td></tr>
+      <tr><td>Reflector</td><td>No centers defined.</td><td>1%</td><td>Wait 28 days</td><td>Lunar</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Profile — the 12 archetypes</h3>
+  <p>Profile is derived from the Lines of the Sun gate in both Personality and Design calculations. Each of the 64 gates has 6 lines, so a gate reading like "32.5" means Gate 32, Line 5. The profile combines Personality line + Design line (e.g., "1/3 Investigator/Martyr").</p>
+
+  <table class="spec-table">
+    <thead><tr><th>Profile</th><th>Name</th><th>Profile</th><th>Name</th></tr></thead>
+    <tbody>
+      <tr><td>1/3</td><td>Investigator / Martyr</td><td>4/1</td><td>Opportunist / Investigator</td></tr>
+      <tr><td>1/4</td><td>Investigator / Opportunist</td><td>4/6</td><td>Opportunist / Role Model</td></tr>
+      <tr><td>2/4</td><td>Hermit / Opportunist</td><td>5/1</td><td>Heretic / Investigator</td></tr>
+      <tr><td>2/5</td><td>Hermit / Heretic</td><td>5/2</td><td>Heretic / Hermit</td></tr>
+      <tr><td>3/5</td><td>Martyr / Heretic</td><td>6/2</td><td>Role Model / Hermit</td></tr>
+      <tr><td>3/6</td><td>Martyr / Role Model</td><td>6/3</td><td>Role Model / Martyr</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Authority — decision-making style</h3>
+  <p>Authority is determined by which motor centers are defined and in what order:</p>
+  <ol>
+    <li><strong>Emotional Solar Plexus</strong> — Solar Plexus defined. Must wait for emotional clarity.</li>
+    <li><strong>Sacral</strong> — Sacral defined, Solar Plexus not. Gut response in the moment.</li>
+    <li><strong>Splenic</strong> — Spleen defined, Sacral &amp; Solar Plexus not. In-the-moment intuition.</li>
+    <li><strong>Ego / Heart Projected</strong> — Heart defined, no Sacral/Solar Plexus/Spleen. Willpower-based.</li>
+    <li><strong>Self-Projected (G Center)</strong> — G Center connected to Throat. Talking it out.</li>
+    <li><strong>Mental / None (Sounding Board)</strong> — No motors defined. Projector-specific. Outer authority.</li>
+    <li><strong>Lunar</strong> — Reflectors only. Waiting a full lunar cycle.</li>
+  </ol>
+
+  <h3>Incarnation Cross</h3>
+  <p>Derived from the 4 gate numbers of Sun and Earth in both Personality and Design. There are 192 crosses in 4 families: Right Angle, Left Angle, Juxtaposition, Quarter. Display the name (e.g., "Right Angle Cross of the Unexpected") and the 4 gate numbers.</p>
+</section>
+
+<!-- 03 USER FLOW -->
+<section id="user-flow">
+  <h2><span class="section-label">03 — UX Architecture</span>User flow — all 7 steps</h2>
+
+  <div class="flow-step">
+    <div class="flow-num">1</div>
+    <div class="flow-content">
+      <h4>Entry — The Intake Form</h4>
+      <p>User lands on <code>/chart</code> or opens the overlay from any page. They see a clean, editorial form: full name, date of birth, time of birth, location of birth. A brief, warm explanation of why each field matters. No technical jargon.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">2</div>
+    <div class="flow-content">
+      <h4>Loading — The Wait</h4>
+      <p>After form submission, an animated loading state plays for 2–4 seconds. Not a spinner — a breathing, animated version of the bodygraph outline, slowly filling in. This builds anticipation.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">3</div>
+    <div class="flow-content">
+      <h4>Preview — Chart Silhouette</h4>
+      <p>The bodygraph appears, but blurred (filter: blur(8px)) with a translucent overlay. The user can see their chart taking shape — colors, defined centers — but cannot read the details. Type and Profile appear clearly above. This creates desire.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">4</div>
+    <div class="flow-content">
+      <h4>Email Gate — Unlock Full Chart</h4>
+      <p>A centered overlay card asks for an email address to "reveal your full chart and receive a downloadable PDF." One field. One button. The email is used for the PDF and added to Dirk's list. After entering email, chart unblurs with a smooth animation.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">5</div>
+    <div class="flow-content">
+      <h4>Full Chart Reveal</h4>
+      <p>The complete bodygraph renders in full fidelity. Below: a data panel explaining the user's Type, Strategy, Authority, Profile, defined channels, and defined centers. The language is warm and accessible, not clinical.</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">6</div>
+    <div class="flow-content">
+      <h4>PDF Download</h4>
+      <p>A "Download Your Chart" button generates a beautifully designed PDF on the fly. The PDF includes the bodygraph image, all chart data, Dirk's logo, a short description of each defined center, and an invitation to book a session. Requires the email address (already captured).</p>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">7</div>
+    <div class="flow-content">
+      <h4>Reading Invitation</h4>
+      <p>After the chart fully reveals, a section below (or a delayed modal after 15 seconds) invites the user to book a session with Dirk. The copy speaks directly to what they just discovered about themselves. This is the conversion moment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 FORM DESIGN -->
+<section id="form-design">
+  <h2><span class="section-label">04 — Step 1</span>The intake form</h2>
+
+  <h3>Layout</h3>
+  <p>Full-screen or large modal. Cream background. Maximum width 640px, centered. The form should feel like an invitation, not a data collection form.</p>
+
+  <h3>Page intro copy (do not change)</h3>
+  <blockquote>"Your birth data is the starting point for understanding your energetic design. Enter your details below to generate your unique Human Design chart."</blockquote>
+
+  <h3>Form fields</h3>
+  <table class="spec-table">
+    <thead><tr><th>Field</th><th>Type</th><th>Validation</th><th>Helper Text</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Full Name</td>
+        <td><code>text</code></td>
+        <td>Required, 2+ chars</td>
+        <td>"Your name will appear on your chart."</td>
+      </tr>
+      <tr>
+        <td>Date of Birth</td>
+        <td><code>date</code> or 3 selects (Day/Month/Year)</td>
+        <td>Required, not future, min 1900</td>
+        <td>"Even a day's difference can shift your chart."</td>
+      </tr>
+      <tr>
+        <td>Time of Birth</td>
+        <td><code>time</code> or HH:MM + AM/PM</td>
+        <td>Required. "I don't know" option</td>
+        <td>"Exact time matters for your Authority and Centers. Check your birth certificate if unsure."</td>
+      </tr>
+      <tr>
+        <td>Location of Birth</td>
+        <td>Text + autocomplete (Google Places API)</td>
+        <td>Required, must resolve to lat/lng</td>
+        <td>"City and country is enough. We need this to calculate your local time zone."</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Time of birth edge case:</strong> If user selects "I don't know my birth time," generate the chart using noon (12:00) and show a notice: "Without an exact birth time, your Authority and some Centers may be inaccurate. Consider requesting your birth certificate for a full reading." The bodygraph still generates — it just carries a caveat.</p>
+  </div>
+
+  <h3>Form design details</h3>
+  <ul>
+    <li>Input height: 52px. Border: 1px solid <code>#D4C9B8</code>. Border-radius: 6px. Background: white.</li>
+    <li>Focus state: border color changes to <code>#C8643C</code> with a subtle glow (<code>box-shadow: 0 0 0 3px rgba(200,100,60,0.15)</code>).</li>
+    <li>Label: above the field, 13px, uppercase, letter-spacing 0.08em, color <code>#5A4F47</code>.</li>
+    <li>Placeholder: lighter, <code>#A09080</code>.</li>
+    <li>Location autocomplete: styled dropdown matching the site palette. Google Places API for location lookup. Resolves to lat/long + timezone automatically.</li>
+    <li>Submit button: Full-width. 54px height. Terracotta background. White text. "Generate My Chart →". Subtle wipe animation on hover.</li>
+    <li>Below submit: "Your data is used only to generate your chart. We don't store birth data on our servers." — 12px, centered, cream color text.</li>
+  </ul>
+
+  <h3>Scroll behavior</h3>
+  <p>On mobile, when the keyboard opens for any input field, the form scrolls up so the current field stays visible. The submit button pins to the bottom of the visible viewport when the keyboard is open.</p>
+</section>
+
+<!-- 05 CALCULATION ENGINE -->
+<section id="calculation">
+  <h2><span class="section-label">05 — Step 2</span>Chart calculation engine</h2>
+
+  <div class="implementation-note">
+    <h4>⚠️ Implementation approach — critical decision</h4>
+    <p>Accurate Human Design calculation requires Swiss Ephemeris planetary position data. There are three valid approaches. <strong>Approach A is strongly recommended.</strong></p>
+  </div>
+
+  <h3>Approach A — API integration (recommended)</h3>
+  <p>Use the <strong>Bodygraph.com API</strong> or <strong>MyBodyGraph API</strong>. These services accept birth date/time/location and return a complete JSON object with all chart data: gates, channels, centers, type, authority, profile, incarnation cross.</p>
+
+  <pre><span class="comment">// POST to Bodygraph.com API (or equivalent)</span>
+<span class="key">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'https://api.bodygraph.com/v1/chart'</span>, {
+  method: <span class="string">'POST'</span>,
+  headers: {
+    <span class="string">'Authorization'</span>: <span class="string">`Bearer ${process.env.BODYGRAPH_API_KEY}`</span>,
+    <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>,
+  },
+  body: JSON.stringify({
+    birthDate: <span class="string">'1990-03-15'</span>,
+    birthTime: <span class="string">'14:32'</span>,
+    birthCity: <span class="string">'Brussels'</span>,
+    birthCountry: <span class="string">'Belgium'</span>,
+    lat: <span class="number">50.8503</span>,
+    lng: <span class="number">4.3517</span>,
+    timezone: <span class="string">'Europe/Brussels'</span>,
+  })
+});
+
+<span class="comment">// Expected response shape</span>
+{
+  type: <span class="string">'Generator'</span>,
+  profile: <span class="string">'3/5'</span>,
+  authority: <span class="string">'Sacral'</span>,
+  definition: <span class="string">'Single'</span>,
+  incarnationCross: {
+    name: <span class="string">'Right Angle Cross of Contagion'</span>,
+    gates: [<span class="number">3</span>, <span class="number">50</span>, <span class="number">60</span>, <span class="number">56</span>]
+  },
+  centers: {
+    HEAD: { defined: <span class="keyword">false</span>, open: <span class="keyword">true</span>, gates: [] },
+    AJNA: { defined: <span class="keyword">true</span>, gates: [<span class="number">47</span>, <span class="number">4</span>] },
+    THROAT: { defined: <span class="keyword">true</span>, gates: [<span class="number">23</span>, <span class="number">62</span>] },
+    <span class="comment">// ... all 9 centers</span>
+  },
+  definedChannels: [
+    { gates: [<span class="number">43</span>, <span class="number">23</span>], name: <span class="string">'Structuring'</span>, type: <span class="string">'personality'</span> },
+    <span class="comment">// type: 'personality' | 'design' | 'mixed'</span>
+  ],
+  personalityGates: [<span class="number">43</span>, <span class="number">23</span>, <span class="number">8</span>, <span class="number">1</span>, <span class="number">...</span>],  <span class="comment">// Black</span>
+  designGates: [<span class="number">3</span>, <span class="number">60</span>, <span class="number">50</span>, <span class="number">27</span>, <span class="number">...</span>],      <span class="comment">// Red</span>
+  allDefinedGates: [...],
+  personalityData: {
+    sun: { gate: <span class="number">3</span>, line: <span class="number">5</span> },
+    earth: { gate: <span class="number">50</span>, line: <span class="number">5</span> },
+    <span class="comment">// ... all 13 planets</span>
+  },
+  designData: {
+    sun: { gate: <span class="number">60</span>, line: <span class="number">5</span> },
+    <span class="comment">// ...</span>
+  }
+}</pre>
+
+  <h3>Approach B — Open-source Swiss Ephemeris (self-hosted)</h3>
+  <p>Use <code>swisseph</code> npm package (Node.js binding to the Swiss Ephemeris C library). More complex to implement but fully self-contained. Requires implementing the full gate-mapping algorithm from planetary degrees to I Ching hexagrams.</p>
+
+  <pre><span class="comment">// Install</span>
+npm install swisseph
+
+<span class="comment">// Calculate planetary positions</span>
+<span class="keyword">const</span> swe = <span class="key">require</span>(<span class="string">'swisseph'</span>);
+
+<span class="comment">// Julian day number from birth date/time</span>
+<span class="keyword">const</span> jd = swe.julday(year, month, day, hourDecimal, swe.GREG_CAL);
+
+<span class="comment">// Get Sun position for Personality</span>
+<span class="keyword">const</span> sunPos = swe.calc_ut(jd, swe.SE_SUN, swe.FLG_SWIEPH);
+<span class="comment">// sunPos.longitude = degrees (0-360)</span>
+
+<span class="comment">// 88 degrees before = Design date</span>
+<span class="comment">// Calculate: find JD where Sun was 88° earlier</span>
+<span class="comment">// Then recalculate all 13 planets for that JD</span>
+
+<span class="comment">// Map degree → Gate using Rave Mandala</span>
+<span class="comment">// The 64 gates occupy specific arcs on the 360° wheel</span>
+<span class="comment">// Gate sequence (not sequential): 41,19,13,49,30,55,37,63,22,36,25,17,21,51,42,3,27,24,2,23,8,20,16,35,45,12,15,52,39,53,62,56,31,33,7,4,29,59,40,64,47,6,46,18,48,57,32,50,28,44,1,43,14,34,9,5,26,11,10,58,38,54,61,60</span>
+
+<span class="keyword">function</span> degreeToGate(degrees) {
+  <span class="keyword">const</span> GATE_ORDER = [41,19,13,49,30,55,37,63,22,36,25,17,21,51,42,3,27,24,2,23,8,20,16,35,45,12,15,52,39,53,62,56,31,33,7,4,29,59,40,64,47,6,46,18,48,57,32,50,28,44,1,43,14,34,9,5,26,11,10,58,38,54,61,60];
+  <span class="keyword">const</span> gateArc = <span class="number">360</span> / <span class="number">64</span>; <span class="comment">// 5.625° per gate</span>
+  <span class="keyword">const</span> lineArc = gateArc / <span class="number">6</span>;  <span class="comment">// 0.9375° per line</span>
+  <span class="keyword">const</span> index = Math.floor(degrees / gateArc) % <span class="number">64</span>;
+  <span class="keyword">const</span> gate = GATE_ORDER[index];
+  <span class="keyword">const</span> lineOffset = (degrees % gateArc) / lineArc;
+  <span class="keyword">const</span> line = Math.floor(lineOffset) + <span class="number">1</span>;
+  <span class="keyword">return</span> { gate, line };
+}</pre>
+
+  <h3>Approach C — External embed fallback</h3>
+  <p>As a temporary fallback during development, embed a third-party chart generator (e.g., mybodygraph.com embed or similar) in an iframe, styled to match the site. This is not the final solution but allows testing the UX flow before the calculation engine is complete.</p>
+
+  <h3>What the calculation must return</h3>
+  <p>Regardless of approach, the component needs this data shape to render the chart:</p>
+  <pre>{
+  <span class="key">type</span>: <span class="string">'Generator' | 'ManifestingGenerator' | 'Projector' | 'Manifestor' | 'Reflector'</span>,
+  <span class="key">authority</span>: <span class="string">'Sacral' | 'Emotional' | 'Splenic' | 'Ego' | 'Self-Projected' | 'Mental' | 'Lunar'</span>,
+  <span class="key">profile</span>: <span class="string">'1/3' | '1/4' | '2/4' | '2/5' | '3/5' | '3/6' | '4/1' | '4/6' | '5/1' | '5/2' | '6/2' | '6/3'</span>,
+  <span class="key">definition</span>: <span class="string">'Single' | 'Split' | 'Triple-Split' | 'Quadruple-Split' | 'None'</span>,
+  <span class="key">notSelfTheme</span>: string,   <span class="comment">// e.g. 'Frustration'</span>
+  <span class="key">signature</span>: string,      <span class="comment">// e.g. 'Satisfaction'</span>
+  <span class="key">incarnationCross</span>: { name: string, gates: [number, number, number, number] },
+  <span class="key">centers</span>: {
+    [centerName: string]: {
+      defined: boolean,
+      open: boolean,          <span class="comment">// true = no gate activations at all</span>
+      definedBy: <span class="string">'personality' | 'design' | 'both' | null</span>,
+      activatedGates: number[]
+    }
+  },
+  <span class="key">definedChannels</span>: Array&lt;{
+    gateA: number,
+    gateB: number,
+    name: string,
+    definedBy: <span class="string">'personality' | 'design' | 'both'</span>
+  }&gt;,
+  <span class="key">personalityGates</span>: Array&lt;{ gate: number, line: number, planet: string }&gt;,
+  <span class="key">designGates</span>: Array&lt;{ gate: number, line: number, planet: string }&gt;,
+}</pre>
+</section>
+
+<!-- 06 BODYGRAPH SVG -->
+<section id="bodygraph-svg">
+  <h2><span class="section-label">06 — Step 3</span>Bodygraph SVG specification</h2>
+
+  <p>The Bodygraph is rendered as an SVG. It must be crisp at all screen sizes and look stunning in the PDF. Here is the complete layout specification.</p>
+
+  <h3>SVG canvas</h3>
+  <p>ViewBox: <code>0 0 600 780</code>. This ratio works for both the web view and the PDF. The SVG scales responsively via CSS (<code>width: 100%; height: auto</code>).</p>
+
+  <h3>Center positions (cx, cy) and shapes</h3>
+  <table class="spec-table">
+    <thead><tr><th>Center</th><th>Shape</th><th>cx</th><th>cy</th><th>Size</th></tr></thead>
+    <tbody>
+      <tr><td>Head</td><td>Triangle (▽ pointing down)</td><td>300</td><td>60</td><td>width: 100, height: 80</td></tr>
+      <tr><td>Ajna</td><td>Triangle (△ pointing up)</td><td>300</td><td>160</td><td>width: 100, height: 80</td></tr>
+      <tr><td>Throat</td><td>Square</td><td>300</td><td>260</td><td>80×80</td></tr>
+      <tr><td>G Center</td><td>Diamond (◇)</td><td>300</td><td>360</td><td>90×90</td></tr>
+      <tr><td>Heart (Ego)</td><td>Small Triangle (▽)</td><td>390</td><td>340</td><td>width: 70, height: 56</td></tr>
+      <tr><td>Sacral</td><td>Square</td><td>300</td><td>480</td><td>100×80</td></tr>
+      <tr><td>Solar Plexus</td><td>Triangle (△)</td><td>430</td><td>460</td><td>width: 90, height: 72</td></tr>
+      <tr><td>Spleen</td><td>Triangle (▽)</td><td>170</td><td>440</td><td>width: 90, height: 72</td></tr>
+      <tr><td>Root</td><td>Square</td><td>300</td><td>600</td><td>100×60</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Note on coordinates:</strong> The exact coordinates above are a starting reference. Your designer/developer should adjust to achieve the correct proportions of the traditional Rave BodyGraph layout — a tall human-body-like form, widest at the center, with the Root at the bottom. Study reference charts from mybodygraph.com or jovianarchive.com for the precise visual.</p>
+  </div>
+
+  <h3>Channel lines</h3>
+  <p>Each channel is a <code>&lt;line&gt;</code> or <code>&lt;path&gt;</code> drawn between the connecting points of two centers. The connecting points are the midpoints of the relevant edge of each center shape (e.g., the bottom midpoint of the Throat center connects to the top midpoint of the G Center).</p>
+
+  <p>Channel stroke width: <strong>12px</strong>. This makes them visually prominent at all sizes.</p>
+
+  <h3>Color system</h3>
+  <table class="spec-table">
+    <thead><tr><th>State</th><th>Center Fill</th><th>Center Stroke</th><th>Channel Stroke</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Open (no gates)</td>
+        <td><span class="color-swatch" style="background:#FFFFFF;border-color:#D4C9B8;"></span><code>#FFFFFF</code></td>
+        <td><code>#D4C9B8</code> 1.5px</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>Undefined (has gates, no channel)</td>
+        <td><span class="color-swatch" style="background:#FFFFFF;border-color:#B8A898;"></span><code>#FFFFFF</code></td>
+        <td><code>#B8A898</code> 1.5px dashed</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>Defined by Personality (Conscious)</td>
+        <td><span class="color-swatch" style="background:#2A2218;"></span><code>#2A2218</code> dark brown</td>
+        <td><code>#1A1714</code> 2px</td>
+        <td><code>#2A2218</code></td>
+      </tr>
+      <tr>
+        <td>Defined by Design (Unconscious)</td>
+        <td><span class="color-swatch" style="background:#C8643C;"></span><code>#C8643C</code> terracotta</td>
+        <td><code>#A84E2C</code> 2px</td>
+        <td><code>#C8643C</code></td>
+      </tr>
+      <tr>
+        <td>Defined by Both</td>
+        <td>Striped: alternating dark &amp; terracotta</td>
+        <td><code>#1A1714</code> 2px</td>
+        <td>Striped / dashed alternating</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Color adaptation from standard HD:</strong> Traditional Human Design uses red for Design and black for Personality. We're mapping those to the site palette: terracotta (<code>#C8643C</code>) replaces red, and deep brown-black (<code>#2A2218</code>) replaces black. The visual language is preserved, the palette is Dirk's.</p>
+  </div>
+
+  <h3>Gate numbers</h3>
+  <p>Small numbers appear along the edges of each center, showing which gates are active. Activated gates are bold; inactive (open) gates are shown as very light gray numbers. Gate number font: <code>10px</code>, font-family matching site serif, positioned along the perimeter of each center shape.</p>
+
+  <p>Only show gate numbers for activated gates and their inactive pair (to show incomplete channels). The numbers are interactive on hover — hovering a gate number shows a tooltip with the gate's name.</p>
+
+  <h3>Planet columns</h3>
+  <p>On either side of the bodygraph (left = Design/Red, right = Personality/Black), show two columns of planetary activations:</p>
+
+  <pre><span class="comment">// Left column — Design (Unconscious)</span>
+☉ Sun        32.5
+🜁 Earth      50.5
+☽ Moon       27.3
+☊ N.Node     13.2
+☋ S.Node     7.2
+☿ Mercury    23.4
+♀ Venus      56.6
+♂ Mars       3.1
+♃ Jupiter    60.5
+♄ Saturn     42.3
+⛢ Uranus     11.2
+♆ Neptune    55.4
+♇ Pluto      38.6
+
+<span class="comment">// Right column — Personality (Conscious)</span>
+<span class="comment">// Same planets, different gate.line values</span></pre>
+
+  <p>Column font: 12px, monospace. Color: Design column in terracotta, Personality column in dark brown. The planet glyph, gate number, and line number appear in each row.</p>
+
+  <h3>SVG implementation skeleton</h3>
+  <pre>&lt;<span class="key">svg</span> viewBox=<span class="string">"0 0 800 820"</span> xmlns=<span class="string">"http://www.w3.org/2000/svg"</span>
+     class=<span class="string">"bodygraph"</span> role=<span class="string">"img"</span>
+     aria-label=<span class="string">"Human Design Bodygraph chart"</span>&gt;
+
+  &lt;<span class="key">defs</span>&gt;
+    <span class="comment">&lt;!-- Stripe pattern for "both" defined centers --&gt;</span>
+    &lt;<span class="key">pattern</span> id=<span class="string">"both-defined"</span> patternUnits=<span class="string">"userSpaceOnUse"</span>
+             width=<span class="string">"8"</span> height=<span class="string">"8"</span> patternTransform=<span class="string">"rotate(45)"</span>&gt;
+      &lt;<span class="key">rect</span> width=<span class="string">"4"</span> height=<span class="string">"8"</span> fill=<span class="string">"#2A2218"</span>/&gt;
+      &lt;<span class="key">rect</span> x=<span class="string">"4"</span> width=<span class="string">"4"</span> height=<span class="string">"8"</span> fill=<span class="string">"#C8643C"</span>/&gt;
+    &lt;/<span class="key">pattern</span>&gt;
+
+    <span class="comment">&lt;!-- Glow filter for defined centers --&gt;</span>
+    &lt;<span class="key">filter</span> id=<span class="string">"center-glow"</span>&gt;
+      &lt;<span class="key">feGaussianBlur</span> stdDeviation=<span class="string">"3"</span> result=<span class="string">"blur"</span>/&gt;
+      &lt;<span class="key">feColorMatrix</span> type=<span class="string">"matrix"</span>
+        values=<span class="string">"1 0 0 0 0.78  0 0.39 0 0 0.23  0 0 0.23 0 0  0 0 0 0.4 0"</span>/&gt;
+    &lt;/<span class="key">filter</span>&gt;
+
+    <span class="comment">&lt;!-- Clip paths for each center shape --&gt;</span>
+    &lt;<span class="key">clipPath</span> id=<span class="string">"clip-head"</span>&gt;
+      &lt;<span class="key">polygon</span> points=<span class="string">"250,20 350,20 300,100"</span>/&gt;
+    &lt;/<span class="key">clipPath</span>&gt;
+    <span class="comment">&lt;!-- ... more clip paths --&gt;</span>
+  &lt;/<span class="key">defs</span>&gt;
+
+  <span class="comment">&lt;!-- CHANNELS — rendered first (below centers) --&gt;</span>
+  &lt;<span class="key">g</span> class=<span class="string">"channels"</span>&gt;
+    <span class="comment">&lt;!-- Example: Channel 43-23 (Ajna to Throat), Personality defined --&gt;</span>
+    &lt;<span class="key">line</span> x1=<span class="string">"300"</span> y1=<span class="string">"200"</span> x2=<span class="string">"300"</span> y2=<span class="string">"220"</span>
+          stroke=<span class="string">"#2A2218"</span> stroke-width=<span class="string">"12"</span>
+          class=<span class="string">"channel channel-43-23 defined-personality"</span>
+          data-channel=<span class="string">"43-23"</span>/&gt;
+    <span class="comment">&lt;!-- All undefined channels: --&gt;</span>
+    &lt;<span class="key">line</span> x1=<span class="string">"..."</span> y1=<span class="string">"..."</span> x2=<span class="string">"..."</span> y2=<span class="string">"..."</span>
+          stroke=<span class="string">"#D4C9B8"</span> stroke-width=<span class="string">"4"</span>
+          class=<span class="string">"channel undefined"</span>/&gt;
+  &lt;/<span class="key">g</span>&gt;
+
+  <span class="comment">&lt;!-- CENTERS — rendered above channels --&gt;</span>
+  &lt;<span class="key">g</span> class=<span class="string">"centers"</span>&gt;
+    <span class="comment">&lt;!-- Head — triangle --&gt;</span>
+    &lt;<span class="key">g</span> class=<span class="string">"center head defined-design"</span> data-center=<span class="string">"head"</span>&gt;
+      &lt;<span class="key">polygon</span> points=<span class="string">"250,20 350,20 300,100"</span>
+               fill=<span class="string">"#C8643C"</span> stroke=<span class="string">"#A84E2C"</span> stroke-width=<span class="string">"2"</span>/&gt;
+      &lt;<span class="key">text</span> x=<span class="string">"300"</span> y=<span class="string">"60"</span> text-anchor=<span class="string">"middle"</span>
+            font-size=<span class="string">"10"</span> fill=<span class="string">"white"</span> opacity=<span class="string">"0.6"</span>&gt;HEAD&lt;/<span class="key">text</span>&gt;
+    &lt;/<span class="key">g</span>&gt;
+    <span class="comment">&lt;!-- ... all 9 centers --&gt;</span>
+  &lt;/<span class="key">g</span>&gt;
+
+  <span class="comment">&lt;!-- GATE NUMBERS — small labels at center edges --&gt;</span>
+  &lt;<span class="key">g</span> class=<span class="string">"gate-numbers"</span> font-size=<span class="string">"9"</span>&gt;
+    <span class="comment">&lt;!-- Personality gates: dark --&gt;</span>
+    &lt;<span class="key">text</span> x=<span class="string">"..."</span> y=<span class="string">"..."</span> fill=<span class="string">"#2A2218"</span>
+          font-weight=<span class="string">"bold"</span> class=<span class="string">"gate personality"</span>
+          data-gate=<span class="string">"43"</span>&gt;43&lt;/<span class="key">text</span>&gt;
+    <span class="comment">&lt;!-- Design gates: terracotta --&gt;</span>
+    &lt;<span class="key">text</span> x=<span class="string">"..."</span> y=<span class="string">"..."</span> fill=<span class="string">"#C8643C"</span>
+          font-weight=<span class="string">"bold"</span> class=<span class="string">"gate design"</span>
+          data-gate=<span class="string">"23"</span>&gt;23&lt;/<span class="key">text</span>&gt;
+    <span class="comment">&lt;!-- Inactive gates: very light --&gt;</span>
+    &lt;<span class="key">text</span> fill=<span class="string">"#D4C9B8"</span> class=<span class="string">"gate inactive"</span>&gt;...&lt;/<span class="key">text</span>&gt;
+  &lt;/<span class="key">g</span>&gt;
+
+&lt;/<span class="key">svg</span>&gt;</pre>
+
+  <h3>Responsive behavior</h3>
+  <ul>
+    <li><strong>Desktop (>900px):</strong> Bodygraph SVG centered at 440px wide. Planet columns visible on both sides.</li>
+    <li><strong>Tablet (600–900px):</strong> Bodygraph full width minus padding. Planet columns hidden, shown in a tab below the chart.</li>
+    <li><strong>Mobile (&lt;600px):</strong> Bodygraph full width. Planet data in a collapsible accordion below. Chart at minimum 320px wide to remain legible.</li>
+  </ul>
+
+  <h3>Interactivity</h3>
+  <ul>
+    <li><strong>Hover on any center:</strong> Tooltip appears with center name, function, and whether it's defined or open in this chart. For defined centers: include the keyword (e.g., "Consistent life force and sexuality").</li>
+    <li><strong>Hover on any channel:</strong> Tooltip shows channel name (e.g., "Channel of Structuring") and whether it's conscious, unconscious, or both.</li>
+    <li><strong>Hover on a gate number:</strong> Tooltip shows gate name (e.g., "Gate 43: Insight") and which planet activated it.</li>
+    <li><strong>Tooltip design:</strong> Small card, cream background, 1px terracotta border-top, 13px text, appears above/below the hovered element, animated fade in 150ms.</li>
+    <li><strong>Click on center:</strong> Expands a full description panel below the chart (or in a sidebar on desktop) with deeper context about that center and what it means for this specific person's chart.</li>
+  </ul>
+</section>
+
+<!-- 07 CHART DATA PANEL -->
+<section id="chart-data">
+  <h2><span class="section-label">07 — Step 4</span>Chart data panel — below the bodygraph</h2>
+
+  <p>Below the SVG, a structured data section displays the chart's key information in an accessible, beautiful layout. This is where the insight lives — what the symbols mean for this specific person.</p>
+
+  <h3>Primary data — large and prominent</h3>
+  <p>The first thing visible below the chart should be the user's Type and Profile — the two most important facts. Large serif type, warm tone:</p>
+
+  <pre><span class="comment">&lt;!-- Example render --&gt;</span>
+&lt;<span class="key">div</span> class=<span class="string">"chart-headline"</span>&gt;
+  &lt;<span class="key">p</span> class=<span class="string">"type-label"</span>&gt;Your Type&lt;/<span class="key">p</span>&gt;
+  &lt;<span class="key">h2</span>&gt;Generator&lt;/<span class="key">h2</span>&gt;
+  &lt;<span class="key">p</span> class=<span class="string">"type-description"</span>&gt;
+    You are one of the builders of the world — here to find work
+    you love and respond to life with your gut. Your satisfaction
+    is your north star.
+  &lt;/<span class="key">p</span>&gt;
+
+  &lt;<span class="key">div</span> class=<span class="string">"profile-row"</span>&gt;
+    &lt;<span class="key">span</span> class=<span class="string">"label"</span>&gt;Profile&lt;/<span class="key">span</span>&gt;
+    &lt;<span class="key">span</span> class=<span class="string">"value"</span>&gt;3/5 — Martyr / Heretic&lt;/<span class="key">span</span>&gt;
+  &lt;/<span class="key">div</span>&gt;
+
+  &lt;<span class="key">div</span> class=<span class="string">"authority-row"</span>&gt;
+    &lt;<span class="key">span</span> class=<span class="string">"label"</span>&gt;Inner Authority&lt;/<span class="key">span</span>&gt;
+    &lt;<span class="key">span</span> class=<span class="string">"value"</span>&gt;Sacral — Your gut knows.&lt;/<span class="key">span</span>&gt;
+  &lt;/<span class="key">div</span>&gt;
+&lt;/<span class="key">div</span>&gt;</pre>
+
+  <h3>Secondary data grid — 2 columns on desktop</h3>
+  <p>Below the primary panel, a 2-column grid shows: Definition, Not-Self Theme, Signature / Feeling When In Alignment, Incarnation Cross, Strategy.</p>
+
+  <h3>Defined Centers section</h3>
+  <p>A row of the user's defined centers with a small icon/shape for each, and one warm sentence about what that center means for them specifically. These should feel like insights, not encyclopedia entries.</p>
+
+  <h3>Defined Channels section</h3>
+  <p>List of defined channels with name and a single evocative description line. Group by circuit (Individual, Collective, Tribal) if possible.</p>
+
+  <h3>Copy tone — important</h3>
+  <div class="callout">
+    <p><strong>All chart interpretation copy must sound like Dirk:</strong> warm, non-judgmental, embodied, not New Age cliché. Avoid: "you are a unique beautiful soul." Use instead: clear, grounded language about how energy actually moves. Reference the body, not the spirit. Example: "Your Sacral center is defined — this means you have consistent, reliable life force energy. You're built for work you love, done sustainably."</p>
+  </div>
+
+  <h3>Descriptions database</h3>
+  <p>Create a JSON content file with descriptions for:</p>
+  <ul>
+    <li>All 5 Types (1 paragraph each)</li>
+    <li>All 12 Profiles (1 paragraph each)</li>
+    <li>All 7 Authorities (1 paragraph each)</li>
+    <li>All 9 Centers — both defined and undefined states (2 short sentences each)</li>
+    <li>All 36 Channels (1 sentence each)</li>
+    <li>Top 20 most common Incarnation Crosses (1 sentence each; fallback for others)</li>
+  </ul>
+
+  <p>All copy written in Dirk's voice. If Dirk provides copy, use it verbatim. Otherwise write placeholder copy in his register and mark for his review.</p>
+</section>
+
+<!-- 08 EMAIL GATE -->
+<section id="email-gate">
+  <h2><span class="section-label">08 — Step 5</span>Email gate — unlock the full chart</h2>
+
+  <h3>Timing of the gate</h3>
+  <p>The email gate appears after the loading animation completes and the blurred chart preview is visible on screen. The gate is a centered overlay card on top of the blurred chart. The card appears with a fade-in animation, 400ms ease.</p>
+
+  <h3>Gate card design</h3>
+  <div class="pdf-preview">
+    <p style="text-align:center;font-size:13px;color:#8A7B72;margin-bottom:24px;font-family:monospace;letter-spacing:0.08em;">EMAIL GATE CARD — visual reference</p>
+    <div style="background:#F5F0E8;border-radius:12px;padding:48px;max-width:480px;margin:0 auto;">
+      <p style="font-size:22px;line-height:1.4;color:#1A1714;margin-bottom:12px;font-family:Georgia,serif;font-style:italic;">Your chart is ready.</p>
+      <p style="font-size:15px;color:#5A4F47;margin-bottom:32px;">Enter your email to reveal your Human Design and receive a downloadable PDF of your chart.</p>
+      <input style="width:100%;height:52px;border:1px solid #D4C9B8;border-radius:6px;padding:0 16px;font-size:16px;margin-bottom:16px;box-sizing:border-box;" placeholder="your@email.com" readonly>
+      <button style="width:100%;height:52px;background:#C8643C;color:white;border:none;border-radius:6px;font-size:15px;letter-spacing:0.05em;cursor:pointer;">Reveal My Chart →</button>
+      <p style="text-align:center;font-size:12px;color:#A09080;margin-top:16px;margin-bottom:0;">No spam, ever. Unsubscribe any time.</p>
+    </div>
+  </div>
+
+  <h3>Email validation</h3>
+  <ul>
+    <li>Standard email format validation on blur.</li>
+    <li>Duplicate check: if this email has generated a chart before, still allow — just don't double-add to list. Show a welcome-back moment: "Welcome back. Your chart is ready."</li>
+    <li>On submit: send email to CRM/list (Dirk's email marketing tool — ConvertKit, Mailchimp, or similar). Tag subscriber with "hd-chart-generated" and Type (e.g., "type:generator") for segmentation.</li>
+  </ul>
+
+  <h3>After email submission</h3>
+  <p>The overlay card fades out. The bodygraph's blur filter animates from <code>blur(8px)</code> to <code>blur(0px)</code> over 800ms, easing in gently. Simultaneously, the defined centers animate to full opacity (from 70% → 100%) with a subtle scale pulse (1.0 → 1.03 → 1.0).</p>
+
+  <h3>CRM integration endpoint</h3>
+  <pre><span class="comment">// Next.js API route: /api/subscribe</span>
+<span class="keyword">export</span> <span class="keyword">async</span> <span class="key">function</span> POST(req) {
+  <span class="keyword">const</span> { email, name, chartType, profile } = <span class="keyword">await</span> req.json();
+
+  <span class="comment">// Option A: ConvertKit</span>
+  <span class="keyword">await</span> fetch(<span class="string">`https://api.convertkit.com/v3/forms/${FORM_ID}/subscribe`</span>, {
+    method: <span class="string">'POST'</span>,
+    body: JSON.stringify({
+      api_key: process.env.CONVERTKIT_API_KEY,
+      email,
+      first_name: name,
+      fields: {
+        hd_type: chartType,
+        hd_profile: profile,
+        hd_chart_generated: <span class="keyword">true</span>
+      }
+    })
+  });
+
+  <span class="comment">// Option B: Mailchimp, Klaviyo, etc. — same pattern</span>
+  <span class="keyword">return</span> Response.json({ success: <span class="keyword">true</span> });
+}</pre>
+</section>
+
+<!-- 09 PDF -->
+<section id="pdf">
+  <h2><span class="section-label">09 — Step 6</span>PDF generation — full specification</h2>
+
+  <p>The downloadable PDF is Dirk's most distributed brand asset after this feature launches. It needs to be as beautiful as a book's inside. Every person who generates a chart will likely share this PDF or return to it. The Dirk logo on the back page travels everywhere it goes.</p>
+
+  <h3>PDF dimensions and format</h3>
+  <p>A4 portrait (210×297mm). Generated server-side using <code>puppeteer</code> or <code>@react-pdf/renderer</code>. Two approaches — choose based on stack:</p>
+  <ul>
+    <li><strong>Puppeteer approach:</strong> Render a hidden HTML page that matches the PDF design exactly, then take a PDF screenshot with Puppeteer. Allows pixel-perfect CSS rendering including the SVG.</li>
+    <li><strong>react-pdf approach:</strong> Declarative PDF layout in React. Less flexible but no headless browser needed. May require the bodygraph SVG to be converted to an image first.</li>
+  </ul>
+
+  <div class="callout">
+    <p><strong>Recommended: Puppeteer.</strong> The bodygraph SVG will render perfectly. The PDF will match the website design exactly. Host on Vercel with a dedicated serverless function or use a service like HTML/CSS to PDF API (pdfshift.io, htmlcsstoapi.com).</p>
+  </div>
+
+  <h3>PDF layout — page by page</h3>
+
+  <h4>Page 1 — Cover / Hero</h4>
+  <div class="pdf-preview">
+    <div class="pdf-header">
+      <div>
+        <div style="font-size:11px;color:#8A7B72;letter-spacing:0.1em;font-family:monospace;margin-bottom:8px;">HUMAN DESIGN CHART</div>
+        <div class="pdf-title">[Full Name]</div>
+        <div class="pdf-meta" style="margin-top:4px;">Born [Date] · [City], [Country]</div>
+      </div>
+      <div>
+        <div class="pdf-logo">D</div>
+        <div style="font-size:10px;color:#8A7B72;margin-top:6px;font-family:monospace;text-align:center;">Dirk Nellens</div>
+      </div>
+    </div>
+    <div style="background:#C8643C;border-radius:8px;padding:32px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="color:rgba(255,255,255,0.6);font-size:11px;letter-spacing:0.1em;font-family:monospace;">TYPE</div>
+        <div style="color:white;font-size:32px;font-family:Georgia,serif;">Generator</div>
+        <div style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:8px;">Profile 3/5 · Sacral Authority</div>
+      </div>
+      <div style="text-align:right;color:rgba(255,255,255,0.7);">
+        <div style="font-size:11px;font-family:monospace;">DEFINITION</div>
+        <div style="font-size:18px;color:white;">Single</div>
+      </div>
+    </div>
+    <p style="margin-top:24px;margin-bottom:0;font-size:13px;color:#8A7B72;text-align:center;font-style:italic;">Full Bodygraph chart on page 2</p>
+  </div>
+
+  <h4>Page 2 — Full Bodygraph</h4>
+  <p>The bodygraph SVG, rendered full-page with generous margins. Left planet column (Design) and right planet column (Personality). At the very bottom: name, date of birth, generation date. Dirk's small logo bottom-right.</p>
+  <ul>
+    <li>Bodygraph SVG: 360px wide, centered, with columns on each side.</li>
+    <li>Page background: cream <code>#F5F0E8</code>.</li>
+    <li>A thin terracotta line runs from top to bottom on the left margin — a subtle design element.</li>
+  </ul>
+
+  <h4>Page 3 — Type & Strategy</h4>
+  <p>Full page dedicated to the user's Type. Large heading (Type name), large descriptive paragraph (3–4 sentences), then Strategy section below. The page has ample white space — it should feel like an opening chapter.</p>
+  <ul>
+    <li>H1 (Type name): 42pt, serif, dark</li>
+    <li>Body: 12pt, 1.8 line-height</li>
+    <li>Pull quote at bottom: one key sentence from the Type description, 20pt italic, terracotta</li>
+  </ul>
+
+  <h4>Page 4 — Authority & Profile</h4>
+  <p>Two sections on one page. Top half: Authority (decision-making). Bottom half: Profile (life theme and archetype). Same generous typographic treatment.</p>
+
+  <h4>Page 5 — Defined Centers</h4>
+  <p>A visual grid of all 9 centers. Each center shown as its shape (small SVG icons), color-coded by definition state, with 2–3 sentences about what this center means for this specific person's chart.</p>
+
+  <h4>Page 6 — Defined Channels</h4>
+  <p>List of the user's defined channels. Each channel gets a heading (name) and 2–3 sentences about its theme and gift. If no channels are defined (unusual), explain what that means.</p>
+
+  <h4>Page 7 — Incarnation Cross & Closing</h4>
+  <p>The Incarnation Cross section. Brief explanation of what the Cross is, followed by this person's Cross name and its meaning. Closing paragraph: a warm invitation from Dirk to explore this further in a session.</p>
+
+  <h4>Back cover (Page 8)</h4>
+  <div class="pdf-preview" style="background:#C8643C;color:white;">
+    <div style="text-align:center;padding:48px 0;">
+      <div style="font-size:14px;opacity:0.6;letter-spacing:0.1em;font-family:monospace;margin-bottom:24px;">DIRK NELLENS · HUMAN DESIGN</div>
+      <div style="font-size:72px;margin-bottom:24px;opacity:0.9;">●</div>
+      <div style="font-size:24px;font-family:Georgia,serif;font-style:italic;margin-bottom:32px;opacity:0.9;">"Your design has been waiting your entire life to be recognized."</div>
+      <div style="font-size:14px;opacity:0.7;margin-bottom:8px;">Book a personal chart reading with Dirk</div>
+      <div style="font-size:16px;font-family:monospace;letter-spacing:0.05em;">dirk.respira.cafe/sessions</div>
+    </div>
+  </div>
+
+  <h3>PDF generation API route</h3>
+  <pre><span class="comment">// /api/generate-pdf</span>
+<span class="keyword">import</span> puppeteer <span class="keyword">from</span> <span class="string">'puppeteer'</span>;
+
+<span class="keyword">export</span> <span class="keyword">async</span> <span class="key">function</span> POST(req) {
+  <span class="keyword">const</span> { chartData, userData } = <span class="keyword">await</span> req.json();
+
+  <span class="comment">// Verify email was captured before generating PDF</span>
+  <span class="keyword">if</span> (!userData.emailVerified) {
+    <span class="keyword">return</span> Response.json({ error: <span class="string">'Email required'</span> }, { status: <span class="number">401</span> });
+  }
+
+  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.launch({ headless: <span class="keyword">true</span> });
+  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.newPage();
+
+  <span class="comment">// Render the hidden PDF template route</span>
+  <span class="keyword">await</span> page.goto(
+    <span class="string">`${process.env.NEXT_PUBLIC_URL}/chart/pdf-template?data=${encode(chartData)}`</span>,
+    { waitUntil: <span class="string">'networkidle0'</span> }
+  );
+
+  <span class="keyword">const</span> pdf = <span class="keyword">await</span> page.pdf({
+    format: <span class="string">'A4'</span>,
+    printBackground: <span class="keyword">true</span>,
+    margin: { top: <span class="string">'20mm'</span>, right: <span class="string">'20mm'</span>, bottom: <span class="string">'20mm'</span>, left: <span class="string">'20mm'</span> },
+  });
+
+  <span class="keyword">await</span> browser.close();
+
+  <span class="keyword">return</span> <span class="keyword">new</span> Response(pdf, {
+    headers: {
+      <span class="string">'Content-Type'</span>: <span class="string">'application/pdf'</span>,
+      <span class="string">'Content-Disposition'</span>: <span class="string">`attachment; filename="HD-Chart-${userData.name}.pdf"`</span>,
+    },
+  });
+}</pre>
+</section>
+
+<!-- 10 READING CTA -->
+<section id="reading-cta">
+  <h2><span class="section-label">10 — Step 7</span>Reading invitation — the conversion moment</h2>
+
+  <p>After the full chart is revealed and the PDF is downloadable, a section below makes the offer to work with Dirk. This is not aggressive — it's the natural next step for someone who just received something meaningful.</p>
+
+  <h3>Placement</h3>
+  <p>After the data panel, before the footer. On desktop: a 2-column layout — left: Dirk's portrait photo, right: the invitation. On mobile: stacked.</p>
+
+  <h3>Copy (do not change)</h3>
+  <blockquote>"Understanding your design is one thing. Living it is another. A personal reading with Dirk integrates therapeutic and meditative pathways with your chart — giving you not just knowledge, but a felt sense of who you are."</blockquote>
+
+  <h3>Personalization based on chart data</h3>
+  <p>The CTA heading should dynamically include the user's Type:</p>
+  <ul>
+    <li>Generator: <em>"Ready to unlock your Generator strategy?"</em></li>
+    <li>Projector: <em>"You've been waiting for this invitation."</em></li>
+    <li>Manifestor: <em>"There's more to your impact than you know."</em></li>
+    <li>Reflector: <em>"As a Reflector, your reading with Dirk is especially rare and precious."</em></li>
+    <li>Manifesting Generator: <em>"Your design is one of the most misunderstood. Let's explore it."</em></li>
+  </ul>
+
+  <h3>CTA design</h3>
+  <ul>
+    <li>Background: cream <code>#F5F0E8</code>.</li>
+    <li>Section padding: 80px top/bottom.</li>
+    <li>Primary button: "Book a Session with Dirk" → links to <code>/sessions#chart-analysis</code>.</li>
+    <li>Secondary link: "Learn about Dirk's approach first →" → links to <code>/about</code>.</li>
+  </ul>
+
+  <h3>Delayed modal variant (optional)</h3>
+  <p>15 seconds after chart reveal completes, if user has not scrolled to the CTA section, show a non-intrusive toast/slide-up at the bottom of the screen: <em>"Want to understand what this means for your life? Book a session →"</em> with a close button.</p>
+</section>
+
+<!-- 11 ANIMATIONS -->
+<section id="animations">
+  <h2><span class="section-label">11 — Motion Design</span>Animations & transitions</h2>
+
+  <h3>Loading state — the anticipation builder</h3>
+  <p>During chart calculation (2–4 seconds): render the bodygraph outline in <code>stroke-dasharray</code> state, slowly drawing itself — as if being sketched. All center shapes appear sequentially. Channels draw from center outward. This signals that something real is being constructed.</p>
+
+  <pre><span class="comment">/* SVG drawing animation */</span>
+<span class="key">.channel-line</span> {
+  stroke-dasharray: <span class="number">1000</span>;
+  stroke-dashoffset: <span class="number">1000</span>;
+  animation: drawLine <span class="number">1.5</span>s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: <span class="number">0</span>; }
+}
+
+<span class="comment">/* Stagger channels: 0, 100, 200ms delay etc. */</span>
+<span class="key">.channel:nth-child(1)</span> { animation-delay: 0ms; }
+<span class="key">.channel:nth-child(2)</span> { animation-delay: 100ms; }
+<span class="comment">/* ...etc */</span></pre>
+
+  <h3>Chart reveal — blur-to-clear</h3>
+  <pre><span class="comment">/* After email submitted */</span>
+<span class="key">.bodygraph-wrapper</span> {
+  filter: blur(8px);
+  transition: filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+<span class="key">.bodygraph-wrapper.revealed</span> {
+  filter: blur(0);
+}
+
+<span class="comment">/* Defined centers pulse on reveal */</span>
+<span class="key">.center.defined.revealed</span> {
+  animation: centerPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes centerPulse {
+  0%   { transform: scale(1);    opacity: 0.7; }
+  50%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}</pre>
+
+  <h3>Data panel — sequential reveal</h3>
+  <p>After the chart unblurs, the data panel elements below animate up in sequence (80ms stagger per element). Each element: <code>translateY(24px) → translateY(0), opacity 0 → 1, duration 500ms ease-out</code>.</p>
+
+  <h3>Hover interactions</h3>
+  <pre><span class="comment">/* Center hover */</span>
+<span class="key">.center polygon, .center rect</span> {
+  transition: filter 0.2s ease;
+}
+<span class="key">.center:hover polygon, .center:hover rect</span> {
+  filter: brightness(1.15);
+  cursor: pointer;
+}
+
+<span class="comment">/* Tooltip */</span>
+<span class="key">.tooltip</span> {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+<span class="key">.tooltip.visible</span> {
+  opacity: 1;
+  transform: translateY(0);
+}</pre>
+
+  <h3>Reduced motion</h3>
+  <pre><span class="comment">/* Always respect this — Dirk's audience may include sensitive users */</span>
+@media (prefers-reduced-motion: reduce) {
+  <span class="key">*</span> {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  <span class="key">.bodygraph-wrapper</span> {
+    filter: none; <span class="comment">/* Skip blur entirely */</span>
+  }
+}</pre>
+</section>
+
+<!-- 12 DESIGN TOKENS -->
+<section id="design-tokens">
+  <h2><span class="section-label">12 — Design System</span>Design tokens</h2>
+
+  <p>These tokens should be added to the site's existing design system and referenced throughout the chart component.</p>
+
+  <pre><span class="comment">/* chart.css — add to global styles */</span>
+:root {
+  <span class="comment">/* Chart-specific tokens */</span>
+  <span class="key">--chart-bg</span>:              #FAFAF7;
+  <span class="key">--chart-cream</span>:           #F5F0E8;
+  <span class="key">--chart-border</span>:          #D4C9B8;
+
+  <span class="comment">/* Center states */</span>
+  <span class="key">--center-open</span>:           #FFFFFF;
+  <span class="key">--center-open-stroke</span>:    #D4C9B8;
+  <span class="key">--center-personality</span>:    #2A2218;
+  <span class="key">--center-design</span>:         #C8643C;
+  <span class="key">--center-both</span>:           url(#both-defined); <span class="comment">/* SVG pattern */</span>
+
+  <span class="comment">/* Channel states */</span>
+  <span class="key">--channel-undefined</span>:     #E0D9CF;
+  <span class="key">--channel-personality</span>:   #2A2218;
+  <span class="key">--channel-design</span>:        #C8643C;
+  <span class="key">--channel-width-active</span>:  12px;
+  <span class="key">--channel-width-inactive</span>:4px;
+
+  <span class="comment">/* Gate numbers */</span>
+  <span class="key">--gate-active-personality</span>: #1A1714;
+  <span class="key">--gate-active-design</span>:      #C8643C;
+  <span class="key">--gate-active-both</span>:        #8B4513; <span class="comment">/* maroon — both active */</span>
+  <span class="key">--gate-inactive</span>:            #D4C9B8;
+  <span class="key">--gate-font-size</span>:           9px;
+
+  <span class="comment">/* Tooltip */</span>
+  <span class="key">--tooltip-bg</span>:            #F5F0E8;
+  <span class="key">--tooltip-border</span>:        #C8643C;
+  <span class="key">--tooltip-shadow</span>:        0 4px 20px rgba(0,0,0,0.12);
+  <span class="key">--tooltip-radius</span>:        8px;
+
+  <span class="comment">/* Type colors (subtle backgrounds for type badge) */</span>
+  <span class="key">--type-generator</span>:        #F0EDE8;
+  <span class="key">--type-manifesting-gen</span>:  #EDE8F0;
+  <span class="key">--type-projector</span>:        #E8EDF0;
+  <span class="key">--type-manifestor</span>:       #F0E8E8;
+  <span class="key">--type-reflector</span>:        #E8F0ED;
+}</pre>
+
+  <h3>Typography within the chart component</h3>
+  <table class="spec-table">
+    <thead><tr><th>Element</th><th>Size</th><th>Weight</th><th>Family</th><th>Color</th></tr></thead>
+    <tbody>
+      <tr><td>Type headline</td><td>48px</td><td>normal</td><td>Site serif</td><td>var(--ink)</td></tr>
+      <tr><td>Type description</td><td>20px</td><td>normal</td><td>Site serif</td><td>var(--ink-light)</td></tr>
+      <tr><td>Data label</td><td>11px</td><td>normal</td><td>Monospace</td><td>var(--ink-light)</td></tr>
+      <tr><td>Data value</td><td>18px</td><td>normal</td><td>Site serif</td><td>var(--ink)</td></tr>
+      <tr><td>Center tooltip</td><td>13px</td><td>normal</td><td>Site serif</td><td>var(--ink)</td></tr>
+      <tr><td>Gate numbers</td><td>9px</td><td>bold (active)</td><td>Monospace</td><td>See tokens</td></tr>
+      <tr><td>Planet labels</td><td>11px</td><td>normal</td><td>Monospace</td><td>Column color</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 13 API INTEGRATION -->
+<section id="api-integration">
+  <h2><span class="section-label">13 — Backend</span>API & backend architecture</h2>
+
+  <h3>Next.js API routes needed</h3>
+  <table class="spec-table">
+    <thead><tr><th>Route</th><th>Method</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>/api/chart/calculate</code></td><td>POST</td><td>Receives birth data, returns full chart JSON. Calls Swiss Ephemeris or external API.</td></tr>
+      <tr><td><code>/api/chart/subscribe</code></td><td>POST</td><td>Receives email + chart data. Adds to CRM. Returns confirmation token.</td></tr>
+      <tr><td><code>/api/chart/generate-pdf</code></td><td>POST</td><td>Requires valid token. Generates and returns PDF as binary stream.</td></tr>
+      <tr><td><code>/api/chart/session-booking</code></td><td>POST</td><td>Pre-fill booking form with user's name, email, chart type. Redirect to Calendly/Acuity.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Data storage</h3>
+  <ul>
+    <li><strong>Birth data:</strong> Do NOT store on server. Calculate and discard. State lives client-side in session storage only.</li>
+    <li><strong>Email + chart summary:</strong> Store in CRM (ConvertKit/Mailchimp), not in a database. Tag with type, profile, date generated.</li>
+    <li><strong>Chart JSON:</strong> Stored client-side in sessionStorage for the PDF generation request. Cleared on tab close.</li>
+  </ul>
+
+  <div class="callout">
+    <p><strong>Privacy note to display on form:</strong> "We calculate your chart in real time and do not store your birth data on our servers. Your email is used to send your chart and notify you of upcoming events with Dirk."</p>
+  </div>
+
+  <h3>Google Places API — location autocomplete</h3>
+  <pre><span class="comment">// Next.js API route to proxy Google Places — hide API key server-side</span>
+<span class="comment">// /api/places/autocomplete?q={query}</span>
+
+<span class="keyword">const</span> res = <span class="keyword">await</span> fetch(
+  <span class="string">`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${q}&types=(cities)&key=${process.env.GOOGLE_PLACES_KEY}`</span>
+);
+
+<span class="comment">// On place selection, resolve to lat/lng + timezone:</span>
+<span class="comment">// /api/places/details?place_id={placeId}</span>
+<span class="comment">// Then: /api/timezone?lat={lat}&lng={lng}</span></pre>
+</section>
+
+<!-- 14 STACK -->
+<section id="stack">
+  <h2><span class="section-label">14 — Implementation</span>Tech stack recommendations</h2>
+
+  <table class="spec-table">
+    <thead><tr><th>Concern</th><th>Recommended</th><th>Alternative</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Chart calculation</td>
+        <td><span class="tag tag-api">API</span> Bodygraph.com API or mybodygraph API</td>
+        <td><code>swisseph</code> npm package (self-hosted)</td>
+      </tr>
+      <tr>
+        <td>SVG rendering</td>
+        <td>React component with dynamic SVG. No external library needed.</td>
+        <td>D3.js for complex layouts</td>
+      </tr>
+      <tr>
+        <td>PDF generation</td>
+        <td>Puppeteer (server-side) via Vercel serverless function</td>
+        <td><code>@react-pdf/renderer</code> (less flexible)</td>
+      </tr>
+      <tr>
+        <td>Location autocomplete</td>
+        <td>Google Places API (proxied through Next.js)</td>
+        <td>Algolia Places (deprecated) or Mapbox Geocoding</td>
+      </tr>
+      <tr>
+        <td>Email/CRM</td>
+        <td>ConvertKit API (simple, developer-friendly)</td>
+        <td>Mailchimp, Klaviyo</td>
+      </tr>
+      <tr>
+        <td>Booking integration</td>
+        <td>Calendly embed with pre-filled data</td>
+        <td>Acuity Scheduling (Squarespace)</td>
+      </tr>
+      <tr>
+        <td>Animations</td>
+        <td>Framer Motion (already likely in Next.js stack)</td>
+        <td>CSS transitions + Intersection Observer</td>
+      </tr>
+      <tr>
+        <td>State management</td>
+        <td>React <code>useState</code> + <code>useReducer</code> — no Redux needed</td>
+        <td>Zustand for complex state</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>File structure</h3>
+  <pre>app/
+├── chart/
+│   ├── page.tsx              <span class="comment">// Main chart page</span>
+│   ├── pdf-template/
+│   │   └── page.tsx          <span class="comment">// Hidden PDF template (no layout)</span>
+│   └── components/
+│       ├── ChartForm.tsx
+│       ├── LoadingAnimation.tsx
+│       ├── BodyGraph.tsx     <span class="comment">// Main SVG component</span>
+│       ├── Center.tsx        <span class="comment">// Individual center SVG</span>
+│       ├── Channel.tsx       <span class="comment">// Individual channel line</span>
+│       ├── GateNumber.tsx    <span class="comment">// Gate label with tooltip</span>
+│       ├── PlanetColumn.tsx  <span class="comment">// Left/right planet columns</span>
+│       ├── Tooltip.tsx       <span class="comment">// Shared tooltip component</span>
+│       ├── ChartDataPanel.tsx
+│       ├── EmailGate.tsx
+│       ├── ReadingCTA.tsx
+│       └── content/
+│           ├── types.ts      <span class="comment">// Type descriptions in Dirk's voice</span>
+│           ├── authorities.ts
+│           ├── centers.ts
+│           ├── channels.ts
+│           └── profiles.ts
+api/
+├── chart/
+│   ├── calculate/route.ts
+│   ├── subscribe/route.ts
+│   └── generate-pdf/route.ts
+└── places/
+    ├── autocomplete/route.ts
+    └── details/route.ts</pre>
+
+  <h3>Accessibility</h3>
+  <ul>
+    <li>The bodygraph SVG: <code>role="img"</code> with a descriptive <code>aria-label</code> summarizing the chart (e.g., "Human Design Bodygraph for [Name]: Generator type, Profile 3/5, Sacral Authority. 4 defined centers: Ajna, Throat, G Center, Sacral.").</li>
+    <li>All interactive elements: keyboard navigable with visible focus states.</li>
+    <li>Tooltips: announced by screen readers via <code>aria-live="polite"</code>.</li>
+    <li>Form: all fields have visible labels above (not just placeholders).</li>
+    <li>Color alone never conveys meaning — all states have text labels in addition to color coding.</li>
+  </ul>
+
+  <h3>Performance</h3>
+  <ul>
+    <li>The chart component is lazy-loaded (<code>dynamic(() => import('./components/BodyGraph'), { ssr: false })</code>). SVG is generated client-side after data returns.</li>
+    <li>PDF generation is triggered on demand only — no pre-generation.</li>
+    <li>Google Places proxy caches results for 5 minutes server-side to avoid rate limits.</li>
+    <li>Chart calculation result cached in <code>sessionStorage</code> keyed by birth data hash — if user refreshes, chart doesn't need to be recalculated.</li>
+  </ul>
+
+  <hr style="border:none;border-top:1px solid #D4C9B8;margin:60px 0 40px;">
+  <p style="font-size:13px;color:#8A7B72;font-family:monospace;text-align:center;">Spec complete · dirk.respira.cafe/chart · February 2026 · For Dirk Nellens via Respira</p>
+</section>
+
+</div>
+
+</body>
+</html>
