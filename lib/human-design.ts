@@ -22,6 +22,9 @@ const SWISS_FLAGS = C.SEFLG_SWIEPH | C.SEFLG_SPEED;
 const MOSEPH_FLAGS = C.SEFLG_MOSEPH | C.SEFLG_SPEED;
 
 const GATE_ORDER = [41, 19, 13, 49, 30, 55, 37, 63, 22, 36, 25, 17, 21, 51, 42, 3, 27, 24, 2, 23, 8, 20, 16, 35, 45, 12, 15, 52, 39, 53, 62, 56, 31, 33, 7, 4, 29, 59, 40, 64, 47, 6, 46, 18, 48, 57, 32, 50, 28, 44, 1, 43, 14, 34, 9, 5, 26, 11, 10, 58, 38, 54, 61, 60] as const;
+// Human Design mandala starts at Gate 41 around 2° Aquarius (tropical zodiac).
+// Using 0° Aries as the start causes type/profile drift.
+const HD_MANDALA_START_DEG = 302;
 
 const CENTER_GATES: Record<CenterKey, number[]> = {
   HEAD: [64, 61, 63],
@@ -84,7 +87,7 @@ function mod360(x: number): number {
 }
 
 function longitudeToGateLine(longitude: number): { gate: number; line: number } {
-  const normalized = mod360(longitude);
+  const normalized = mod360(longitude - HD_MANDALA_START_DEG);
   const gateArc = 360 / 64;
   const lineArc = gateArc / 6;
   const gateIndex = Math.floor(normalized / gateArc) % 64;
