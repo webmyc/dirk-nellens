@@ -1,16 +1,15 @@
 import React from 'react';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import Image from 'next/image';
-import { Podcast, Headphones } from 'lucide-react';
+import { Podcast } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-    title: 'Podcasts | Dirk Nellens',
+    title: 'Media | Dirk Nellens',
     description: 'Listen to Dirk discuss the mechanics of Human Design in various interviews.',
     openGraph: {
-        title: 'Podcasts | Dirk Nellens',
+        title: 'Media | Dirk Nellens',
         description: 'Listen to Dirk discuss the mechanics of Human Design in various interviews.',
         url: 'https://dirknellens.com/podcasts',
         siteName: 'Dirk Nellens',
@@ -32,20 +31,12 @@ export default function PodcastsPage() {
             <Navigation />
             {/* Header section with padding to account for fixed nav */}
             <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-6 md:px-12 max-w-7xl mx-auto">
-                <Breadcrumbs
-                    items={[
-                        { label: 'Media', href: '/#media' },
-                        { label: 'Podcasts', href: '/podcasts' }
-                    ]}
-                    className="mb-8"
-                />
-
                 <FadeUp className="max-w-3xl">
                     <h1 className="font-serif text-[48px] md:text-[64px] lg:text-[80px] text-[#2B2218] leading-[1.05] tracking-[-0.02em] mb-6">
-                        Podcasts & Audio
+                        Media
                     </h1>
                     <p className="font-sans text-[18px] md:text-[20px] text-[#2B2218]/70 leading-[1.6]">
-                        Listen to conversations and reflections exploring the mechanics of Human Design, therapeutic deconditioning, and how we navigate the cosmic weather.
+                        Listen to conversations and reflections exploring the mechanics of Human Design, therapeutic deconditioning and how we navigate the cosmic weather.
                     </p>
                 </FadeUp>
             </section>
@@ -56,14 +47,14 @@ export default function PodcastsPage() {
                         {/* Substack Panel */}
                         <FadeUp delay={0.1}>
                             <a href="https://reflectorsreflections.substack.com/podcast" target="_blank" rel="noopener noreferrer" className="group block bg-[#F7F4EF] rounded-[24px] p-8 h-full shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 border border-[#2B2218]/10 text-[#2B2218]">
-                                <div className="w-14 h-14 bg-[#C96A45] text-white rounded-full flex items-center justify-center mb-8 relative">
+                                <div className="w-14 h-14 bg-[#D27349] text-white rounded-full flex items-center justify-center mb-8 relative">
                                     <Image src="/images/substack-orange.png" alt="Substack" width={24} height={24} className="brightness-0 invert" />
                                 </div>
-                                <h3 className="font-serif text-[28px] mb-3">Reflector's Reflections</h3>
+                                <h3 className="font-serif text-[28px] mb-3">Reflector&rsquo;s Reflections</h3>
                                 <p className="font-sans text-[15px] opacity-70 mb-8 line-clamp-3">
                                     The native home for all my audio content, including weekly Neutrino Weather and deep-dive reflections.
                                 </p>
-                                <div className="font-sans font-medium text-[#C96A45] flex items-center gap-2 group-hover:gap-3 transition-all">
+                                <div className="font-sans font-medium text-[#D27349] flex items-center gap-2 group-hover:gap-3 transition-all">
                                     Listen on Substack <span>&rarr;</span>
                                 </div>
                             </a>
@@ -80,7 +71,7 @@ export default function PodcastsPage() {
                                 </div>
                                 <h3 className="font-serif text-[28px] mb-3">Spotify</h3>
                                 <p className="font-sans text-[15px] opacity-70 mb-8 line-clamp-3">
-                                    Listen to my podcast directly on Spotify, featuring insights, interviews, and human design reflections.
+                                    Listen to my podcast directly on Spotify, featuring insights, interviews and Human Design reflections.
                                 </p>
                                 <div className="font-sans font-medium text-[#1ed760] flex items-center gap-2 group-hover:gap-3 transition-all">
                                     Open in Spotify <span>&rarr;</span>

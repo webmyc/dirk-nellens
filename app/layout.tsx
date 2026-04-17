@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script async src="https://tally.so/widgets/embed.js"></script>
       </head>
-      <body className="font-sans bg-[#F0EBE3] text-[#2B2218] antialiased selection:bg-[#C96A45] selection:text-white" suppressHydrationWarning>
+      <body className="font-sans bg-[#F0EBE3] text-[#2B2218] antialiased selection:bg-[#D27349] selection:text-white" suppressHydrationWarning>
         {children}
       </body>
     </html>

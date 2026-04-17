@@ -26,18 +26,18 @@ export function QuoteHome() {
             <div className="relative z-10 max-w-[900px] mx-auto text-center w-full">
                 {/* Large decorative quotation mark, scrolls slower with simple CSS (can use framer motion for real parallax if needed, but sticky/transform is often enough) */}
                 <div
-                    className="absolute -top-[80px] md:-top-[120px] -left-[20px] md:-left-[60px] text-[#C96A45] opacity-[0.18] font-serif leading-none select-none z-0"
+                    className="absolute -top-[80px] md:-top-[120px] -left-[20px] md:-left-[60px] text-[#D27349] opacity-[0.18] font-serif leading-none select-none z-0"
                     style={{ fontSize: 'clamp(140px, 20vw, 240px)' }}
                 >
                     &ldquo;
                 </div>
 
-                <div className="relative z-10 font-serif text-[42px] md:text-[56px] lg:text-[64px] leading-[1.15] text-[#2B2218] italic flex flex-col gap-4">
+                <div className="relative z-10 font-serif text-[30px] md:text-[40px] lg:text-[46px] leading-[1.2] text-[#2B2218] italic flex flex-col gap-4">
                     <FadeUp delay={0.1}>
                         <span>Human Design is not about what you know&mdash;</span>
                     </FadeUp>
                     <FadeUp delay={0.25}>
-                        <span>it's about how you live,</span>
+                        <span>it&rsquo;s about how you live,</span>
                     </FadeUp>
                     <FadeUp delay={0.4}>
                         <span>and about letting the process of awareness</span>
@@ -46,6 +46,11 @@ export function QuoteHome() {
                         <span>transform you from within.</span>
                     </FadeUp>
                 </div>
+                <FadeUp delay={0.7}>
+                    <p className="relative z-10 mt-10 text-[#2B2218]/70 font-sans text-[14px] tracking-[0.18em] uppercase">
+                        &mdash; Dirk Nellens &mdash;
+                    </p>
+                </FadeUp>
             </div>
         </section>
     );

@@ -39,7 +39,7 @@ export function AuthorBioBook() {
 
                         <FadeUp delay={0.4}>
                             <p className="font-sans text-[20px] leading-[1.7] text-[#2B2218] opacity-[0.85]">
-                                He discovered Human Design in 2002 and is one of the very few Reflector Types—comprising just 1% of the population—to have had the rare privilege of studying directly under the Human Design founder Ra Uru Hu in Ibiza for many years.
+                                He discovered Human Design in 2002 and is one of the very few Reflectors&mdash;comprising just 1% of the population&mdash;to have had the rare privilege of studying directly under the Human Design founder Ra Uru Hu in Ibiza for many years.
                             </p>
                         </FadeUp>
 
@@ -47,11 +47,11 @@ export function AuthorBioBook() {
                             <div className="flex flex-wrap gap-6 items-center justify-center md:justify-start mt-4">
                                 <Link
                                     href="/about"
-                                    className="group flex items-center gap-2 text-[#C96A45] font-sans font-medium text-[16px]"
+                                    className="group flex items-center gap-2 text-[#D27349] font-sans font-medium text-[16px]"
                                 >
                                     <span className="relative pb-1">
                                         Read full bio
-                                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C96A45] origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#D27349] origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100" />
                                     </span>
                                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                                 </Link>

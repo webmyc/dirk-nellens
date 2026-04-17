@@ -6,7 +6,6 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Newsletter from '@/components/Newsletter';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export default function CoursesPage() {
   return (
@@ -16,18 +15,14 @@ export default function CoursesPage() {
       {/* Hero */}
       <section className="relative pt-32 md:pt-40 pb-24 md:pb-32 bg-[#2B2218] text-[#F0EBE3] overflow-hidden">
 
-        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-20 mb-8 md:mb-12">
-          <Breadcrumbs items={[{ label: 'Education', href: '/courses' }]} className="text-[#F0EBE3]/60" />
-        </div>
-
         {/* Subtle dot matrix background */}
         <div
           className="absolute inset-0 opacity-10 pointer-events-none"
-          style={{ backgroundImage: 'radial-gradient(#C96A45 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}
+          style={{ backgroundImage: 'radial-gradient(#D27349 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}
         />
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 flex flex-col items-center text-center">
           <FadeUp delay={0.1}>
-            <p className="font-sans text-[12px] md:text-[14px] font-semibold tracking-[0.2em] uppercase text-[#C96A45] mb-6">
+            <p className="font-sans text-[12px] md:text-[14px] font-semibold tracking-[0.2em] uppercase text-[#D27349] mb-6">
               Education
             </p>
           </FadeUp>
@@ -50,18 +45,17 @@ export default function CoursesPage() {
             </FadeUp>
             <FadeUp delay={0.2}>
               <p className="font-sans text-[18px] text-[#2B2218] opacity-[0.85] leading-[1.7]">
-                Dirk's courses offer a living, participatory, and co-creative experience rather than just theoretical information.
+                Dirk&rsquo;s courses offer a living, participatory and co-creative experience rather than just theoretical information.
               </p>
             </FadeUp>
 
             <FadeUp delay={0.3}>
-              <blockquote className="font-serif text-[20px] md:text-[24px] leading-[1.6] text-[#2B2218] relative pl-8 border-l-[3px] border-[#C96A45]/30">
-                <span className="text-[#C96A45] text-5xl absolute -top-4 -left-3 opacity-40">"</span>
-                I have noticed that after their Chart Analysis many of my clients ask me, 'Now What? How do I start to live my Human Design?' It is this feedback that has inspired the creation of my courses, which are dedicated to bridging Human Design with experiential and therapeutic pathways for self-discovery and transformation.
+              <blockquote className="font-serif text-[20px] md:text-[24px] leading-[1.6] text-[#2B2218] relative pl-8 border-l-[3px] border-[#D27349]/30 italic">
+                I have noticed that after their Chart Analysis many of my clients ask me, &lsquo;Now What? How do I start to live my Human Design?&rsquo; It is this feedback that has inspired the creation of my courses, which are dedicated to bridging Human Design with experiential and therapeutic pathways for self-discovery and transformation.
                 <br /><br />
-                Indeed, I have learned the most about myself not through theory and information, but through therapy, creative expression, meditation, dance, deep conversations, listening, music, touch, breath—anything that moves the body and strengthens the inner witness. It's in these spaces that Human Design truly comes alive for me.
-                <footer className="mt-6 font-sans text-[13px] font-semibold tracking-[0.1em] uppercase text-[#C96A45] not-italic">
-                  – Dirk Nellens
+                Indeed, I have learned the most about myself not through theory and information, but through therapy, creative expression, meditation, dance, deep conversations, listening, music, touch, breath&mdash;anything that moves the body and strengthens the inner witness. It&rsquo;s in these spaces that Human Design truly comes alive for me.
+                <footer className="mt-6 font-sans text-[13px] font-semibold tracking-[0.1em] uppercase text-[#D27349] not-italic">
+                  &mdash; Dirk Nellens
                 </footer>
               </blockquote>
             </FadeUp>
@@ -104,7 +98,7 @@ export default function CoursesPage() {
                 The curriculum is currently being refined. Sign up for the Reflections newsletter below to be the first to know when enrollment opens.
               </p>
 
-              <div className="w-16 h-[1px] bg-[#C96A45]/30 mt-4" />
+              <div className="w-16 h-[1px] bg-[#D27349]/30 mt-4" />
             </div>
           </FadeUp>
         </div>

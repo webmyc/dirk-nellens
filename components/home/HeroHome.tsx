@@ -68,7 +68,7 @@ export function HeroBookTilt() {
     );
 }
 
-export function StaggeredText({ text }: { text: string }) {
+export function StaggeredText({ text, allItalic = false }: { text: string; allItalic?: boolean }) {
     const words = text.split(' ');
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, amount: 0.5 });
@@ -76,7 +76,7 @@ export function StaggeredText({ text }: { text: string }) {
     return (
         <div ref={ref} className="overflow-hidden flex flex-wrap gap-x-[0.3em] gap-y-[0.1em]">
             {words.map((word, i) => {
-                const isItalic = word.toLowerCase().includes('energetic') || word.toLowerCase().includes('architecture');
+                const isItalic = allItalic || word.toLowerCase().includes('energetic') || word.toLowerCase().includes('architecture');
                 return (
                     <motion.span
                         key={i}
@@ -99,24 +99,11 @@ export function StaggeredText({ text }: { text: string }) {
 
 export function HeroHome() {
     return (
-        <section className="relative min-h-screen flex items-center bg-[#C96A45] overflow-hidden pt-20">
+        <section className="relative min-h-screen flex items-center bg-[#D27349] overflow-hidden pt-20">
             {/* Noise/Grain texture overlay */}
             <div
                 className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
-            />
-
-            {/* Grid lines (5% opacity) */}
-            <div
-                className="absolute inset-0 opacity-5 pointer-events-none"
-                style={{
-                    backgroundImage: `
-            linear-gradient(to right, #F0EBE3 1px, transparent 1px),
-            linear-gradient(to bottom, #F0EBE3 1px, transparent 1px)
-          `,
-                    backgroundSize: '80px 80px',
-                    backgroundPosition: 'center center'
-                }}
             />
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full relative z-10 grid md:grid-cols-[55%_45%] gap-10 items-center py-20 pb-32">
@@ -133,17 +120,8 @@ export function HeroHome() {
                 </div>
 
                 <div className="flex flex-col items-start gap-8 relative z-20">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-[12px] uppercase tracking-[0.2em] text-[#F0EBE3]/60 font-sans"
-                    >
-                        HUMAN DESIGN
-                    </motion.div>
-
-                    <h1 className="font-serif text-[52px] md:text-[84px] lg:text-[100px] leading-[0.97] tracking-[-0.02em] text-white">
-                        <StaggeredText text="'Understanding our Energetic Architecture' is now available" />
+                    <h1 className="font-serif text-[44px] md:text-[68px] lg:text-[80px] leading-[1.02] tracking-[-0.02em] text-white">
+                        <StaggeredText text="Understanding our Energetic Architecture is now available" allItalic />
                     </h1>
 
                     <motion.div
@@ -172,7 +150,7 @@ export function HeroHome() {
                             variant="secondary"
                             className="w-full sm:w-auto border-white/40 text-white hover:text-white bg-transparent hover:bg-white/10"
                         >
-                            Or learn more
+                            Learn more
                         </Button>
                     </motion.div>
 

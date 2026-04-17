@@ -30,7 +30,7 @@ export default async function CommunityPage() {
                     <FadeUpStaggerGroup>
                         <FadeUp delay={0.1}>
                             <h1 className="font-serif text-[48px] md:text-[80px] leading-[1.1] tracking-[-0.02em] mb-8">
-                                Reflector's <span className="text-[#C96A45] italic">Sanctuary</span>
+                                Reflector's <span className="text-[#D27349] italic">Sanctuary</span>
                             </h1>
                         </FadeUp>
                         <FadeUp delay={0.2}>
@@ -43,7 +43,7 @@ export default async function CommunityPage() {
                                 href="https://reflectorsreflections.substack.com/subscribe"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center bg-[#C96A45] text-white px-8 py-4 rounded-full font-sans text-[13px] font-bold tracking-widest uppercase hover:bg-white hover:text-[#C96A45] transition-colors duration-300"
+                                className="inline-flex items-center justify-center bg-[#D27349] text-white px-8 py-4 rounded-full font-sans text-[13px] font-bold tracking-widest uppercase hover:bg-white hover:text-[#D27349] transition-colors duration-300"
                             >
                                 Upgrade to Premium
                             </a>
@@ -56,7 +56,7 @@ export default async function CommunityPage() {
             <section className="py-24 md:py-32 bg-white">
                 <div className="max-w-[1400px] mx-auto px-6 md:px-8">
                     <FadeUp className="text-center mb-16 md:mb-24">
-                        <p className="font-sans text-[13px] font-semibold tracking-[0.2em] uppercase text-[#C96A45] mb-6">Join the Inner Circle</p>
+                        <p className="font-sans text-[13px] font-semibold tracking-[0.2em] uppercase text-[#D27349] mb-6">Join the Inner Circle</p>
                         <h2 className="font-serif text-[42px] md:text-[56px] text-[#2B2218] leading-[1.1] tracking-[-0.01em]">
                             Choose your subscription
                         </h2>
@@ -95,31 +95,31 @@ export default async function CommunityPage() {
                         {/* 2. Annual (Highlighted) */}
                         <FadeUp delay={0.2}>
                             <a href="https://reflectorsreflections.substack.com/subscribe" target="_blank" rel="noopener noreferrer" className="block h-full cursor-pointer">
-                                <div className="h-full border-2 border-[#C96A45] rounded-2xl p-8 bg-white relative shadow-lg flex flex-col">
+                                <div className="h-full border-2 border-[#D27349] rounded-2xl p-8 bg-white relative shadow-lg flex flex-col">
                                     <div className="flex justify-between items-start mb-6">
                                         <div>
                                             <h3 className="font-sans font-bold text-[20px] text-[#2B2218]">Annual</h3>
                                             <p className="font-sans text-[#2B2218]/60 mt-1">€177/year <span className="opacity-70">(€14.75/month)</span></p>
                                         </div>
-                                        <div className="w-6 h-6 rounded-full bg-[#C96A45] flex items-center justify-center">
+                                        <div className="w-6 h-6 rounded-full bg-[#D27349] flex items-center justify-center">
                                             <CheckCircle2 className="w-4 h-4 text-white" />
                                         </div>
                                     </div>
                                     <ul className="space-y-4 font-sans text-[#2B2218]/80 text-[15px] flex-grow">
                                         <li className="flex items-start gap-3">
-                                            <CheckCircle2 className="w-5 h-5 text-[#C96A45] shrink-0 mt-0.5" />
+                                            <CheckCircle2 className="w-5 h-5 text-[#D27349] shrink-0 mt-0.5" />
                                             <span>Subscriber-only posts and full archive</span>
                                         </li>
                                         <li className="flex items-start gap-3">
-                                            <CheckCircle2 className="w-5 h-5 text-[#C96A45] shrink-0 mt-0.5" />
+                                            <CheckCircle2 className="w-5 h-5 text-[#D27349] shrink-0 mt-0.5" />
                                             <span>Weekly Neutrino Weather & Post comments and join the community</span>
                                         </li>
                                         <li className="flex items-start gap-3">
-                                            <CheckCircle2 className="w-5 h-5 text-[#C96A45] shrink-0 mt-0.5" />
+                                            <CheckCircle2 className="w-5 h-5 text-[#D27349] shrink-0 mt-0.5" />
                                             <span>2 Zoom calls per month with live Neutrino Weather hot seat readings</span>
                                         </li>
                                         <li className="flex items-start gap-3">
-                                            <CheckCircle2 className="w-5 h-5 text-[#C96A45] shrink-0 mt-0.5" />
+                                            <CheckCircle2 className="w-5 h-5 text-[#D27349] shrink-0 mt-0.5" />
                                             <span>13% cheaper than subscribing monthly</span>
                                         </li>
                                     </ul>
@@ -213,7 +213,7 @@ export default async function CommunityPage() {
                                 A glimpse into the type of deep psychological and mechanics-based content available to the community.
                             </p>
                         </div>
-                        <Link href="/blog/newsletter" className="hidden md:inline-flex items-center hover:text-[#C96A45] font-sans text-[13px] font-bold tracking-widest uppercase transition-colors">
+                        <Link href="/blog/newsletter" className="hidden md:inline-flex items-center hover:text-[#D27349] font-sans text-[13px] font-bold tracking-widest uppercase transition-colors">
                             Read the free blog
                         </Link>
                     </FadeUp>
@@ -229,7 +229,7 @@ export default async function CommunityPage() {
                                             <div className="w-full h-full bg-[#2B2218]" />
                                         )}
                                     </div>
-                                    <h3 className="font-serif text-[20px] md:text-[24px] leading-[1.3] text-[#2B2218] group-hover:text-[#C96A45] transition-colors line-clamp-2">
+                                    <h3 className="font-serif text-[20px] md:text-[24px] leading-[1.3] text-[#2B2218] group-hover:text-[#D27349] transition-colors line-clamp-2">
                                         {article.title}
                                     </h3>
                                 </Link>
@@ -250,7 +250,7 @@ export default async function CommunityPage() {
                         </FadeUp>
                         <FadeUp delay={0.2}>
                             <h2 className="font-serif text-[42px] md:text-[64px] text-[#F0EBE3] leading-[1.1] mb-8">
-                                Ready to join the <span className="italic text-[#C96A45]">inner circle</span>?
+                                Ready to join the <span className="italic text-[#D27349]">inner circle</span>?
                             </h2>
                         </FadeUp>
                         <FadeUp delay={0.3}>
@@ -263,7 +263,7 @@ export default async function CommunityPage() {
                                 href="https://reflectorsreflections.substack.com/subscribe"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center bg-[#C96A45] text-white px-10 py-5 rounded-full font-sans text-[14px] font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#C96A45] transition-all duration-300 shadow-xl"
+                                className="inline-flex items-center justify-center bg-[#D27349] text-white px-10 py-5 rounded-full font-sans text-[14px] font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#D27349] transition-all duration-300 shadow-xl"
                             >
                                 Become a Paid Subscriber
                             </a>

@@ -39,7 +39,7 @@ export default function Newsletter() {
           className="flex flex-col gap-8"
         >
           <h2 className="font-serif text-2xl md:text-3xl leading-relaxed text-[#2C2C2C]">
-            Deepen your life journey with Dirk's Reflector Reflections, including Human Design insights and Neutrino reports.
+            Deepen your life journey with Dirk&rsquo;s Reflector Reflections, including Human Design insights and Neutrino Weather reports
           </h2>
 
           {status === 'success' ? (

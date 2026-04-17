@@ -21,8 +21,8 @@ const socialIcons = [
 ];
 
 export default function Footer() {
-  const headingClass = "text-[#C96A45] text-[11px] uppercase tracking-[0.22em] font-medium";
-  const linkClass = "text-[#2B2218] opacity-75 hover:opacity-100 hover:text-[#C96A45] transition-all duration-200";
+  const headingClass = "text-[#D27349] text-[11px] uppercase tracking-[0.22em] font-medium";
+  const linkClass = "text-[#2B2218] opacity-75 hover:opacity-100 hover:text-[#D27349] transition-all duration-200";
 
   return (
     <footer className="bg-[#F0EBE3] py-20">
@@ -32,10 +32,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <h4 className={headingClass}>Courses</h4>
             <div className="flex flex-col gap-3 text-[15px]">
-              <span className="text-[#2B2218]/40 line-through decoration-[#2B2218]/25">Human Design Analysis</span>
-              <span className="text-[#2B2218]/40 line-through decoration-[#2B2218]/25">Connection Chart Analysis</span>
-              <span className="text-[#2B2218]/40 line-through decoration-[#2B2218]/25">Human Design & Personal Guidance</span>
-              <Link href="/courses" className="text-[#C96A45] hover:text-[#b05c3b] transition-colors mt-2">
+              <Link href="/courses" className="text-[#D27349] hover:text-[#b05c3b] transition-colors">
                 View All Courses →
               </Link>
             </div>
@@ -49,7 +46,7 @@ export default function Footer() {
               <Link href="/sessions#connection" className={linkClass}>Connection Chart Analysis</Link>
               <Link href="/sessions#guidance" className={linkClass}>Human Design & Personal Guidance</Link>
               <Link href="/sessions#opening-to-change" className={linkClass}>'Opening to Change' Session</Link>
-              <Link href="/sessions" className="text-[#C96A45] hover:text-[#b05c3b] transition-colors mt-2">
+              <Link href="/sessions" className="text-[#D27349] hover:text-[#b05c3b] transition-colors mt-2">
                 View All Sessions →
               </Link>
             </div>
@@ -92,7 +89,7 @@ export default function Footer() {
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="text-[#2B2218] opacity-75 hover:opacity-100 hover:text-[#C96A45] hover:scale-115 transition-all duration-200"
+                  className="text-[#2B2218] opacity-75 hover:opacity-100 hover:text-[#D27349] hover:scale-115 transition-all duration-200"
                 >
                   <svg className="w-[28px] h-[28px]" fill="currentColor" viewBox="0 0 24 24">
                     <path d={path} />
@@ -103,9 +100,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-[#C96A45]/20 pt-8 mt-12 flex flex-col items-center justify-center gap-2 text-[13px] text-[#2B2218]/50 text-center">
+        <div className="border-t border-[#D27349]/20 pt-8 mt-12 flex flex-col items-center justify-center gap-2 text-[13px] text-[#2B2218]/50 text-center">
           <p>
-            Bespoke site heart crafted by <a href="https://respira.cafe" target="_blank" rel="noopener noreferrer" className="hover:text-[#C96A45] underline underline-offset-2 transition-colors">Mihai @ respira.cafe</a>. Thank you Sophia for the initial design.
+            Bespoke site heart crafted by <a href="https://respira.cafe" target="_blank" rel="noopener noreferrer" className="hover:text-[#D27349] underline underline-offset-2 transition-colors">Mihai @ respira.cafe</a>. Thank you Sophia for the initial design.
           </p>
           <p>© {new Date().getFullYear()} Dirk Nellens. All rights reserved.</p>
         </div>

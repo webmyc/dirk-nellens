@@ -67,11 +67,11 @@ export function TestimonialsHome() {
                             transition={{ duration: 0.7, ease: 'easeInOut' }}
                             className="flex flex-col gap-10 items-center w-full"
                         >
-                            <blockquote className="font-serif text-[32px] md:text-[44px] lg:text-[52px] leading-[1.2] text-white italic">
-                                "{testimonials[slide].quote}"
+                            <blockquote className="font-serif text-[24px] md:text-[32px] lg:text-[36px] leading-[1.3] text-white italic">
+                                &ldquo;{testimonials[slide].quote}&rdquo;
                             </blockquote>
-                            <div className="font-sans text-[16px] text-[#C96A45] tracking-[0.16em] uppercase font-semibold">
-                                — {testimonials[slide].author}
+                            <div className="font-sans text-[14px] text-[#D27349] tracking-[0.18em] uppercase font-semibold">
+                                &mdash; {testimonials[slide].author}
                             </div>
                         </motion.div>
                     </AnimatePresence>
@@ -84,8 +84,8 @@ export function TestimonialsHome() {
                             key={i}
                             onClick={() => setSlide(i)}
                             className={`h-[2px] transition-all duration-300 ease-out ${i === slide
-                                    ? 'w-[40px] bg-[#C96A45]'
-                                    : 'w-[24px] bg-[#C96A45]/30 hover:bg-[#C96A45]/60'
+                                    ? 'w-[40px] bg-[#D27349]'
+                                    : 'w-[24px] bg-[#D27349]/30 hover:bg-[#D27349]/60'
                                 }`}
                             aria-label={`Go to testimonial ${i + 1}`}
                         />

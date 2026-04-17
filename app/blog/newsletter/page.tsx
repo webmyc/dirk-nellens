@@ -7,15 +7,14 @@ import { getSubstackFeed, getFeaturedTherapyGridArticles } from '@/lib/substack'
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import Newsletter from '@/components/Newsletter';
 import { PlayCircle, Headphones } from 'lucide-react';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { BookPromoCampaign } from '@/components/BookPromoCampaign';
 
 export const metadata = {
-    title: 'Reflector\'s Reflections',
-    description: 'Weekly Human Design reflections, neutrino reports, and psychological explorations through the lens of a Reflector.',
+    title: 'Reflector\u2019s Reflections',
+    description: 'Weekly Human Design reflections, Neutrino Weather reports and psychological explorations through the lens of a Reflector.',
     openGraph: {
-        title: 'Reflector\'s Reflections | Dirk Nellens',
-        description: 'Weekly Human Design reflections, neutrino reports, and psychological explorations through the lens of a Reflector.',
+        title: 'Reflector\u2019s Reflections | Dirk Nellens',
+        description: 'Weekly Human Design reflections, Neutrino Weather reports and psychological explorations through the lens of a Reflector.',
         images: [{ url: '/images/dirk-3.jpg' }],
     }
 };
@@ -41,23 +40,20 @@ export default async function NewsletterIndex() {
 
             {/* Header */}
             <section className="pt-32 md:pt-40 pb-16 px-6 md:px-12 text-center border-b border-[#2B2218]/5">
-                <div className="max-w-7xl mx-auto mb-8 md:mb-12 flex justify-start">
-                    <Breadcrumbs items={[{ label: 'Blog', href: '/blog/newsletter' }]} className="text-[#2B2218]/50" />
-                </div>
                 <div className="max-w-4xl mx-auto flex flex-col items-center gap-6">
                     <FadeUp delay={0.1}>
-                        <p className="font-sans text-[12px] font-semibold tracking-[0.2em] uppercase text-[#C96A45]">
-                            Essays & Insights
+                        <p className="font-sans text-[12px] font-semibold tracking-[0.2em] uppercase text-[#D27349]">
+                            Essays &amp; Insights
                         </p>
                     </FadeUp>
                     <FadeUp delay={0.2}>
                         <h1 className="font-serif text-[48px] md:text-[64px] lg:text-[76px] leading-[1.0] text-[#2B2218] tracking-[-0.01em]">
-                            Reflector's Reflections
+                            Reflector&rsquo;s Reflections
                         </h1>
                     </FadeUp>
                     <FadeUp delay={0.3}>
                         <p className="font-sans text-[18px] md:text-[20px] leading-[1.6] text-[#2B2218] opacity-70 max-w-2xl mx-auto">
-                            Weekly Human Design reflections, neutrino reports, and psychological explorations through the lens of a Reflector.
+                            Weekly Human Design reflections, Neutrino Weather reports and psychological explorations through the lens of a Reflector.
                         </p>
                     </FadeUp>
                 </div>
@@ -102,17 +98,17 @@ export default async function NewsletterIndex() {
 
                                 {/* Content */}
                                 <div className="flex flex-col gap-6 w-full md:w-1/2 p-8 md:pr-16 md:py-16">
-                                    <div className="flex items-center gap-3 font-sans text-[13px] font-semibold tracking-widest uppercase text-[#C96A45]">
+                                    <div className="flex items-center gap-3 font-sans text-[13px] font-semibold tracking-widest uppercase text-[#D27349]">
                                         Latest Essay • {formatDate(featuredArticle.pubDate)}
                                     </div>
-                                    <h2 className="font-serif text-[32px] md:text-[42px] leading-[1.15] text-[#2B2218] group-hover:text-[#C96A45] transition-colors">
+                                    <h2 className="font-serif text-[32px] md:text-[42px] leading-[1.15] text-[#2B2218] group-hover:text-[#D27349] transition-colors">
                                         {featuredArticle.title}
                                     </h2>
                                     <div className="w-12 h-[1px] bg-[#2B2218]/20 my-2" />
                                     <p className="font-sans text-[18px] leading-[1.7] text-[#2B2218] opacity-[0.8] line-clamp-3">
                                         {featuredArticle.contentSnippet}
                                     </p>
-                                    <div className="mt-4 font-serif text-[18px] italic text-[#C96A45] flex items-center gap-2">
+                                    <div className="mt-4 font-serif text-[18px] italic text-[#D27349] flex items-center gap-2">
                                         Read article <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
                                     </div>
                                 </div>
@@ -128,7 +124,7 @@ export default async function NewsletterIndex() {
                     <div className="max-w-7xl mx-auto px-6 md:px-12">
                         <FadeUp delay={0.1}>
                             <div className="flex flex-col gap-4 text-center mb-16 max-w-2xl mx-auto">
-                                <span className="font-sans text-[12px] font-semibold tracking-widest uppercase text-[#C96A45]">
+                                <span className="font-sans text-[12px] font-semibold tracking-widest uppercase text-[#D27349]">
                                     Featured Series
                                 </span>
                                 <h2 className="font-serif text-[36px] md:text-[48px] leading-tight text-[#2B2218]">
@@ -173,7 +169,7 @@ export default async function NewsletterIndex() {
                                             <div className="flex items-center gap-3 font-sans text-[12px] font-semibold tracking-widest uppercase text-[#2B2218]/40">
                                                 {formatDate(article.pubDate)}
                                             </div>
-                                            <h3 className="font-serif text-[22px] leading-[1.3] text-[#2B2218] group-hover:text-[#C96A45] transition-colors line-clamp-3">
+                                            <h3 className="font-serif text-[22px] leading-[1.3] text-[#2B2218] group-hover:text-[#D27349] transition-colors line-clamp-3">
                                                 {article.title}
                                             </h3>
                                             <p className="font-sans text-[15px] opacity-70 leading-[1.6] line-clamp-3 mt-auto pt-4 border-t border-[#2B2218]/5">
@@ -236,10 +232,10 @@ export default async function NewsletterIndex() {
                                     </div>
 
                                     <div className="flex flex-col gap-3">
-                                        <div className="font-sans text-[12px] font-semibold tracking-widest uppercase text-[#C96A45]/80">
+                                        <div className="font-sans text-[12px] font-semibold tracking-widest uppercase text-[#D27349]/80">
                                             {formatDate(article.pubDate)}
                                         </div>
-                                        <h3 className="font-serif text-[24px] leading-[1.3] text-[#2B2218] group-hover:text-[#C96A45] transition-colors">
+                                        <h3 className="font-serif text-[24px] leading-[1.3] text-[#2B2218] group-hover:text-[#D27349] transition-colors">
                                             {article.title}
                                         </h3>
                                         <p className="font-sans text-[15px] text-[#2B2218] opacity-70 leading-[1.6] line-clamp-2">

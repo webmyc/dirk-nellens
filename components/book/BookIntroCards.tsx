@@ -33,7 +33,7 @@ export function BookIntroCards() {
                         {benefitCards.map((text, i) => (
                             <FadeUp delay={0.15 + i * 0.1} key={i}>
                                 <div className="bg-white p-10 h-full rounded-[20px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 border border-[#2B2218]/5 group">
-                                    <div className="w-10 h-10 rounded-full bg-[#F0EBE3] flex items-center justify-center text-[#C96A45] font-serif italic text-xl mb-6 group-hover:bg-[#C96A45] group-hover:text-white transition-colors duration-400">
+                                    <div className="w-10 h-10 rounded-full bg-[#F0EBE3] flex items-center justify-center text-[#D27349] font-serif italic text-xl mb-6 group-hover:bg-[#D27349] group-hover:text-white transition-colors duration-400">
                                         {i + 1}
                                     </div>
                                     <p className="font-sans text-[17px] leading-[1.6] text-[#2B2218] opacity-[0.85]">
@@ -55,7 +55,7 @@ export function BookIntroCards() {
                     <div className="grid md:grid-cols-3 gap-6">
                         {invitationCards.map((text, i) => (
                             <FadeUp delay={0.15 + i * 0.1} key={i}>
-                                <div className="bg-[#C96A45] p-10 h-full rounded-[20px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 text-white flex items-center">
+                                <div className="bg-[#D27349] p-10 h-full rounded-[20px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 text-white flex items-center">
                                     <p className="font-serif text-[24px] leading-[1.4] italic w-full text-center">
                                         "{text}"
                                     </p>

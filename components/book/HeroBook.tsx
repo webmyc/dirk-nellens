@@ -24,7 +24,7 @@ export function HeroBook() {
             <div className="w-full md:w-[55%] lg:w-[50%] flex flex-col justify-center px-6 md:px-16 lg:px-24 xl:px-32 py-32 md:py-40">
                 <div className="max-w-2xl mx-auto md:mx-0">
                     <FadeUp delay={0.1}>
-                        <div className="font-sans text-[12px] font-semibold tracking-[0.2em] uppercase text-[#C96A45] mb-8">
+                        <div className="font-sans text-[12px] font-semibold tracking-[0.2em] uppercase text-[#D27349] mb-8">
                             The Book
                         </div>
                     </FadeUp>
@@ -36,15 +36,15 @@ export function HeroBook() {
                     </FadeUp>
 
                     <FadeUp delay={0.3}>
-                        <p className="font-serif text-[24px] md:text-[28px] leading-[1.3] text-[#2B2218] italic text-[#C96A45] border-l-2 border-[#C96A45] pl-6 mb-12">
-                            What if your deepest struggles don't come from who you are, but from living against how your energy is designed?
+                        <p className="font-serif text-[24px] md:text-[28px] leading-[1.3] italic text-[#D27349] border-l-2 border-[#D27349] pl-6 mb-12">
+                            What if your deepest struggles don&rsquo;t come from who you are, but from living against how your energy is designed?
                         </p>
                     </FadeUp>
 
                     <FadeUpStaggerGroup className="flex flex-col gap-6 font-sans text-[18px] md:text-[20px] leading-[1.8] text-[#2B2218] opacity-[0.85] mb-16">
                         <FadeUp delay={0.4}>
                             <p>
-                                In <em>'Understanding Our Energetic Architecture'</em>, Dirk explores Human Design as more than a system—but as a living map of the body's intelligence, shaping how we live, make decisions, relate, parent, love, and protect ourselves.
+                                In <em>Understanding Our Energetic Architecture</em>, Dirk explores Human Design as more than a system&mdash;but as a living map of the body&rsquo;s intelligence, shaping how we live, make decisions, relate, parent, love and protect ourselves.
                             </p>
                         </FadeUp>
                         <FadeUp delay={0.5}>

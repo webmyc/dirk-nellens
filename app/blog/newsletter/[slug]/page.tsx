@@ -8,7 +8,6 @@ import { notFound } from 'next/navigation';
 import { FadeUp } from '@/components/ui/FadeUp';
 import Newsletter from '@/components/Newsletter';
 import Script from 'next/script';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 // Generate dynamic metadata for the article
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -97,10 +96,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         </div>
                     )}
                     <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
-                        <FadeUp delay={0.1} className="w-full flex justify-center mb-6">
-                            <Breadcrumbs items={[{ label: 'Blog', href: '/blog/newsletter' }, { label: article.title, href: `/blog/newsletter/${article.slug}` }]} className="text-white/60" />
-                        </FadeUp>
-
                         <FadeUp delay={0.2}>
                             <h1 className="font-serif text-[48px] md:text-[64px] lg:text-[76px] leading-[1.05] tracking-[-0.01em]">
                                 {article.title}
@@ -139,8 +134,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     <div className="max-w-[720px] mx-auto px-6">
 
                         {/* Substack Attribution Banner */}
-                        <div className="mb-12 p-6 bg-[#F7F4EF] rounded-[16px] border border-[#C96A45]/20 flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
-                            <div className="w-12 h-12 bg-[#C96A45] rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="mb-12 p-6 bg-[#F7F4EF] rounded-[16px] border border-[#D27349]/20 flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
+                            <div className="w-12 h-12 bg-[#D27349] rounded-full flex items-center justify-center flex-shrink-0">
                                 <Image src="/images/substack-orange.png" alt="Substack" width={24} height={24} className="brightness-0 invert object-contain" />
                             </div>
                             <div className="flex flex-col gap-2">
@@ -148,13 +143,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                     Originally published on Substack
                                 </p>
                                 <p className="font-sans text-[14px] text-[#2B2218]/70 leading-relaxed">
-                                    This article is part of Dirk's ongoing newsletter <em>Reflector's Reflections</em>. You can read, comment, and engage with the original post on Substack.
+                                    This article is part of Dirk&rsquo;s ongoing newsletter <em>Reflector&rsquo;s Reflections</em>. You can read, comment and engage with the original post on Substack.
                                 </p>
                                 <a
                                     href={article.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="font-sans text-[14px] text-[#C96A45] font-medium hover:underline w-fit mx-auto sm:mx-0 mt-1"
+                                    className="font-sans text-[14px] text-[#D27349] font-medium hover:underline w-fit mx-auto sm:mx-0 mt-1"
                                 >
                                     View original article →
                                 </a>
@@ -166,9 +161,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             className="prose prose-xl md:prose-2xl prose-stone max-w-none 
                          prose-headings:font-serif prose-headings:text-[#2B2218] prose-headings:leading-tight
                          prose-p:font-sans prose-p:text-[#2B2218] prose-p:opacity-[0.88] prose-p:leading-[2.1] prose-p:text-[22px] md:prose-p:text-[25px] prose-p:tracking-tight prose-p:font-light
-                         prose-a:text-[#C96A45] prose-a:underline prose-a:underline-offset-4
+                         prose-a:text-[#D27349] prose-a:underline prose-a:underline-offset-4
                          prose-strong:font-semibold prose-strong:text-[#2B2218]
-                         prose-blockquote:font-serif prose-blockquote:text-[#2B2218] prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:border-[#C96A45] prose-blockquote:bg-[#F7F4EF] prose-blockquote:py-8 prose-blockquote:px-10 prose-blockquote:rounded-r-2xl prose-blockquote:text-[28px] prose-blockquote:my-16 prose-blockquote:leading-snug
+                         prose-blockquote:font-serif prose-blockquote:text-[#2B2218] prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:border-[#D27349] prose-blockquote:bg-[#F7F4EF] prose-blockquote:py-8 prose-blockquote:px-10 prose-blockquote:rounded-r-2xl prose-blockquote:text-[28px] prose-blockquote:my-16 prose-blockquote:leading-snug
                          prose-img:rounded-[24px] prose-img:w-full prose-img:shadow-sm prose-img:my-16
                          prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-[24px] prose-iframe:shadow-sm prose-iframe:my-16 mt-16"
                             dangerouslySetInnerHTML={{ __html: article.content }}
@@ -197,7 +192,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         </a>
                         <Link
                             href="/book"
-                            className="bg-[#C96A45] text-white px-8 py-4 rounded-full font-sans font-medium text-[15px] hover:bg-[#b05c3b] transition-colors"
+                            className="bg-[#D27349] text-white px-8 py-4 rounded-full font-sans font-medium text-[15px] hover:bg-[#b05c3b] transition-colors"
                         >
                             View the Book
                         </Link>

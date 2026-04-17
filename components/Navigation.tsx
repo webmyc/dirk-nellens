@@ -18,9 +18,7 @@ const sessions = [
 
 const primaryLinks = [
   { label: 'Reflections', href: '/blog/newsletter' },
-  { label: 'Podcasts', href: '/podcasts' },
   { label: 'Inner Circle', href: '/community' },
-  { label: 'About', href: '/about' },
 ];
 
 export default function Navigation() {
@@ -69,7 +67,7 @@ export default function Navigation() {
           }`}
       >
         <div
-          className="absolute top-0 left-0 h-[2px] bg-[#C96A45] z-[60]"
+          className="absolute top-0 left-0 h-[2px] bg-[#D27349] z-[60]"
           style={{ width: `${scrollProgress}%` }}
         />
         <div className="max-w-[1440px] mx-auto px-5 md:px-8 xl:px-12 flex items-center justify-between relative mt-[2px]">
@@ -103,7 +101,7 @@ export default function Navigation() {
                 isDarkHero={isDarkHero}
                 active={isActivePath('/courses')}
               >
-                <DropdownLink href="/courses">View All Courses</DropdownLink>
+                <DropdownLink href="/courses" accent>View All Courses</DropdownLink>
               </DesktopDropdown>
 
               {primaryLinks.map((link) => (
@@ -117,6 +115,25 @@ export default function Navigation() {
                   {link.label}
                 </DesktopNavLink>
               ))}
+
+              <DesktopDropdown
+                label="Media"
+                isScrolled={isScrolled}
+                isDarkHero={isDarkHero}
+                active={isActivePath('/podcasts')}
+              >
+                <DropdownLink href="/podcasts">Podcasts</DropdownLink>
+              </DesktopDropdown>
+
+              <DesktopDropdown
+                label="About"
+                isScrolled={isScrolled}
+                isDarkHero={isDarkHero}
+                active={isActivePath('/about')}
+              >
+                <DropdownLink href="/about">About Dirk</DropdownLink>
+                <DropdownLink href="/about#speaking">Speaking</DropdownLink>
+              </DesktopDropdown>
             </div>
 
             <div className={`mx-5 xl:mx-6 h-7 w-px ${isDarkHero && !isScrolled ? 'bg-white/25' : 'bg-[#2B2218]/12'}`} />
@@ -129,17 +146,17 @@ export default function Navigation() {
               alignRight
               pill
             >
+              <DropdownLink href="/sessions" accent>View All Sessions</DropdownLink>
               {sessions.map(s => (
                 <DropdownLink key={s.href} href={s.href}>{s.label}</DropdownLink>
               ))}
-              <DropdownLink href="/sessions" accent>View All Sessions</DropdownLink>
             </DesktopDropdown>
 
             <Link
               href="/book"
               className={`ml-3 inline-flex items-center justify-center rounded-full px-6 py-2.5 text-[15px] font-semibold tracking-[0.01em] transition-all duration-300 ${isDarkHero && !isScrolled
-                ? 'bg-[#C96A45] text-[#F7F4EF] hover:bg-[#b45f3d] shadow-[0_10px_24px_rgba(24,12,6,0.35)]'
-                : 'bg-[#C96A45] text-[#F7F4EF] hover:bg-[#b45f3d] shadow-[0_8px_18px_rgba(201,106,69,0.28)]'
+                ? 'bg-[#D27349] text-[#F7F4EF] hover:bg-[#b45f3d] shadow-[0_10px_24px_rgba(24,12,6,0.35)]'
+                : 'bg-[#D27349] text-[#F7F4EF] hover:bg-[#b45f3d] shadow-[0_8px_18px_rgba(201,106,69,0.28)]'
                 }`}
             >
               The Book
@@ -231,7 +248,7 @@ export default function Navigation() {
                     className="border border-[#2C2C2C]/12 rounded-2xl px-5 py-4 font-sans text-[#2C2C2C] hover:border-[#D96C40] hover:text-[#D96C40] transition-colors bg-white/40"
                     onClick={closeMobile}
                   >
-                    Podcasts
+                    Media
                   </Link>
 
                   <Link
@@ -252,7 +269,7 @@ export default function Navigation() {
 
                   <Link
                     href="/book"
-                    className="border border-[#2C2C2C]/12 rounded-2xl px-5 py-4 mt-2 font-sans text-[#F0EBE3] bg-[#C96A45] font-semibold text-center hover:bg-[#b05c3b] hover:shadow-md transition-all duration-300 shadow-sm"
+                    className="border border-[#2C2C2C]/12 rounded-2xl px-5 py-4 mt-2 font-sans text-[#F0EBE3] bg-[#D27349] font-semibold text-center hover:bg-[#b05c3b] hover:shadow-md transition-all duration-300 shadow-sm"
                     onClick={closeMobile}
                   >
                     The Book
@@ -309,7 +326,7 @@ function DesktopDropdown({
   const triggerClass = pill
     ? isWhite
       ? `px-[18px] py-2 rounded-full border transition-all duration-300 ${active ? 'border-white/70 bg-white/15 text-white' : 'border-white/40 hover:border-white/70 hover:bg-white/10 text-white'}`
-      : `px-[18px] py-2 rounded-full border transition-all duration-300 ${active ? 'border-[#C96A45]/55 bg-[#C96A45]/12 text-[#2B2218]' : 'border-[#2B2218]/14 bg-[#2B2218]/5 hover:border-[#C96A45]/45 hover:bg-[#C96A45]/8 text-[#2B2218]'}`
+      : `px-[18px] py-2 rounded-full border transition-all duration-300 ${active ? 'border-[#D27349]/55 bg-[#D27349]/12 text-[#2B2218]' : 'border-[#2B2218]/14 bg-[#2B2218]/5 hover:border-[#D27349]/45 hover:bg-[#D27349]/8 text-[#2B2218]'}`
     : isWhite
       ? `relative py-1 text-white/90 hover:text-white transition-colors duration-200 ${active ? 'text-white' : ''}`
       : `relative py-1 text-[#2B2218]/90 hover:text-[#2B2218] transition-colors duration-200 ${active ? 'text-[#2B2218]' : ''}`;
@@ -365,8 +382,8 @@ function DropdownLink({ href, children, accent }: { href: string; children: Reac
     <Link
       href={href}
       className={`block py-2.5 px-3 text-[15px] rounded-xl transition-colors ${accent
-        ? 'text-[#C96A45] font-medium hover:bg-[#C96A45]/10'
-        : 'hover:text-[#C96A45] hover:bg-[#2B2218]/5'
+        ? 'text-[#D27349] font-medium hover:bg-[#D27349]/10'
+        : 'hover:text-[#D27349] hover:bg-[#2B2218]/5'
         }`}
     >
       {children}

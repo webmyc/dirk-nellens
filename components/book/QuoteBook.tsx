@@ -17,17 +17,17 @@ export function QuoteBook() {
             <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
                 <FadeUp delay={0.1}>
                     <blockquote className="font-serif text-[32px] md:text-[48px] lg:text-[56px] leading-[1.2] text-[#F0EBE3] italic">
-                        "If you feel called to understand yourself—and others—with more clarity, compassion and depth, this book may be a meaningful companion on your path."
+                        &ldquo;If you feel called to understand yourself&mdash;and others&mdash;with more clarity, compassion and depth, this book may be a meaningful companion on your path.&rdquo;
                     </blockquote>
                 </FadeUp>
 
                 <FadeUp delay={0.3}>
                     <div className="mt-12 flex items-center justify-center gap-6">
-                        <div className="w-16 h-[1px] bg-[#C96A45]" />
-                        <span className="font-sans text-[14px] font-semibold tracking-[0.2em] uppercase text-[#C96A45]">
+                        <div className="w-16 h-[1px] bg-[#D27349]" />
+                        <span className="font-sans text-[14px] font-semibold tracking-[0.2em] uppercase text-[#D27349]">
                             Dirk Nellens
                         </span>
-                        <div className="w-16 h-[1px] bg-[#C96A45]" />
+                        <div className="w-16 h-[1px] bg-[#D27349]" />
                     </div>
                 </FadeUp>
             </div>

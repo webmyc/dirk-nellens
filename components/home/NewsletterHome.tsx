@@ -21,7 +21,7 @@ export function NewsletterHome() {
 
                 <FadeUp delay={0.1}>
                     <h2 className="font-serif text-[48px] md:text-[56px] leading-[1.1] text-[#2B2218] mb-12">
-                        Receive updates on courses, writings, and Human Design.
+                        Receive updates on courses, writings and Human Design
                     </h2>
                 </FadeUp>
 
@@ -42,7 +42,7 @@ export function NewsletterHome() {
                                 />
                                 {/* Custom animated underline */}
                                 <div
-                                    className={`absolute bottom-0 left-0 w-full h-[2px] transition-colors duration-250 ${isFocused ? 'bg-[#C96A45]' : 'bg-[#2B2218]/30'
+                                    className={`absolute bottom-0 left-0 w-full h-[2px] transition-colors duration-250 ${isFocused ? 'bg-[#D27349]' : 'bg-[#2B2218]/30'
                                         }`}
                                 />
                             </div>

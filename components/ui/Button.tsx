@@ -21,7 +21,7 @@ export function Button({
     href,
     variant = 'primary',
     className = '',
-    magnetic = true,
+    magnetic = false,
     onClick,
     type = 'button',
     icon = true,
@@ -54,7 +54,7 @@ export function Button({
     const sizeStyles = "h-[56px] px-[36px] rounded-full text-[17px]";
 
     const variants = {
-        primary: "bg-[#C96A45] text-[#F0EBE3]",
+        primary: "bg-[#D27349] text-[#F0EBE3]",
         // Hover effect for Primary CTA: dark charcoal fill slides in from left
         secondary: "bg-transparent border-[1.5px] border-[#2B2218] text-[#2C2C2C]",
         outline: "bg-transparent border-[1.5px] border-[#F0EBE3] text-[#F0EBE3]",

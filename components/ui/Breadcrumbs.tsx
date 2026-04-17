@@ -42,7 +42,7 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
             <nav aria-label="Breadcrumb" className={`flex items-center gap-2 font-sans text-[12px] font-semibold tracking-widest uppercase ${className}`}>
                 <ol className="flex items-center gap-2">
                     <li>
-                        <Link href="/" className="hover:text-[#C96A45] transition-colors">
+                        <Link href="/" className="hover:text-[#D27349] transition-colors">
                             Home
                         </Link>
                     </li>
@@ -52,11 +52,11 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
                             <li key={item.href} className="flex items-center gap-2">
                                 <ChevronRight className="w-3 h-3 opacity-40" />
                                 {isLast ? (
-                                    <span className="text-[#C96A45] truncate max-w-[200px] md:max-w-none line-clamp-1" aria-current="page">
+                                    <span className="text-[#D27349] truncate max-w-[200px] md:max-w-none line-clamp-1" aria-current="page">
                                         {item.label}
                                     </span>
                                 ) : (
-                                    <Link href={item.href} className="hover:text-[#C96A45] transition-colors truncate max-w-[150px] md:max-w-none">
+                                    <Link href={item.href} className="hover:text-[#D27349] transition-colors truncate max-w-[150px] md:max-w-none">
                                         {item.label}
                                     </Link>
                                 )}

@@ -9,11 +9,11 @@ import { Button } from '../ui/Button';
 const audienceItems = [
     {
         title: "For parents",
-        content: "It offers invaluable guidance for supporting their children's authentic development by understanding their innate energetic wiring."
+        content: "It offers invaluable guidance for supporting their children\u2019s authentic development by understanding their innate energetic wiring."
     },
     {
         title: "For therapists",
-        content: "It offers a way to perceive clients beyond their conditioned patterns—revealing their energetic essence and the deeper roots of their defence mechanisms."
+        content: "It offers a way to perceive clients beyond their conditioned patterns\u2014revealing their energetic essence and the deeper roots of their defence mechanisms."
     },
     {
         title: "For spiritual seekers",
@@ -32,10 +32,10 @@ function AccordionItem({ item, isOpen, onClick }: { item: any; isOpen: boolean; 
                 onClick={onClick}
                 className="w-full flex items-center justify-between py-6 text-left group"
             >
-                <h3 className="font-serif text-[24px] md:text-[28px] text-[#2B2218] group-hover:text-[#C96A45] transition-colors">
+                <h3 className="font-serif text-[24px] md:text-[28px] text-[#2B2218] group-hover:text-[#D27349] transition-colors">
                     {item.title}
                 </h3>
-                <div className={`w-10 h-10 rounded-full border border-[#2B2218]/15 flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[#C96A45] border-[#C96A45] text-white rotate-180' : 'text-[#2B2218] group-hover:border-[#C96A45]'}`}>
+                <div className={`w-10 h-10 rounded-full border border-[#2B2218]/15 flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[#D27349] border-[#D27349] text-white rotate-180' : 'text-[#2B2218] group-hover:border-[#D27349]'}`}>
                     <ChevronDown className="w-5 h-5" />
                 </div>
             </button>
@@ -72,17 +72,17 @@ export function BookDescription() {
                     <div className="md:sticky md:top-32 space-y-6 font-sans text-[20px] leading-[1.8] text-[#2B2218] opacity-[0.85]">
                         <FadeUp delay={0.1}>
                             <p>
-                                Understanding Our Energetic Architecture represents the culmination of two decades of exploration into Human Design as a living, embodied system.
+                                <em>Understanding Our Energetic Architecture</em> represents the culmination of two decades of exploration into Human Design as a living, embodied system.
                             </p>
                         </FadeUp>
                         <FadeUp delay={0.2}>
                             <p>
-                                It is a truly original contribution to the field of Human Design, one that honors Human Design's founder Ra's teachings while opening new pathways for therapy, childhood development, conscious living and relating.
+                                It is a truly original contribution to the field of Human Design, one that honors Human Design&rsquo;s founder Ra&rsquo;s teachings while opening new pathways for therapy, childhood development, conscious living and relating.
                             </p>
                         </FadeUp>
                         <FadeUp delay={0.3}>
                             <p>
-                                This book guides readers through Human Design's Bodygraph in a clear, experiential way. Real life examples bring these energetic patterns to life, transforming abstract ideas into practical insights anyone can apply.
+                                This book guides readers through Human Design&rsquo;s Bodygraph in a clear, experiential way. Real life examples bring these energetic patterns to life, transforming abstract ideas into practical insights anyone can apply.
                             </p>
                         </FadeUp>
                     </div>
@@ -91,7 +91,7 @@ export function BookDescription() {
                     <div className="flex flex-col gap-8">
                         <FadeUp delay={0.2}>
                             <h2 className="font-serif text-[36px] md:text-[44px] leading-[1.1] text-[#2B2218] mb-4">
-                                Who is this for?
+                                Who is this book for?
                             </h2>
                         </FadeUp>
 
@@ -122,7 +122,7 @@ export function BookDescription() {
                     <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
                         <FadeUp delay={0.1}>
                             <p className="font-serif text-[28px] md:text-[36px] lg:text-[42px] leading-[1.3] text-[#2B2218] mb-12 italic">
-                                “In a world that pressures us to conform, my book offers something radical: the science of our authentic Self—a drop in a vast ocean of Love.”
+                                &ldquo;In a world that pressures us to conform, my book offers something radical: the science of our authentic Self&mdash;a drop in a vast ocean of Love.&rdquo;
                             </p>
                         </FadeUp>
 
