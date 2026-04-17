@@ -32,22 +32,19 @@ export function QuoteHome() {
                     &ldquo;
                 </div>
 
-                <div className="relative z-10 font-serif text-[30px] md:text-[40px] lg:text-[46px] leading-[1.2] text-[#2B2218] italic flex flex-col gap-4">
+                <div className="relative z-10 font-serif text-[24px] md:text-[32px] lg:text-[36px] leading-[1.25] text-[#2B2218] italic flex flex-col gap-3">
                     <FadeUp delay={0.1}>
                         <span>Human Design is not about what you know&mdash;</span>
                     </FadeUp>
                     <FadeUp delay={0.25}>
-                        <span>it&rsquo;s about how you live,</span>
+                        <span>it&rsquo;s about how you live, and about letting</span>
                     </FadeUp>
                     <FadeUp delay={0.4}>
-                        <span>and about letting the process of awareness</span>
-                    </FadeUp>
-                    <FadeUp delay={0.55}>
-                        <span>transform you from within.</span>
+                        <span>the process of awareness transform you from within.</span>
                     </FadeUp>
                 </div>
                 <FadeUp delay={0.7}>
-                    <p className="relative z-10 mt-10 text-[#2B2218]/70 font-sans text-[14px] tracking-[0.18em] uppercase">
+                    <p className="relative z-10 mt-8 text-[#D27349] font-sans text-[13px] font-semibold tracking-[0.18em] uppercase">
                         &mdash; Dirk Nellens &mdash;
                     </p>
                 </FadeUp>

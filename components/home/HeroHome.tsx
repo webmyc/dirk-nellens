@@ -106,9 +106,9 @@ export function HeroHome() {
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
             />
 
-            <div className="max-w-7xl mx-auto px-6 md:px-12 w-full relative z-10 grid md:grid-cols-[55%_45%] gap-10 items-center py-20 pb-32">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 w-full relative z-10 grid md:grid-cols-[55%_45%] gap-8 items-center py-16 pb-24">
                 {/* Left Column - Mobile puts book above text */}
-                <div className="flex flex-col md:hidden items-center justify-center mb-12 mt-12 w-full max-w-[420px] mx-auto aspect-[4/5] relative">
+                <div className="flex flex-col md:hidden items-center justify-center mb-8 mt-6 w-full max-w-[320px] mx-auto aspect-[4/5] relative">
                     <div className="absolute bottom-[-5%] left-1/2 -translate-x-1/2 w-[60%] h-[20px] bg-black/40 blur-xl rounded-[100%]" />
                     <Image
                         src="/images/book-transparent.png"
@@ -119,8 +119,8 @@ export function HeroHome() {
                     />
                 </div>
 
-                <div className="flex flex-col items-start gap-8 relative z-20">
-                    <h1 className="font-serif text-[44px] md:text-[68px] lg:text-[80px] leading-[1.02] tracking-[-0.02em] text-white">
+                <div className="flex flex-col items-start gap-6 relative z-20">
+                    <h1 className="font-serif text-[34px] sm:text-[40px] md:text-[56px] lg:text-[68px] leading-[1.05] tracking-[-0.02em] text-white">
                         <StaggeredText text="Understanding our Energetic Architecture is now available" allItalic />
                     </h1>
 

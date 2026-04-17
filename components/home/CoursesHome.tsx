@@ -15,7 +15,7 @@ export function CoursesHome() {
 
                     <div className="flex flex-col gap-10">
                         <FadeUp delay={0.1}>
-                            <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] leading-tight text-[#2B2218] whitespace-nowrap">
+                            <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] leading-tight text-[#2B2218] md:whitespace-nowrap">
                                 Courses taught by Dirk
                             </h2>
                         </FadeUp>
@@ -41,13 +41,13 @@ export function CoursesHome() {
                     </div>
 
                     <FadeUp delay={0.2} className="w-full flex justify-center md:justify-end">
-                        <div className="relative w-full max-w-[540px] aspect-[4/5] animate-[float-large_7s_ease-in-out_infinite]">
+                        <div className="relative w-full max-w-[400px] md:max-w-[440px] aspect-[4/5] animate-[float-large_7s_ease-in-out_infinite]">
                             <Image
                                 src="/images/collage-g-center-composition.png"
                                 alt="Human Design organic collage artwork"
                                 fill
                                 className="object-contain"
-                                sizes="(max-width: 768px) 100vw, 540px"
+                                sizes="(max-width: 768px) 100vw, 440px"
                             />
                         </div>
                     </FadeUp>

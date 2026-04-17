@@ -33,13 +33,13 @@ export function AuthorBioBook() {
 
                         <FadeUp delay={0.3}>
                             <p className="font-sans text-[20px] leading-[1.7] text-[#2B2218] opacity-[0.85]">
-                                A certified Human Design Analyst with more than 20 years of experience, Dirk has conducted over 4,000 readings and trainings internationally.
+                                A certified Human Design Analyst with over 20 years of experience, Dirk has conducted over 4,000 readings and trainings internationally.
                             </p>
                         </FadeUp>
 
                         <FadeUp delay={0.4}>
                             <p className="font-sans text-[20px] leading-[1.7] text-[#2B2218] opacity-[0.85]">
-                                He discovered Human Design in 2002 and is one of the very few Reflectors&mdash;comprising just 1% of the population&mdash;to have had the rare privilege of studying directly under the Human Design founder Ra Uru Hu in Ibiza for many years.
+                                He discovered Human Design in 2002 and is one of the very few Reflectors&mdash;a Type comprising just 1% of the population&mdash;to have had the rare privilege of studying directly under the Human Design founder Ra Uru Hu for many years while living in Ibiza.
                             </p>
                         </FadeUp>
 

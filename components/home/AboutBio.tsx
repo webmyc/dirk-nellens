@@ -71,17 +71,17 @@ export function AboutBio() {
                     className="flex flex-col px-6 md:pr-12 lg:pr-24 py-16 md:py-0 w-full max-w-[700px]"
                 >
                     {/* Broken headline */}
-                    <h2 className="font-serif text-[46px] md:text-[60px] lg:text-[68px] leading-[1.0] text-[#2B2218] tracking-[-0.01em] mb-12">
+                    <h2 className="font-serif text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] text-[#2B2218] tracking-[-0.01em] mb-10">
                         A certified Human Design<br className="hidden md:block" /> Analyst{' '}
                         <span className="md:hidden">/</span><br className="hidden md:block" />
-                        with more than <span className="md:hidden">/</span><br className="hidden md:block" />
+                        with over <span className="md:hidden">/</span><br className="hidden md:block" />
                         20 years of experience
                     </h2>
 
                     {/* Stats Grid */}
-                    <div className="flex gap-8 mb-16 border-l pl-2 border-[#D27349]">
+                    <div className="flex gap-8 mb-12 border-l pl-2 border-[#D27349]">
                         <div className="flex flex-col gap-1 pr-8">
-                            <div className="font-sans font-bold text-[60px] md:text-[80px] leading-none text-[#D27349] tracking-tight">
+                            <div className="font-sans font-bold text-[48px] md:text-[64px] leading-none text-[#D27349] tracking-tight">
                                 <AnimatedCounter value={20} />+
                             </div>
                             <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.18em] text-[#2B2218]">
@@ -92,7 +92,7 @@ export function AboutBio() {
                         <div className="w-[1px] bg-[#D27349]/30 self-stretch my-2" />
 
                         <div className="flex flex-col gap-1 pl-4">
-                            <div className="font-sans font-bold text-[60px] md:text-[80px] leading-none text-[#D27349] tracking-tight">
+                            <div className="font-sans font-bold text-[48px] md:text-[64px] leading-none text-[#D27349] tracking-tight">
                                 <AnimatedCounter value={4000} />+
                             </div>
                             <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.18em] text-[#2B2218] max-w-[120px]">
@@ -101,9 +101,9 @@ export function AboutBio() {
                         </div>
                     </div>
 
-                    <div className="space-y-6 text-[#2B2218] opacity-[0.85] font-sans text-[19px] md:text-[20px] leading-[1.85] max-w-[560px]">
+                    <div className="space-y-5 text-[#2B2218] opacity-[0.85] font-sans text-[16px] md:text-[18px] leading-[1.7] max-w-[560px]">
                         <p>
-                            He discovered Human Design in 2002 and is one of the very few Reflectors&mdash;comprising just 1% of the population&mdash;to have had the rare privilege of studying directly under the Human Design founder Ra Uru Hu in Ibiza for many years.
+                            He discovered Human Design in 2002 and is one of the very few Reflectors&mdash;a Type comprising just 1% of the population&mdash;to have had the rare privilege of studying directly under the Human Design founder Ra Uru Hu for many years while living in Ibiza.
                         </p>
                         <p>
                             Dirk&rsquo;s therapeutic background includes formal training in inner child work, co-dependency recovery, breathwork, family constellations and the Enneagram, as well as active meditative practices developed by Osho.

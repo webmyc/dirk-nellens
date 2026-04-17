@@ -24,8 +24,8 @@ export function BookPromoCampaign() {
                         </FadeUp>
 
                         <FadeUp delay={0.2}>
-                            <h2 className="font-serif text-[42px] md:text-[56px] leading-[1.1] tracking-[-0.01em] mb-6 text-white">
-                                Free 3-month access to the Inner Circle
+                            <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] leading-[1.1] tracking-[-0.01em] mb-6 text-white">
+                                Claim your 3-month access to the Inner Circle
                             </h2>
                         </FadeUp>
 

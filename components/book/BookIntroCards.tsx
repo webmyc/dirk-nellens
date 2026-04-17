@@ -57,7 +57,7 @@ export function BookIntroCards() {
                             <FadeUp delay={0.15 + i * 0.1} key={i}>
                                 <div className="bg-[#D27349] p-10 h-full rounded-[20px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-400 text-white flex items-center">
                                     <p className="font-serif text-[24px] leading-[1.4] italic w-full text-center">
-                                        "{text}"
+                                        &ldquo;{text}&rdquo;
                                     </p>
                                 </div>
                             </FadeUp>

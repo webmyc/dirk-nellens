@@ -55,7 +55,7 @@ export function FAQ() {
 
             <div className="max-w-4xl mx-auto px-6 md:px-12">
                 <FadeUp delay={0.1} className="text-center mb-16">
-                    <h2 className="font-serif text-[42px] md:text-[56px] text-[#2B2218] tracking-[-0.01em]">
+                    <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] text-[#2B2218] tracking-[-0.01em]">
                         Common Questions
                     </h2>
                 </FadeUp>

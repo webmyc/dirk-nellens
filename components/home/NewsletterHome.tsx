@@ -20,7 +20,7 @@ export function NewsletterHome() {
             <div className="max-w-[720px] mx-auto text-center flex flex-col items-center">
 
                 <FadeUp delay={0.1}>
-                    <h2 className="font-serif text-[48px] md:text-[56px] leading-[1.1] text-[#2B2218] mb-12">
+                    <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] leading-[1.1] text-[#2B2218] mb-12">
                         Receive updates on courses, writings and Human Design
                     </h2>
                 </FadeUp>

@@ -29,7 +29,7 @@ export async function MediaHome() {
                     <div>
                         <div className="flex flex-col md:flex-row items-baseline justify-between gap-6 mb-12 border-b border-[#2B2218]/10 pb-6">
                             <FadeUp delay={0.1}>
-                                <h2 className="font-serif text-[36px] md:text-[44px] leading-tight text-[#2B2218]">
+                                <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] leading-tight text-[#2B2218]">
                                     Human Design & Therapy Series
                                 </h2>
                             </FadeUp>
@@ -86,7 +86,7 @@ export async function MediaHome() {
                 <div>
                     <div className="flex flex-col md:flex-row items-baseline justify-between gap-6 mb-12 border-b border-[#2B2218]/10 pb-6">
                         <FadeUp delay={0.1}>
-                            <h2 className="font-serif text-[36px] md:text-[44px] leading-tight text-[#2B2218]">
+                            <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] leading-tight text-[#2B2218]">
                                 Dirk&rsquo;s Recent Reflections
                             </h2>
                         </FadeUp>

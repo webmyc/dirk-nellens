@@ -30,7 +30,7 @@ export function BookPreviewHome() {
 
                     <FadeUp delay={0.4}>
                         <div className="mt-4">
-                            <Button href="https://mybook.to/dirk-nellens" variant="primary" className="bg-[#2B2218] text-[#F0EBE3]">
+                            <Button href="https://mybook.to/dirk-nellens" variant="primary" className="bg-[#2B2218] text-[#F0EBE3] border-[1.5px] border-white">
                                 Buy the book
                             </Button>
                         </div>

@@ -38,7 +38,7 @@ export function SessionsHome() {
         <section id="sessions" className="py-24 md:py-32 bg-[#F7F4EF]">
             <div className="max-w-7xl mx-auto px-6 md:px-12 mb-16 relative">
                 <FadeUp delay={0.1}>
-                    <h2 className="font-serif text-[34px] md:text-[42px] lg:text-[48px] leading-tight text-[#2B2218]">
+                    <h2 className="font-serif text-[36px] md:text-[48px] lg:text-[56px] leading-tight text-[#2B2218]">
                         Human Design &amp; Therapy Sessions
                     </h2>
                 </FadeUp>
