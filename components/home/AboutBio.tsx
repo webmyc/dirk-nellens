@@ -41,7 +41,7 @@ function AnimatedCounter({ value, duration = 1.8 }: { value: number; duration?: 
 export function AboutBio() {
     return (
         <section id="about" className="relative bg-white overflow-hidden pb-20 md:pb-32">
-            <div className="grid md:grid-cols-[auto_1fr] gap-12 lg:gap-20 items-center min-h-screen">
+            <div className="grid md:grid-cols-[auto_1fr] gap-12 lg:gap-20 items-stretch">
 
                 {/* Full bleed left-edge photo */}
                 <motion.div
@@ -49,7 +49,7 @@ export function AboutBio() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="relative w-full h-[60vh] md:h-full md:min-h-screen md:w-[45vw] md:max-w-[600px] lg:w-[50vw]"
+                    className="relative w-full h-[60vh] md:h-auto md:w-[45vw] md:max-w-[600px] lg:w-[50vw]"
                 >
                     <Image
                         src="/images/dirk-1.jpg"
