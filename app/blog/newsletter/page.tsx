@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { getSubstackFeed, getFeaturedTherapyGridArticles } from '@/lib/substack';
 import { FadeUp, FadeUpStaggerGroup } from '@/components/ui/FadeUp';
 import Newsletter from '@/components/Newsletter';
+import NewsletterHeroSubscribe from '@/components/NewsletterHeroSubscribe';
 import { PlayCircle, Headphones } from 'lucide-react';
 import { BookPromoCampaign } from '@/components/BookPromoCampaign';
 
@@ -56,6 +57,7 @@ export default async function NewsletterIndex() {
                             Weekly Human Design reflections, Neutrino Weather reports and psychological explorations through the lens of a Reflector.
                         </p>
                     </FadeUp>
+                    <NewsletterHeroSubscribe />
                 </div>
             </section>
 
