@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'motion/react';
+import SubstackSubscribeForm from './SubstackSubscribeForm';
 
 export default function Newsletter() {
   return (
@@ -18,16 +19,7 @@ export default function Newsletter() {
             Deepen your life journey with Dirk&rsquo;s Reflector Reflections, including Human Design insights and Neutrino Weather reports
           </h2>
 
-          <div className="rounded-2xl overflow-hidden shadow-lg border border-[#2C2C2C]/10 bg-white max-w-md">
-            <iframe
-              src="https://reflectorsreflections.substack.com/embed"
-              width="100%"
-              height="320"
-              style={{ border: 'none', background: 'white', display: 'block' }}
-              title="Subscribe to Reflector's Reflections"
-              loading="lazy"
-            />
-          </div>
+          <SubstackSubscribeForm variant="compact" />
         </motion.div>
 
         <motion.div
