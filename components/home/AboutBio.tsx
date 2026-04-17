@@ -40,7 +40,7 @@ function AnimatedCounter({ value, duration = 1.8 }: { value: number; duration?: 
 
 export function AboutBio() {
     return (
-        <section id="about" className="relative bg-white overflow-hidden pb-20 md:pb-32">
+        <section id="about" className="relative bg-white overflow-hidden">
             <div className="grid md:grid-cols-[auto_1fr] gap-12 lg:gap-20 items-stretch">
 
                 {/* Full bleed left-edge photo */}
@@ -68,7 +68,7 @@ export function AboutBio() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                    className="flex flex-col px-6 md:pr-12 lg:pr-24 py-16 md:py-0 w-full max-w-[700px]"
+                    className="flex flex-col px-6 md:pr-12 lg:pr-24 py-16 md:py-24 lg:py-32 w-full max-w-[700px]"
                 >
                     {/* Broken headline */}
                     <h2 className="font-serif text-[36px] md:text-[44px] lg:text-[52px] leading-[1.05] text-[#2B2218] tracking-[-0.01em] mb-10">
