@@ -185,9 +185,7 @@ export default async function NewsletterIndex() {
             )}
 
             {/* Promotional Campaign Injection */}
-            <section className="bg-white border-y border-[#2B2218]/5 py-0 pt-24 pb-12">
-                <BookPromoCampaign />
-            </section>
+            <BookPromoCampaign />
 
             {/* General Grid */}
             <section className="py-24 px-6 md:px-12 bg-[#F0EBE3]">
